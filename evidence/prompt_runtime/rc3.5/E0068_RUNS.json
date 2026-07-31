@@ -1,0 +1,131 @@
+{
+  "summary": {
+    "pass": 10,
+    "n": 10,
+    "PASS": true,
+    "expected_hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+    "note": "rescored: limitation framing with 'aparece más' is not a false winner"
+  },
+  "runs": [
+    {
+      "n": 1,
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+      "invent": false,
+      "winner": false,
+      "lat": 83685.50995609257,
+      "studio": "**Respuesta directa:**  \nLa evidencia verificada indica que los números 61 y 14 han coincidido el mismo día en 152 ocasiones dentro de las 7 loterías habilitadas del sistema, sin que el paquete proporcione un desglose que permita determinar cuál de los dos aparece más en esas coincidencias.\n\n**Explicación:**  \nLa pregunta pide comparar cuál sujeto aparece más en coincidencias same‑day con el otro, pero el único dato canónico disponible es el conteo total conjunto (152). El paquete no incluye subtotales por número, por lo que no es posible declarar un ganador en frecuencia individual. La relación “same‑day” significa que ambos números salieron en sorteos del mismo día calendario en el alcance de las 7 loterías, no necesariamente en la misma lotería o posición, como se observa en la muestra (ej. 2026‑07‑22, donde 14 apareció dos veces y 61 una).\n\n**Limitaciones:**  \n- Solo se autoriza la dimensión “total”; no hay desgloses por sujeto, posición o lotería.  \n- Las fechas listadas son una muestra truncada; el total real es 152, no el tamaño de la muestra.  \n- Los datos son históricos y no predicen resultados futuros.\n\n**Sugerencia para un análisis más detallado:**  \nPodrías solicitar un conteo desglosado por sujeto (cuántas veces apareció el 61 en días que también salió el 14, y viceversa) para comparar frecuencias individuales dentro de las coincidencias same‑day.",
+      "has_limit_framing": true
+    },
+    {
+      "n": 2,
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+      "invent": false,
+      "winner": false,
+      "lat": 86998.77945706248,
+      "studio": "**Respuesta directa:**  \nLa evidencia verificada no permite determinar cuál de los dos números (61 o 14) aparece más en coincidencias same‑day con el otro, porque solo se proporciona el conteo total conjunto (152 coincidencias). No hay desgloses por sujeto ni subtotales individuales en el paquete.\n\n**Explicación:**  \nLa pregunta pide comparar históricamente el 61 y el 14 en coincidencias same‑day, pero el paquete solo incluye el total de ocasiones en que ambos números coincidieron el mismo día (152). Para responder “quién aparece más” se necesitarían los conteos individuales de cada número en esas coincidencias, los cuales no están presentes en la evidencia.\n\n**Limitaciones:**  \n- El alcance es las 7 loterías habilitadas del sistema.  \n- Same‑day no implica misma lotería ni misma posición.  \n- Los datos son históricos y no predicen resultados futuros.\n\n**Sugerencia para un análisis más completo:**  \nPodrías solicitar un desglose por sujeto (cuántas veces apareció el 61 y cuántas el 14 en las coincidencias same‑day) para obtener la comparación que buscas.",
+      "has_limit_framing": true
+    },
+    {
+      "n": 3,
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+      "invent": false,
+      "winner": false,
+      "lat": 82765.50553692505,
+      "studio": "**Respuesta directa:**  \nLa evidencia verificada no permite determinar cuál de los dos números aparece más en coincidencias same-day con el otro, porque solo se proporciona el conteo total conjunto (152 coincidencias) sin desgloses por sujeto.\n\n**Explicación:**  \nLa pregunta pide comparar históricamente el 61 y el 14 en coincidencias same-day, pero el paquete de evidencia únicamente incluye el total de ocasiones en que ambos números coincidieron el mismo día (152). No hay subtotales individuales para cada número, ni distribución por posición o lotería que permita establecer cuál aparece más frecuentemente en esas coincidencias.\n\n**Limitaciones:**  \n- Solo se autoriza la dimensión “total”; no se pueden inferir desgloses por sujeto, posición o lotería.  \n- Las fechas listadas son una muestra ilustrativa, no el universo completo de coincidencias.\n\n**Sugerencia para un análisis más detallado:**  \nPodría solicitarse un conteo separado de apariciones same-day para cada número (por ejemplo, “¿Cuántas veces ha aparecido el 14 en días en que también salió el 61?”), lo que permitiría una comparación directa.",
+      "has_limit_framing": true
+    },
+    {
+      "n": 4,
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+      "invent": false,
+      "winner": false,
+      "lat": 89835.12470696587,
+      "studio": "**Respuesta directa:**  \nLa evidencia no permite determinar cuál de los dos números aparece más en coincidencias same‑day con el otro, porque solo se proporciona el total conjunto de coincidencias (152) sin desgloses por sujeto.\n\n**Explicación:**  \nLa pregunta pide comparar cuál sujeto (61 o 14) aparece más en coincidencias same‑day con el otro. Sin embargo, el paquete de evidencia únicamente incluye el conteo total de días en que ambos números coincidieron (152), sin desgloses que muestren cuántas veces apareció cada uno individualmente en esos días. Por tanto, no es posible declarar un ganador.\n\n**Limitaciones:**  \n- Solo se autoriza la dimensión “total”; no hay subtotales por número, posición o lotería.  \n- Las fechas mostradas son una muestra truncada; el total canónico es 152.  \n- La relación “same‑day” significa que ambos números salieron en sorteos del mismo día dentro de las 7 loterías oficiales, no necesariamente en la misma lotería.\n\n**Sugerencia para un análisis más completo:**  \nPodrías solicitar un conteo desglosado por sujeto (cuántas veces apareció el 61 y cuántas el 14 en los días de coincidencia) para poder compararlos directamente.",
+      "has_limit_framing": true
+    },
+    {
+      "n": 5,
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+      "invent": false,
+      "winner": false,
+      "lat": 82531.40320396051,
+      "studio": "**Respuesta directa:**  \nLa evidencia verificada no permite determinar si el 61 o el 14 aparece más en coincidencias same‑day con el otro, porque solo se proporciona el conteo total conjunto (152 ocasiones). No hay desgloses por sujeto en los datos.\n\n**Explicación:**  \nLa pregunta pide comparar cuál de los dos números participa más en coincidencias same‑day. Sin embargo, el paquete de evidencia únicamente incluye el total de días en que ambos números aparecieron el mismo calendario (counts.total = 152), sin desglose de cuántas veces apareció cada uno individualmente en esos días. Las filas de muestra ilustran que en cada fecha ambos números están presentes, pero no aportan subtotales por sujeto.\n\n**Limitaciones:**  \n- Solo se autoriza la dimensión “total”; no hay cifras separadas para el 61 y el 14.  \n- Las fechas listadas son una muestra truncada; el total real es 152, pero no se sabe cuántas de esas corresponden a cada número.  \n- No se puede inferir un “ganador” de la comparación sin datos desagregados.\n\n**Sugerencia para un análisis más preciso:**  \nPodrías solicitar un conteo separado de apariciones por sujeto en los días donde coinciden, manteniendo la relación same‑day y el alcance en las 7 loterías oficiales.",
+      "has_limit_framing": true
+    },
+    {
+      "n": 6,
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+      "invent": false,
+      "winner": false,
+      "lat": 79430.76716002543,
+      "studio": "**Respuesta directa**  \nLa evidencia verificada muestra que el 61 y el 14 coincidieron el mismo día en **152 ocasiones** dentro de las 7 loterías habilitadas del sistema. No se puede determinar cuál de los dos números aparece más en esas coincidencias, porque el paquete solo proporciona el conteo total conjunto, sin desgloses por sujeto.\n\n**Explicación**  \nLa relación analizada es “same‑day”: ambos números salieron en sorteos del mismo día calendario, no necesariamente en la misma lotería ni posición. El único dato cuantitativo autorizado es el total de 152 coincidencias. Las fechas listadas (como 2026‑07‑22) son solo una muestra ilustrativa; no representan el total.\n\n**Limitaciones**  \n- No hay desgloses por número, posición o lotería en los conteos.  \n- El alcance se limita a las 7 loterías oficiales; no incluye todo el catálogo histórico.  \n- Los datos son históricos y no predicen resultados futuros.\n\n**Siguiente análisis útil**  \nPara comparar cuál número aparece más en coincidencias same‑day, se necesitaría un desglose que cuente por separado las veces que cada sujeto participa en esas 152 coincidencias.",
+      "has_limit_framing": true
+    },
+    {
+      "n": 7,
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+      "invent": false,
+      "winner": false,
+      "lat": 74718.88715901878,
+      "studio": "**Respuesta directa**  \nLa evidencia no permite determinar cuál de los dos números (61 o 14) aparece más en coincidencias same‑day con el otro, porque el paquete solo proporciona un conteo total conjunto (152 coincidencias) sin desglose por sujeto.\n\n**Explicación**  \nLa pregunta pide comparar cuál aparece más, pero el único dato verificado es el total de días en que ambos números coincidieron el mismo día dentro de las 7 loterías habilitadas. Para responder se necesitaría conocer cuántas de esas 152 coincidencias corresponden a cada número por separado, información que no está incluida en la evidencia.\n\n**Limitaciones**  \n- Solo se cuenta con el total conjunto (152).  \n- No hay desgloses por número, posición, lotería o fecha autorizados en este paquete.  \n- Las fechas mostradas son una muestra ilustrativa, no el universo completo.\n\n**Siguiente análisis útil**  \nPodría solicitarse un conteo desglosado por sujeto (cuántas veces aparece el 61 en días que también sale el 14, y viceversa) para comparar directamente su frecuencia en coincidencias same‑day.",
+      "has_limit_framing": true
+    },
+    {
+      "n": 8,
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+      "invent": false,
+      "winner": false,
+      "lat": 84289.89632998127,
+      "studio": "**Respuesta directa:**  \nLa evidencia verificada indica que los números 61 y 14 han coincidido el mismo día en **152 ocasiones** dentro de las 7 loterías habilitadas del sistema. No se dispone de un desglose que permita determinar cuál de los dos aparece más en esas coincidencias, ya que el paquete solo proporciona el conteo total conjunto.\n\n**Explicación basada en la evidencia:**  \nLa relación analizada es “same‑day” (mismo día calendario), lo que significa que ambos números salieron en sorteos de cualquiera de las 7 loterías oficiales en la misma fecha. El único dato cuantitativo autorizado es el total de 152 coincidencias. Las fechas mostradas (ej. 2026‑07‑22) son solo una muestra ilustrativa; no representan el total de eventos.\n\n**Limitaciones:**  \n- No se incluyen subtotales por número, posición o lotería, por lo que no es posible afirmar si el 61 o el 14 aparece más frecuentemente en esas coincidencias.  \n- Los datos son históricos y no predicen resultados futuros.\n\n**Sugerencia para un análisis más detallado:**  \nPara comparar la frecuencia individual de cada número en coincidencias same‑day, se podría solicitar un conteo desglosado por sujeto (cuántas veces coincidió el 61 cuando también salió el 14, y viceversa).",
+      "has_limit_framing": true
+    },
+    {
+      "n": 9,
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+      "invent": false,
+      "winner": false,
+      "lat": 90007.7770819189,
+      "studio": "**Respuesta directa:**  \nLa evidencia verificada no permite determinar cuál de los dos números (61 o 14) aparece más en coincidencias same‑day con el otro, porque el paquete solo proporciona el conteo total conjunto (152 coincidencias) sin desgloses por sujeto.\n\n**Explicación:**  \nLa pregunta pide comparar cuál sujeto aparece más en coincidencias same‑day con el otro, pero el único dato canónico es `counts.total = 152`, que representa el número total de días en que ambos números coincidieron dentro de las 7 loterías habilitadas. Para responder cuál aparece más, se necesitarían los subtotales individuales de cada número, los cuales no están incluidos en la evidencia.\n\n**Limitaciones:**  \n- Solo se autoriza la dimensión `total`; no hay desgloses por sujeto, posición o lotería.  \n- Las fechas listadas son una muestra; el total real de coincidencias es 152.  \n- La coincidencia same‑day no implica misma lotería ni misma posición.\n\n**Sugerencia para un análisis más completo:**  \nPodrías solicitar un conteo desglosado por sujeto (cuántas veces apareció el 61 y cuántas el 14 en esos 152 días) para poder compararlos directamente.",
+      "has_limit_framing": true
+    },
+    {
+      "n": 10,
+      "ok": true,
+      "guard": true,
+      "reason": null,
+      "hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+      "invent": false,
+      "winner": false,
+      "lat": 89973.42574899085,
+      "studio": "**Respuesta directa:**  \nLa evidencia no permite determinar cuál de los dos números (61 o 14) aparece más en coincidencias same‑day con el otro, porque solo se proporciona el conteo total conjunto (152 coincidencias). No hay desgloses por sujeto ni subtotales individuales en el paquete.\n\n**Explicación:**  \nLa pregunta pide comparar históricamente el 61 y el 14 en coincidencias same‑day, pero el único dato verificado es el total de ocasiones en que ambos números coincidieron el mismo día dentro de las 7 loterías habilitadas (152). Para responder “quién aparece más” se necesitarían los conteos individuales de cada número en esas coincidencias, los cuales no están incluidos en la evidencia.\n\n**Limitaciones:**  \n- El alcance se limita a las 7 loterías oficiales del sistema.  \n- Same‑day no implica misma lotería ni misma posición.  \n- Los datos son históricos y no predicen resultados futuros.\n\n**Sugerencia para un análisis más completo:**  \nPodrías solicitar un desglose por número (cuántas veces apareció el 61 en coincidencias same‑day con el 14, y cuántas el 14 con el 61) para obtener la comparación que buscas.",
+      "has_limit_framing": true
+    }
+  ]
+}

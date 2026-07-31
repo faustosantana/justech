@@ -1,0 +1,18 @@
+**Respuesta directa**
+Según la evidencia verificada, **ambos números (61 y 14) han coincidido el mismo día en 152 ocasiones** dentro de las 7 loterías habilitadas del sistema. Este es el único total canónico disponible. No es posible determinar cuál de los dos números "aparece más" en estas coincidencias, ya que la evidencia no proporciona un desglose de apariciones individuales por número.
+
+**Explicación / Interpretación**
+La pregunta original pide comparar cuál número (61 o 14) aparece más en coincidencias "same-day" con el otro. Sin embargo, el paquete de evidencia solo contiene el **conteo total de coincidencias (152)**, que representa el número de días en los que ambos sujetos aparecieron en sorteos (de cualquier posición) dentro del alcance de las 7 loterías oficiales. La relación "" significa que ambos números salieron en sorteos del **mismo día calendario**, pero no necesariamente en la misma lotería o posición.
+
+La lista de `occurrences` (8 fechas) es solo una **muestra ilustrativa** de cómo se ven estas coincidencias, no el conjunto completo. Por ejemplo, en la fecha más reciente (2026-07-22), el 14 apareció dos veces (en Nacional y Leidsa) y el 61 una vez (en NY 2:30), contando como una coincidencia de día.
+
+**Limitaciones**
+1. **Falta de desglose:** La evidencia no incluye cuántas de las 152 coincidencias fueron impulsadas por más apariciones del 14 o del 61. Sin ese dato, la comparación solicitada no puede responderse.
+2. **Alcance restringido:** El análisis se limita a las 7 loterías listadas (``). No incluye otras loterías.
+3. **Datos históricos:** Las 152 coincidencias son un hecho histórico. No predicen futuras coincidencias.
+4. **Muestra, no total:** Las 8 fechas detalladas en `occurrences` son una muestra. El total real de días con coincidencia es el `counts.total` (152).
+
+**Siguiente análisis útil**
+Para responder la pregunta de "quién aparece más", se necesitaría una **nueva investigación** que genere un paquete de evidencia con un desglose comparativo. Una consulta útil sería: **"¿Cuántas veces ha aparecido el 61 y cuántas el 14 en los días en que coinciden () dentro de las 7 loterías oficiales?"**. Esto proporcionaría dos conteos individuales que sí permitirían una comparación directa.
+
+Puedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.

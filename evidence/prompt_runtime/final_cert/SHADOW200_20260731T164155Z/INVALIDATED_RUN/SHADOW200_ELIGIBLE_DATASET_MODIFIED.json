@@ -1,0 +1,2462 @@
+{
+  "suite": "SHADOW200_ELIGIBLE",
+  "version": "2.0",
+  "frozen_prompt": "7.0.0-rc3.4",
+  "expected_hash": "41c64a0fc7c303222c2b492e82a0ea51cec6c16139bc2f0cde9ec9e9da642ff9",
+  "eligibility_rule": "Cases designed for ReasoningModeSelector to invoke Huawei (interpret/compare/explain/clarify), never skip/factual_answer.",
+  "n": 200,
+  "preflight_invoke_pass": 200,
+  "preflight_invoke_fail": 0,
+  "cases": [
+    {
+      "id": "E0001",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 07 y el 38 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0002",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 12 y el 50 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0003",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 14 y el 54 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0004",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 18 y el 63 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0005",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 22 y el 77 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0006",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 11 y el 25 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0007",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 35 y el 02 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0008",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 38 y el 03 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0009",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 50 y el 90 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0010",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 63 y el 19 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0011",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 41 y el 25 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0012",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 90 y el 35 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0013",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 05 y el 44 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0014",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 08 y el 61 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0015",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 09 y el 72 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0016",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 15 y el 28 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0017",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 16 y el 33 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0018",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 17 y el 49 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0019",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 19 y el 55 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0020",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 21 y el 66 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0021",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 23 y el 70 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0022",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 24 y el 81 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0023",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 26 y el 88 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0024",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 27 y el 04 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0025",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 29 y el 06 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0026",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 30 y el 48 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0027",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 31 y el 52 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0028",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 32 y el 57 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0029",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 34 y el 68 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0030",
+      "category": "interp_coincidence",
+      "user": "¿Han coincidido el 36 y el 73 el mismo día? Interpreta qué significa esa coincidencia same-day. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0031",
+      "category": "freq_analysis",
+      "user": "¿El 37 y el 79 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0032",
+      "category": "freq_analysis",
+      "user": "¿El 39 y el 82 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0033",
+      "category": "freq_analysis",
+      "user": "¿El 40 y el 85 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0034",
+      "category": "freq_analysis",
+      "user": "¿El 42 y el 91 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0035",
+      "category": "freq_analysis",
+      "user": "¿El 43 y el 01 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0036",
+      "category": "freq_analysis",
+      "user": "¿El 45 y el 10 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0037",
+      "category": "freq_analysis",
+      "user": "¿El 46 y el 13 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0038",
+      "category": "freq_analysis",
+      "user": "¿El 47 y el 20 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0039",
+      "category": "freq_analysis",
+      "user": "¿El 51 y el 53 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0040",
+      "category": "freq_analysis",
+      "user": "¿El 56 y el 58 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0041",
+      "category": "freq_analysis",
+      "user": "¿El 59 y el 60 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0042",
+      "category": "freq_analysis",
+      "user": "¿El 62 y el 64 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0043",
+      "category": "freq_analysis",
+      "user": "¿El 65 y el 67 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0044",
+      "category": "freq_analysis",
+      "user": "¿El 69 y el 71 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0045",
+      "category": "freq_analysis",
+      "user": "¿El 74 y el 75 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0046",
+      "category": "freq_analysis",
+      "user": "¿El 76 y el 78 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0047",
+      "category": "freq_analysis",
+      "user": "¿El 80 y el 83 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0048",
+      "category": "freq_analysis",
+      "user": "¿El 84 y el 86 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0049",
+      "category": "freq_analysis",
+      "user": "¿El 87 y el 89 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0050",
+      "category": "freq_analysis",
+      "user": "¿El 92 y el 93 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0051",
+      "category": "freq_analysis",
+      "user": "¿El 94 y el 95 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0052",
+      "category": "freq_analysis",
+      "user": "¿El 96 y el 97 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0053",
+      "category": "freq_analysis",
+      "user": "¿El 00 y el 98 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0054",
+      "category": "freq_analysis",
+      "user": "¿El 03 y el 99 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0055",
+      "category": "freq_analysis",
+      "user": "¿El 04 y el 41 han coincidido más de 40 veces el mismo día? Explica solo el conteo canónico y su alcance. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0056",
+      "category": "compare_numbers",
+      "user": "Sobre el 06 y el 50: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0057",
+      "category": "compare_numbers",
+      "user": "Sobre el 08 y el 22: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0058",
+      "category": "compare_numbers",
+      "user": "Sobre el 10 y el 35: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0059",
+      "category": "compare_numbers",
+      "user": "Sobre el 13 y el 63: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0060",
+      "category": "compare_numbers",
+      "user": "Sobre el 20 y el 77: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0061",
+      "category": "compare_numbers",
+      "user": "Sobre el 25 y el 38: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0062",
+      "category": "compare_numbers",
+      "user": "Sobre el 28 y el 54: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0063",
+      "category": "compare_numbers",
+      "user": "Sobre el 33 y el 90: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0064",
+      "category": "compare_numbers",
+      "user": "Sobre el 44 y el 12: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0065",
+      "category": "compare_numbers",
+      "user": "Sobre el 61 y el 14: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0066",
+      "category": "compare_numbers",
+      "user": "Sobre el 52 y el 18: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0067",
+      "category": "compare_numbers",
+      "user": "Sobre el 57 y el 11: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0068",
+      "category": "compare_numbers",
+      "user": "Sobre el 61 y el 14: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0069",
+      "category": "compare_numbers",
+      "user": "Sobre el 66 y el 02: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0070",
+      "category": "compare_numbers",
+      "user": "Sobre el 68 y el 19: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0071",
+      "category": "compare_numbers",
+      "user": "Sobre el 72 y el 05: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0072",
+      "category": "compare_numbers",
+      "user": "Sobre el 73 y el 09: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0073",
+      "category": "compare_numbers",
+      "user": "Sobre el 78 y el 15: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0074",
+      "category": "compare_numbers",
+      "user": "Sobre el 81 y el 16: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0075",
+      "category": "compare_numbers",
+      "user": "Sobre el 85 y el 17: reporta únicamente el conteo canónico total de coincidencias same-day y explica el alcance (7 loterías). Di explícitamente qué NO se puede afirmar sin desglose en la evidencia. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0076",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 88 y el 21 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0077",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 91 y el 23 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0078",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 93 y el 24 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0079",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 95 y el 26 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0080",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 97 y el 27 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0081",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 99 y el 29 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0082",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 01 y el 30 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0083",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 02 y el 31 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0084",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 05 y el 32 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0085",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 07 y el 34 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0086",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 09 y el 36 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0087",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 11 y el 37 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0088",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 12 y el 39 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0089",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 14 y el 40 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0090",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 15 y el 42 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0091",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 16 y el 43 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0092",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 17 y el 45 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0093",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 18 y el 46 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0094",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 19 y el 47 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0095",
+      "category": "recent_interp",
+      "user": "¿Cuál fue la coincidencia más reciente del 21 y el 51 el mismo día según la evidencia? Interpreta limitaciones. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0096",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 41 y el 25, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0097",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 90 y el 35, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0098",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 05 y el 44, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0099",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 08 y el 61, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0100",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 09 y el 72, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0101",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 15 y el 28, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0102",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 16 y el 33, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0103",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 17 y el 49, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0104",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 19 y el 55, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0105",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 21 y el 66, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0106",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 23 y el 70, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0107",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 24 y el 81, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0108",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 26 y el 88, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0109",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 27 y el 04, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0110",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 29 y el 06, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0111",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 30 y el 48, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0112",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 31 y el 52, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0113",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 32 y el 57, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0114",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 34 y el 68, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0115",
+      "category": "position_interp",
+      "user": "Sobre las coincidencias same-day del 36 y el 73, interpreta el significado general sin inventar subtotales de posición. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0116",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 59 y el 60? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0117",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 62 y el 64? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0118",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 65 y el 67? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0119",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 69 y el 71? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0120",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 74 y el 75? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0121",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 76 y el 78? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0122",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 80 y el 83? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0123",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 84 y el 86? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0124",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 87 y el 89? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0125",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 92 y el 93? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0126",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 94 y el 95? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0127",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 96 y el 97? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0128",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 00 y el 98? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0129",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 03 y el 99? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0130",
+      "category": "insufficient_evidence",
+      "user": "¿Qué significa el total de coincidencias same-day del 04 y el 41? Incluye limitaciones y qué no se puede afirmar. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0131",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 25 y el 38 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0132",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 28 y el 54 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0133",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 33 y el 90 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0134",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 44 y el 12 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0135",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 48 y el 07 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0136",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 52 y el 18 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0137",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 57 y el 11 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0138",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 61 y el 14 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0139",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 66 y el 02 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0140",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 68 y el 19 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0141",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 72 y el 05 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0142",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 73 y el 09 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0143",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 78 y el 15 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0144",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 81 y el 16 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0145",
+      "category": "multi_lottery",
+      "user": "Dentro de las 7 loterías oficiales, ¿cuántas veces coincidieron el 85 y el 17 el mismo día? Interpreta el alcance multi-lotería. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0146",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 99 y el 29 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0147",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 01 y el 30 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0148",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 02 y el 31 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0149",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 05 y el 32 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0150",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 07 y el 34 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0151",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 09 y el 36 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0152",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 11 y el 37 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0153",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 12 y el 39 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0154",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 14 y el 40 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0155",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 15 y el 42 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0156",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 16 y el 43 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0157",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 17 y el 45 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0158",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 18 y el 46 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0159",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 19 y el 47 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0160",
+      "category": "followup_interp",
+      "user": "¿Qué significa ese resultado? No inventes desgloses ni subtotales.",
+      "setup": [
+        "¿Han coincidido el 21 y el 51 el mismo día? Interpreta el alcance."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0161",
+      "category": "tabla1_semantics",
+      "user": "Sin exportar ni paginar: interpreta las coincidencias same-day del 11 y el 25 como si revisaras la primera vista de evidencia (fechas y loterías).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0162",
+      "category": "tabla1_semantics",
+      "user": "Sin exportar ni paginar: interpreta las coincidencias same-day del 35 y el 02 como si revisaras la primera vista de evidencia (fechas y loterías).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0163",
+      "category": "tabla1_semantics",
+      "user": "Sin exportar ni paginar: interpreta las coincidencias same-day del 38 y el 03 como si revisaras la primera vista de evidencia (fechas y loterías).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0164",
+      "category": "tabla1_semantics",
+      "user": "Sin exportar ni paginar: interpreta las coincidencias same-day del 50 y el 90 como si revisaras la primera vista de evidencia (fechas y loterías).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0165",
+      "category": "tabla1_semantics",
+      "user": "Sin exportar ni paginar: interpreta las coincidencias same-day del 63 y el 19 como si revisaras la primera vista de evidencia (fechas y loterías).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0166",
+      "category": "tabla1_semantics",
+      "user": "Sin exportar ni paginar: interpreta las coincidencias same-day del 41 y el 25 como si revisaras la primera vista de evidencia (fechas y loterías).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0167",
+      "category": "tabla1_semantics",
+      "user": "Sin exportar ni paginar: interpreta las coincidencias same-day del 90 y el 35 como si revisaras la primera vista de evidencia (fechas y loterías).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0168",
+      "category": "tabla1_semantics",
+      "user": "Sin exportar ni paginar: interpreta las coincidencias same-day del 05 y el 44 como si revisaras la primera vista de evidencia (fechas y loterías).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0169",
+      "category": "tabla1_semantics",
+      "user": "Sin exportar ni paginar: interpreta las coincidencias same-day del 08 y el 61 como si revisaras la primera vista de evidencia (fechas y loterías).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0170",
+      "category": "tabla1_semantics",
+      "user": "Sin exportar ni paginar: interpreta las coincidencias same-day del 09 y el 72 como si revisaras la primera vista de evidencia (fechas y loterías).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0171",
+      "category": "tabla2_semantics",
+      "user": "Sin exportar: interpreta un segundo corte de evidencia para el 16 y el 43 same-day (posiciones y loterías distintas).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0172",
+      "category": "tabla2_semantics",
+      "user": "Sin exportar: interpreta un segundo corte de evidencia para el 17 y el 45 same-day (posiciones y loterías distintas).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0173",
+      "category": "tabla2_semantics",
+      "user": "Sin exportar: interpreta un segundo corte de evidencia para el 18 y el 46 same-day (posiciones y loterías distintas).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0174",
+      "category": "tabla2_semantics",
+      "user": "Sin exportar: interpreta un segundo corte de evidencia para el 19 y el 47 same-day (posiciones y loterías distintas).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0175",
+      "category": "tabla2_semantics",
+      "user": "Sin exportar: interpreta un segundo corte de evidencia para el 21 y el 51 same-day (posiciones y loterías distintas).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0176",
+      "category": "tabla2_semantics",
+      "user": "Sin exportar: interpreta un segundo corte de evidencia para el 22 y el 56 same-day (posiciones y loterías distintas).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0177",
+      "category": "tabla2_semantics",
+      "user": "Sin exportar: interpreta un segundo corte de evidencia para el 23 y el 59 same-day (posiciones y loterías distintas).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0178",
+      "category": "tabla2_semantics",
+      "user": "Sin exportar: interpreta un segundo corte de evidencia para el 24 y el 62 same-day (posiciones y loterías distintas).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0179",
+      "category": "tabla2_semantics",
+      "user": "Sin exportar: interpreta un segundo corte de evidencia para el 25 y el 65 same-day (posiciones y loterías distintas).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0180",
+      "category": "tabla2_semantics",
+      "user": "Sin exportar: interpreta un segundo corte de evidencia para el 26 y el 69 same-day (posiciones y loterías distintas).",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0181",
+      "category": "complex",
+      "user": "Analiza en profundidad las coincidencias same-day del 27 y el 74, y compara el patrón con el del 35 y el 02, sin inventar números.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0182",
+      "category": "complex",
+      "user": "Analiza en profundidad las coincidencias same-day del 28 y el 76, y compara el patrón con el del 38 y el 03, sin inventar números.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0183",
+      "category": "complex",
+      "user": "Analiza en profundidad las coincidencias same-day del 29 y el 80, y compara el patrón con el del 50 y el 90, sin inventar números.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0184",
+      "category": "complex",
+      "user": "Analiza en profundidad las coincidencias same-day del 30 y el 84, y compara el patrón con el del 63 y el 19, sin inventar números.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0185",
+      "category": "complex",
+      "user": "Analiza en profundidad las coincidencias same-day del 07 y el 38, y compara el patrón con el del 41 y el 25, sin inventar números.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0186",
+      "category": "complex",
+      "user": "Analiza en profundidad las coincidencias same-day del 12 y el 50, y compara el patrón con el del 90 y el 35, sin inventar números.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0187",
+      "category": "complex",
+      "user": "Analiza en profundidad las coincidencias same-day del 14 y el 54, y compara el patrón con el del 05 y el 44, sin inventar números.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0188",
+      "category": "complex",
+      "user": "Analiza en profundidad las coincidencias same-day del 18 y el 63, y compara el patrón con el del 08 y el 61, sin inventar números.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0189",
+      "category": "complex",
+      "user": "Analiza en profundidad las coincidencias same-day del 22 y el 77, y compara el patrón con el del 09 y el 72, sin inventar números.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0190",
+      "category": "complex",
+      "user": "Analiza en profundidad las coincidencias same-day del 11 y el 25, y compara el patrón con el del 15 y el 28, sin inventar números.",
+      "setup": [],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0191",
+      "category": "topic_switch_reasoning",
+      "user": "Cambia de tema: ¿han coincidido el 31 y el 52 el mismo día? Interpreta el nuevo resultado.",
+      "setup": [
+        "¿Han coincidido el 16 y el 33 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0192",
+      "category": "topic_switch_reasoning",
+      "user": "Cambia de tema: ¿han coincidido el 32 y el 57 el mismo día? Interpreta el nuevo resultado.",
+      "setup": [
+        "¿Han coincidido el 17 y el 49 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0193",
+      "category": "topic_switch_reasoning",
+      "user": "Cambia de tema: ¿han coincidido el 34 y el 68 el mismo día? Interpreta el nuevo resultado.",
+      "setup": [
+        "¿Han coincidido el 19 y el 55 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0194",
+      "category": "topic_switch_reasoning",
+      "user": "Cambia de tema: ¿han coincidido el 36 y el 73 el mismo día? Interpreta el nuevo resultado.",
+      "setup": [
+        "¿Han coincidido el 21 y el 66 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0195",
+      "category": "topic_switch_reasoning",
+      "user": "Cambia de tema: ¿han coincidido el 37 y el 79 el mismo día? Interpreta el nuevo resultado.",
+      "setup": [
+        "¿Han coincidido el 23 y el 70 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0196",
+      "category": "topic_switch_reasoning",
+      "user": "Cambia de tema: ¿han coincidido el 39 y el 82 el mismo día? Interpreta el nuevo resultado.",
+      "setup": [
+        "¿Han coincidido el 24 y el 81 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0197",
+      "category": "topic_switch_reasoning",
+      "user": "Cambia de tema: ¿han coincidido el 40 y el 85 el mismo día? Interpreta el nuevo resultado.",
+      "setup": [
+        "¿Han coincidido el 26 y el 88 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0198",
+      "category": "topic_switch_reasoning",
+      "user": "Cambia de tema: ¿han coincidido el 42 y el 91 el mismo día? Interpreta el nuevo resultado.",
+      "setup": [
+        "¿Han coincidido el 27 y el 04 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0199",
+      "category": "topic_switch_reasoning",
+      "user": "Cambia de tema: ¿han coincidido el 43 y el 01 el mismo día? Interpreta el nuevo resultado.",
+      "setup": [
+        "¿Han coincidido el 29 y el 06 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    },
+    {
+      "id": "E0200",
+      "category": "topic_switch_reasoning",
+      "user": "Cambia de tema: ¿han coincidido el 45 y el 10 el mismo día? Interpreta el nuevo resultado.",
+      "setup": [
+        "¿Han coincidido el 30 y el 48 el mismo día? Interpreta."
+      ],
+      "expect": {
+        "huawei_eligible": true,
+        "preflight_mode": "explain_evidence",
+        "preflight_invoke": true,
+        "relation": "same_day"
+      }
+    }
+  ]
+}

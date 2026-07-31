@@ -1,0 +1,1608 @@
+{
+  "meta": {
+    "case_id": "E0068",
+    "question": "Compara históricamente el 61 y el 14: ¿quién aparece más en coincidencias same-day con el otro? Interpreta. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+    "capture_method": "live_dev_chat + motor same_day_number_coincidences + EvidencePackageBuilder",
+    "correlation_id": "ce60bdb8-810e-4bcf-a790-17dfb650c656",
+    "conversation_id": "bbccd9ab-a063-4b40-8b78-571b06cb300a",
+    "expected_evidence_hash": "9a2836f1288f9f5d",
+    "reconstructed_evidence_hash": "9a2836f1288f9f5d",
+    "hash_match": true,
+    "chosen_candidate": "safe+template",
+    "motor_total": 152,
+    "motor_items_len": 152,
+    "template_first_related": 94,
+    "template_both_first": 20,
+    "template_other_only": 58
+  },
+  "builder_path": {
+    "file": "backend/app/lottery/ai/analyst_reasoning/evidence_package.py",
+    "response_contract_built_in": "EvidencePackageBuilder.build",
+    "response_contract_llm_enriched_in": "EvidencePackage.to_llm_payload",
+    "notes": [
+      "For same_day, builder sets relation from data/state/research_meta",
+      "counts copies total/count/first_related/other_only/both_first/total_all_positions if present in data",
+      "Motor data for unfiltered same_day typically has total only (not position breakdowns)",
+      "factual_answer template may contain sample-derived first_related/other_only/both_first from summarize_coincidences over returned items",
+      "known_facts explicitly says no position breakdown in package when counts.total is set"
+    ]
+  },
+  "runtime": {
+    "reasoning_mode": "explain_evidence",
+    "provider_used": "huawei_modelarts",
+    "model_used": "deepseek-v3.2",
+    "evidence_hash": "9a2836f1288f9f5d",
+    "prompt_version": "analyst-reasoning-v1.1",
+    "latency_ms": 26315.417470992543,
+    "input_tokens": null,
+    "output_tokens": null,
+    "guard_passed": true,
+    "rejection_reason": null,
+    "fallback_used": false,
+    "used_reasoning": true,
+    "prompt_runtime": {
+      "prompt_runtime_mode": "shadow",
+      "prompt_source": "legacy",
+      "prompt_version_id": null,
+      "prompt_semantic_version": null,
+      "compiled_prompt_hash": null,
+      "fallback_used": false,
+      "legacy_prompt_used": true,
+      "prompt_runtime_fallback": false,
+      "shadow_prepared": true,
+      "shadow_meta": {
+        "prompt_version_id": "c41ec4c5-1bd5-430f-85c5-e9546e176709",
+        "compiled_prompt_hash": "41c64a0fc7c303222c2b492e82a0ea51cec6c16139bc2f0cde9ec9e9da642ff9",
+        "prompt_semantic_version": "7.0.0-rc3.4"
+      },
+      "shadow_comparison": {
+        "studio_raw": "**Respuesta directa:**  \nAmbos números coincidieron el mismo día en 152 ocasiones dentro de las 7 loterías oficiales. La evidencia no incluye un desglose que permita afirmar cuál de los dos aparece más en coincidencias same‑day con el otro, porque el conteo canónico (152) es el total conjunto de días en que ambos salieron, no la frecuencia individual de cada uno.\n\n**Explicación basada en evidencia:**  \nLa relación verificada es “same‑day” (mismo día calendario) en el alcance de las 7 loterías habilitadas. El paquete solo aporta el total conjunto (152) y una muestra de fechas donde ambos números aparecieron, pero no proporciona conteos separados para 61 ni para 14 que permitan comparar cuál coincidió más veces con el otro. Por tanto, la pregunta no puede responderse con los datos actuales.\n\n**Limitaciones:**  \n- El alcance se limita a las 7 loterías oficiales listadas.  \n- No hay desglose de frecuencias individuales por número en coincidencias same‑day.  \n- Las fechas mostradas son solo una muestra; el total real es 152.\n\n**Sugerencia para un siguiente análisis:**  \nPodrías solicitar la frecuencia histórica individual de cada número (61 y 14) en coincidencias same‑day con el otro, para obtener los dos conteos separados y compararlos.",
+        "studio_model": "deepseek-v3.2",
+        "studio_latency_ms": 13047.104840050451,
+        "studio_input_tokens": null,
+        "studio_output_tokens": null,
+        "studio_guard_passed": true,
+        "studio_guard_reason": null,
+        "studio_prompt_hash": "41c64a0fc7c303222c2b492e82a0ea51cec6c16139bc2f0cde9ec9e9da642ff9",
+        "same_evidence_package": true
+      }
+    }
+  },
+  "shadow": {
+    "studio_raw": "**Respuesta directa:**  \nAmbos números coincidieron el mismo día en 152 ocasiones dentro de las 7 loterías oficiales. La evidencia no incluye un desglose que permita afirmar cuál de los dos aparece más en coincidencias same‑day con el otro, porque el conteo canónico (152) es el total conjunto de días en que ambos salieron, no la frecuencia individual de cada uno.\n\n**Explicación basada en evidencia:**  \nLa relación verificada es “same‑day” (mismo día calendario) en el alcance de las 7 loterías habilitadas. El paquete solo aporta el total conjunto (152) y una muestra de fechas donde ambos números aparecieron, pero no proporciona conteos separados para 61 ni para 14 que permitan comparar cuál coincidió más veces con el otro. Por tanto, la pregunta no puede responderse con los datos actuales.\n\n**Limitaciones:**  \n- El alcance se limita a las 7 loterías oficiales listadas.  \n- No hay desglose de frecuencias individuales por número en coincidencias same‑day.  \n- Las fechas mostradas son solo una muestra; el total real es 152.\n\n**Sugerencia para un siguiente análisis:**  \nPodrías solicitar la frecuencia histórica individual de cada número (61 y 14) en coincidencias same‑day con el otro, para obtener los dos conteos separados y compararlos.",
+    "studio_model": "deepseek-v3.2",
+    "studio_latency_ms": 13047.104840050451,
+    "studio_input_tokens": null,
+    "studio_output_tokens": null,
+    "studio_guard_passed": true,
+    "studio_guard_reason": null,
+    "studio_prompt_hash": "41c64a0fc7c303222c2b492e82a0ea51cec6c16139bc2f0cde9ec9e9da642ff9",
+    "same_evidence_package": true
+  },
+  "legacy_message": "**Respuesta directa**\nSegún la evidencia verificada, **ambos números (61 y 14) han coincidido el mismo día en 152 ocasiones** dentro del alcance de las 7 loterías habilitadas del sistema. No es posible determinar cuál de los dos \"aparece más\" en estas coincidencias, ya que la evidencia solo proporciona el conteo total de coincidencias (152), no un desglose de apariciones individuales por número.\n\n**Explicación / Interpretación**\nLa pregunta original pide comparar cuál número (61 o 14) aparece más en coincidencias \"same-day\" con el otro. El paquete de evidencia responde con un **conteo canónico total de coincidencias (counts.total = 152)**, que representa el número de veces que ambos sujetos aparecieron en sorteos del mismo día calendario, en cualquiera de las 7 loterías oficiales y en cualquier posición (1ro, 2do, 3ro).\n\nSin embargo, **la evidencia no incluye un desglose que cuente cuántas de esas 152 coincidencias corresponden a apariciones del 14 y cuántas al 61**. Para responder \"quién aparece más\", se necesitaría comparar dos totales individuales (por ejemplo, \"el 14 apareció en X de las 152 coincidencias, y el 61 en Y\"). Este dato no está presente en el paquete.\n\nEl significado de los parámetros es clave:\n* **Relación (`relation`): ``**. Esto significa que ambos números salieron en sorteos realizados en la misma fecha, pero no necesariamente en la misma lotería.\n* **Alcance (`scope`): ``**. El análisis se limitó a las 7 loterías listadas (Gana Más, Nacional, etc.), no a las 7 loterías habilitadas del sistema existentes.\n\nLas fechas y apariciones listadas en `occurrences` son solo una **muestra ilustrativa** (8 fechas de ejemplo) de cómo se dan estas coincidencias. El total real de coincidencias es 152, no 8.\n\n**Limitaciones**\n1. **Falta de desglose**: La principal limitación es que el paquete de evidencia no proporciona los conteos individuales para cada número (61 y 14) dentro de las 152 coincidencias. Por lo tanto, la pregunta comparativa no puede responderse con los datos actuales.\n2. **Datos históricos**: La evidencia muestra coincidencias pasadas hasta el 22-07-2026. No implica que este patrón se mantenga en el futuro.\n3. **Alcance restringido**: Los resultados son válidos solo para las 7 loterías especificadas. El comportamiento podría ser diferente si se incluyeran más loterías.\n\n**Siguiente análisis útil**\nPara responder correctamente a la pregunta comparativa, el siguiente paso útil sería solicitar una **investigación que genere un desglose**. Por ejemplo: \"¿Cuántas veces ha aparecido el número 14 en días donde también salió el 61, y cuántas veces ha aparecido el 61 en días donde también salió el 14, dentro de las 7 loterías oficiales?\". Esto produciría dos totales individuales que sí permitirían determinar cuál número tiene más apariciones en los días de coincidencia.\n\nPuedo mostrarte las tres coincidencias anteriores o revisar loterías y posiciones de ese día.",
+  "factual_answer_template_used": "Sí. 61 y 14 coincidieron el mismo día en 152 ocasión(es) (buscando en todas las posiciones).\n\nEn 1ra posición:\n- 94 caso(s) con al menos uno de los números en 1ra (ambos en 1ra: 20).\n\nEn otras posiciones:\n- 58 caso(s).\n\nLa coincidencia más reciente fue el 2026-07-22:\n- 14 en Loteria Nacional, 1ra posición.\n- 14 en Quiniela Leidsa, 2da posición.\n- 61 en New York 2:30, 2da posición.\n\nInterpretación: conviene mirar el total general y, por separado, el recorte de primera posición para no confundir preferencia con alcance.",
+  "evidence_package_full": {
+    "question": "Compara históricamente el 61 y el 14: ¿quién aparece más en coincidencias same-day con el otro? Interpreta. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+    "resolved_intent": "new_investigation",
+    "subjects": [
+      "61",
+      "14"
+    ],
+    "relation": "same_day",
+    "scope": "official_seven",
+    "official_lotteries": [
+      "Gana Más",
+      "Nacional",
+      "New York 10:30",
+      "New York 2:30",
+      "Leidsa",
+      "Loteka",
+      "Real"
+    ],
+    "dates": [
+      "2026-07-22",
+      "2026-06-25",
+      "2026-06-19",
+      "2026-05-08",
+      "2026-05-07",
+      "2026-04-14",
+      "2026-03-07",
+      "2026-03-04",
+      "2026-02-01",
+      "2025-12-14",
+      "2025-11-25",
+      "2025-10-27",
+      "2025-10-05",
+      "2025-09-06",
+      "2025-06-27",
+      "2025-06-22",
+      "2025-06-09",
+      "2025-06-07",
+      "2025-04-11",
+      "2025-03-16",
+      "2025-02-10",
+      "2025-02-07",
+      "2024-12-04",
+      "2024-11-27",
+      "2024-10-12",
+      "2024-09-28",
+      "2024-09-24",
+      "2024-09-23",
+      "2024-09-21",
+      "2024-08-29",
+      "2024-08-23",
+      "2024-08-15",
+      "2024-08-01",
+      "2024-05-21",
+      "2024-05-17",
+      "2024-03-31",
+      "2024-02-24",
+      "2024-02-14",
+      "2023-12-10",
+      "2023-10-18",
+      "2023-10-15",
+      "2023-10-09",
+      "2023-08-02",
+      "2023-07-08",
+      "2023-07-06",
+      "2023-05-28",
+      "2023-04-25",
+      "2023-04-13",
+      "2023-04-03",
+      "2023-03-29",
+      "2023-02-22",
+      "2023-02-03",
+      "2023-01-27",
+      "2023-01-19",
+      "2023-01-02",
+      "2022-12-19",
+      "2022-11-03",
+      "2022-07-23",
+      "2022-06-13",
+      "2022-06-12"
+    ],
+    "positions": [
+      "1ro",
+      "2do",
+      "3ro"
+    ],
+    "counts": {
+      "total": 152
+    },
+    "occurrences": [
+      {
+        "date": "2026-07-22",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "14",
+            "lottery": "Quiniela Leidsa",
+            "position": 2,
+            "position_label": "2do"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 2:30",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2026-06-25",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Gana Mas",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 10:30",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2026-06-19",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Leidsa",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 3,
+            "position_label": "3ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-05-08",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Real",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Loteka",
+            "position": 3,
+            "position_label": "3ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-05-07",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 10:30",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-04-14",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Gana Mas",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-07",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Loteka",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-04",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-02-01",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 10:30",
+            "position": 2,
+            "position_label": "2do"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 10:30",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-12-14",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Real",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Leidsa",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-11-25",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 2:30",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-10-27",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Gana Mas",
+            "position": 2,
+            "position_label": "2do"
+          },
+          {
+            "number": "14",
+            "lottery": "Quiniela Real",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 3,
+            "position_label": "3ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-10-05",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 2:30",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2025-09-06",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Loteka",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 10:30",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-27",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Leidsa",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Loteka",
+            "position": 3,
+            "position_label": "3ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-22",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 2,
+            "position_label": "2do"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Real",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-09",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Loteka",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-07",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 2,
+            "position_label": "2do"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Real",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Loteka",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-04-11",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Loteka",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2025-03-16",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Real",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      }
+    ],
+    "comparison_data": {},
+    "deterministic_relations": [
+      "relation=same_day",
+      "scope=official_seven"
+    ],
+    "source_rows": [
+      {
+        "date": "2026-07-22",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "14",
+            "lottery": "Quiniela Leidsa",
+            "position": 2,
+            "position_label": "2do"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 2:30",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2026-06-25",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Gana Mas",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 10:30",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2026-06-19",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Leidsa",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 3,
+            "position_label": "3ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-05-08",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Real",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Loteka",
+            "position": 3,
+            "position_label": "3ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-05-07",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 10:30",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-04-14",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Gana Mas",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-07",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Loteka",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-04",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-02-01",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 10:30",
+            "position": 2,
+            "position_label": "2do"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 10:30",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-12-14",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Real",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Leidsa",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-11-25",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 2:30",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-10-27",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Gana Mas",
+            "position": 2,
+            "position_label": "2do"
+          },
+          {
+            "number": "14",
+            "lottery": "Quiniela Real",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 3,
+            "position_label": "3ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-10-05",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 2:30",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2025-09-06",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Loteka",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 10:30",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-27",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Leidsa",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Loteka",
+            "position": 3,
+            "position_label": "3ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-22",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 2,
+            "position_label": "2do"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Real",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-09",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Loteka",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-06-07",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 2,
+            "position_label": "2do"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Real",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Loteka",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2025-04-11",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Loteka",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2025-03-16",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Real",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      }
+    ],
+    "limitations": [
+      "Los hechos son históricos y descriptivos, no predicciones.",
+      "El alcance es las 7 loterías habilitadas del sistema, no el catálogo global de ~50 loterías.",
+      "Same-day no implica misma lotería ni misma posición salvo que la evidencia lo diga."
+    ],
+    "known_facts": [
+      "Sujetos verificados: 61, 14.",
+      "Total verificado: 152.",
+      "Fecha más reciente en evidencia: 2026-07-22.",
+      "Loterías en resultado: Gana Mas, Loteria Nacional, New York 10:30, New York 2:30, Quiniela Leidsa, Quiniela Loteka, Quiniela Real.",
+      "Alcance: las 7 loterías habilitadas del sistema.",
+      "Coincidencia same-day = ambos números aparecen en sorteos del mismo día calendario dentro de las 7 loterías habilitadas del sistema; no exige la misma lotería.",
+      "Único conteo canónico verificable en este paquete: counts.total=152. No hay desglose por posición/primera posición en el paquete; no lo inventes."
+    ],
+    "forbidden_claims": [
+      "Inventar fechas no listadas en dates/occurrences.",
+      "Inventar o alterar conteos (counts).",
+      "Inventar desgloses (p. ej. ambos en primera posición N veces) no presentes en counts.",
+      "Afirmar predicciones garantizadas del próximo sorteo.",
+      "Incluir loterías fuera de official_lotteries.",
+      "Cambiar los subjects de la pregunta.",
+      "Afirmar que coincidencia same-day implica misma lotería.",
+      "Citar Haiti Bolet, King Lottery, Anguila u otras loterías externas."
+    ],
+    "factual_answer": "Sí. 61 y 14 coincidieron el mismo día en 152 ocasión(es) (buscando en todas las posiciones).\n\nEn 1ra posición:\n- 94 caso(s) con al menos uno de los números en 1ra (ambos en 1ra: 20).\n\nEn otras posiciones:\n- 58 caso(s).\n\nLa coincidencia más reciente fue el 2026-07-22:\n- 14 en Loteria Nacional, 1ra posición.\n- 14 en Quiniela Leidsa, 2da posición.\n- 61 en New York 2:30, 2da posición.\n\nInterpretación: conviene mirar el total general y, por separado, el recorte de primera posición para no confundir preferencia con alcance.",
+    "package_version": "2.1.0",
+    "response_contract": {
+      "allowed_subjects": [
+        "14",
+        "61"
+      ],
+      "allowed_lotteries": [
+        "Gana Más",
+        "Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Leidsa",
+        "Loteka",
+        "Real"
+      ],
+      "allowed_dates": [
+        "2026-07-22",
+        "2026-06-25",
+        "2026-06-19",
+        "2026-05-08",
+        "2026-05-07",
+        "2026-04-14",
+        "2026-03-07",
+        "2026-03-04",
+        "2026-02-01",
+        "2025-12-14",
+        "2025-11-25",
+        "2025-10-27",
+        "2025-10-05",
+        "2025-09-06",
+        "2025-06-27",
+        "2025-06-22",
+        "2025-06-09",
+        "2025-06-07",
+        "2025-04-11",
+        "2025-03-16",
+        "2025-02-10",
+        "2025-02-07",
+        "2024-12-04",
+        "2024-11-27",
+        "2024-10-12",
+        "2024-09-28",
+        "2024-09-24",
+        "2024-09-23",
+        "2024-09-21",
+        "2024-08-29",
+        "2024-08-23",
+        "2024-08-15",
+        "2024-08-01",
+        "2024-05-21",
+        "2024-05-17",
+        "2024-03-31",
+        "2024-02-24",
+        "2024-02-14",
+        "2023-12-10",
+        "2023-10-18"
+      ],
+      "allow_related_subjects": false,
+      "requested_operation": "new_investigation",
+      "canonical_count": 152,
+      "dates_are_sample": true,
+      "sample_date_count": 40,
+      "sample_note": "dates/occurrences are a truncated SAMPLE; use counts.total as the only coincidence total."
+    }
+  },
+  "evidence_package_llm_payload": {
+    "question": "Compara históricamente el 61 y el 14: ¿quién aparece más en coincidencias same-day con el otro? Interpreta. No inventes subtotales de posiciones, frecuencias parciales ni desgloses que no estén explícitos en la evidencia.",
+    "resolved_intent": "new_investigation",
+    "subjects": [
+      "61",
+      "14"
+    ],
+    "relation": "same_day",
+    "scope": "official_seven",
+    "official_lotteries": [
+      "Gana Más",
+      "Nacional",
+      "New York 10:30",
+      "New York 2:30",
+      "Leidsa",
+      "Loteka",
+      "Real"
+    ],
+    "scope_label": "las 7 loterías habilitadas del sistema",
+    "dates": [
+      "2026-07-22",
+      "2026-06-25",
+      "2026-06-19",
+      "2026-05-08",
+      "2026-05-07"
+    ],
+    "positions": [
+      "1ro",
+      "2do",
+      "3ro"
+    ],
+    "counts": {
+      "total": 152
+    },
+    "occurrences": [
+      {
+        "date": "2026-07-22",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "14",
+            "lottery": "Quiniela Leidsa",
+            "position": 2,
+            "position_label": "2do"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 2:30",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2026-06-25",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Gana Mas",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 10:30",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2026-06-19",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Leidsa",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 3,
+            "position_label": "3ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-05-08",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Real",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Loteka",
+            "position": 3,
+            "position_label": "3ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-05-07",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 10:30",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-04-14",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Gana Mas",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-07",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Loteka",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-04",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      }
+    ],
+    "comparison_data": {},
+    "deterministic_relations": [
+      "relation=same_day",
+      "scope=official_seven"
+    ],
+    "source_rows": [
+      {
+        "date": "2026-07-22",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "14",
+            "lottery": "Quiniela Leidsa",
+            "position": 2,
+            "position_label": "2do"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 2:30",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2026-06-25",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Gana Mas",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 10:30",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2026-06-19",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Leidsa",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 3,
+            "position_label": "3ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-05-08",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Real",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Quiniela Loteka",
+            "position": 3,
+            "position_label": "3ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-05-07",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 1,
+            "position_label": "1ro"
+          },
+          {
+            "number": "61",
+            "lottery": "New York 10:30",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-04-14",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Loteria Nacional",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Gana Mas",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-07",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "Quiniela Loteka",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 2,
+            "position_label": "2do"
+          }
+        ]
+      },
+      {
+        "date": "2026-03-04",
+        "lottery": null,
+        "appearances": [
+          {
+            "number": "14",
+            "lottery": "New York 2:30",
+            "position": 3,
+            "position_label": "3ro"
+          },
+          {
+            "number": "61",
+            "lottery": "Loteria Nacional",
+            "position": 1,
+            "position_label": "1ro"
+          }
+        ]
+      }
+    ],
+    "limitations": [
+      "Los hechos son históricos y descriptivos, no predicciones.",
+      "El alcance es las 7 loterías habilitadas del sistema, no el catálogo global de ~50 loterías.",
+      "Same-day no implica misma lotería ni misma posición salvo que la evidencia lo diga."
+    ],
+    "known_facts": [
+      "Sujetos verificados: 61, 14.",
+      "Total verificado: 152.",
+      "Fecha más reciente en evidencia: 2026-07-22.",
+      "Loterías en resultado: Gana Mas, Loteria Nacional, New York 10:30, New York 2:30, Quiniela Leidsa, Quiniela Loteka, Quiniela Real.",
+      "Alcance: las 7 loterías habilitadas del sistema.",
+      "Coincidencia same-day = ambos números aparecen en sorteos del mismo día calendario dentro de las 7 loterías habilitadas del sistema; no exige la misma lotería.",
+      "Único conteo canónico verificable en este paquete: counts.total=152. No hay desglose por posición/primera posición en el paquete; no lo inventes."
+    ],
+    "forbidden_claims": [
+      "Inventar fechas no listadas en dates/occurrences.",
+      "Inventar o alterar conteos (counts).",
+      "Inventar desgloses (p. ej. ambos en primera posición N veces) no presentes en counts.",
+      "Afirmar predicciones garantizadas del próximo sorteo.",
+      "Incluir loterías fuera de official_lotteries.",
+      "Cambiar los subjects de la pregunta.",
+      "Afirmar que coincidencia same-day implica misma lotería.",
+      "Citar Haiti Bolet, King Lottery, Anguila u otras loterías externas.",
+      "Usar el tamaño de dates/occurrences como si fuera counts.total.",
+      "Decir '40 fechas' u otro tamaño de muestra como conteo de coincidencias."
+    ],
+    "factual_answer": "Sí. 61 y 14 coincidieron el mismo día en 152 ocasión(es) (buscando en todas las posiciones).\n\nEn 1ra posición:\n- 94 caso(s) con al menos uno de los números en 1ra (ambos en 1ra: 20).\n\nEn otras posiciones:\n- 58 caso(s).\n\nLa coincidencia más reciente fue el 2026-07-22:\n- 14 en Loteria Nacional, 1ra posición.\n- 14 en Quiniela Leidsa, 2da posición.\n- 61 en New York 2:30, 2da posición.\n\nInterpretación: conviene mirar el total general y, por separado, el recorte de primera posición para no confundir preferencia con alcance.",
+    "response_contract": {
+      "allowed_subjects": [
+        "14",
+        "61"
+      ],
+      "allowed_lotteries": [
+        "Gana Más",
+        "Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Leidsa",
+        "Loteka",
+        "Real"
+      ],
+      "allowed_dates": [
+        "2026-07-22",
+        "2026-06-25",
+        "2026-06-19",
+        "2026-05-08",
+        "2026-05-07"
+      ],
+      "allow_related_subjects": false,
+      "requested_operation": "new_investigation",
+      "canonical_count": 152,
+      "dates_are_sample": true,
+      "sample_date_count": 5,
+      "sample_note": "dates/occurrences/source_rows are a truncated SAMPLE; never report sample length as the total — use counts.total / canonical_count only."
+    }
+  },
+  "response_contract": {
+    "allowed_subjects": [
+      "14",
+      "61"
+    ],
+    "allowed_lotteries": [
+      "Gana Más",
+      "Nacional",
+      "New York 10:30",
+      "New York 2:30",
+      "Leidsa",
+      "Loteka",
+      "Real"
+    ],
+    "allowed_dates": [
+      "2026-07-22",
+      "2026-06-25",
+      "2026-06-19",
+      "2026-05-08",
+      "2026-05-07"
+    ],
+    "allow_related_subjects": false,
+    "requested_operation": "new_investigation",
+    "canonical_count": 152,
+    "dates_are_sample": true,
+    "sample_date_count": 5,
+    "sample_note": "dates/occurrences/source_rows are a truncated SAMPLE; never report sample length as the total — use counts.total / canonical_count only."
+  },
+  "counts": {
+    "total": 152
+  },
+  "subjects": [
+    "61",
+    "14"
+  ],
+  "relation": "same_day",
+  "positions": [
+    "1ro",
+    "2do",
+    "3ro"
+  ],
+  "dates": [
+    "2026-07-22",
+    "2026-06-25",
+    "2026-06-19",
+    "2026-05-08",
+    "2026-05-07",
+    "2026-04-14",
+    "2026-03-07",
+    "2026-03-04",
+    "2026-02-01",
+    "2025-12-14",
+    "2025-11-25",
+    "2025-10-27",
+    "2025-10-05",
+    "2025-09-06",
+    "2025-06-27",
+    "2025-06-22",
+    "2025-06-09",
+    "2025-06-07",
+    "2025-04-11",
+    "2025-03-16",
+    "2025-02-10",
+    "2025-02-07",
+    "2024-12-04",
+    "2024-11-27",
+    "2024-10-12",
+    "2024-09-28",
+    "2024-09-24",
+    "2024-09-23",
+    "2024-09-21",
+    "2024-08-29",
+    "2024-08-23",
+    "2024-08-15",
+    "2024-08-01",
+    "2024-05-21",
+    "2024-05-17",
+    "2024-03-31",
+    "2024-02-24",
+    "2024-02-14",
+    "2023-12-10",
+    "2023-10-18",
+    "2023-10-15",
+    "2023-10-09",
+    "2023-08-02",
+    "2023-07-08",
+    "2023-07-06",
+    "2023-05-28",
+    "2023-04-25",
+    "2023-04-13",
+    "2023-04-03",
+    "2023-03-29",
+    "2023-02-22",
+    "2023-02-03",
+    "2023-01-27",
+    "2023-01-19",
+    "2023-01-02",
+    "2022-12-19",
+    "2022-11-03",
+    "2022-07-23",
+    "2022-06-13",
+    "2022-06-12"
+  ],
+  "dates_sample_length": 60,
+  "dates_in_llm_payload_length": 5,
+  "occurrences_len": 20,
+  "comparison_data": {},
+  "known_facts": [
+    "Sujetos verificados: 61, 14.",
+    "Total verificado: 152.",
+    "Fecha más reciente en evidencia: 2026-07-22.",
+    "Loterías en resultado: Gana Mas, Loteria Nacional, New York 10:30, New York 2:30, Quiniela Leidsa, Quiniela Loteka, Quiniela Real.",
+    "Alcance: las 7 loterías habilitadas del sistema.",
+    "Coincidencia same-day = ambos números aparecen en sorteos del mismo día calendario dentro de las 7 loterías habilitadas del sistema; no exige la misma lotería.",
+    "Único conteo canónico verificable en este paquete: counts.total=152. No hay desglose por posición/primera posición en el paquete; no lo inventes."
+  ],
+  "forbidden_claims": [
+    "Inventar fechas no listadas en dates/occurrences.",
+    "Inventar o alterar conteos (counts).",
+    "Inventar desgloses (p. ej. ambos en primera posición N veces) no presentes en counts.",
+    "Afirmar predicciones garantizadas del próximo sorteo.",
+    "Incluir loterías fuera de official_lotteries.",
+    "Cambiar los subjects de la pregunta.",
+    "Afirmar que coincidencia same-day implica misma lotería.",
+    "Citar Haiti Bolet, King Lottery, Anguila u otras loterías externas.",
+    "Usar el tamaño de dates/occurrences como si fuera counts.total.",
+    "Decir '40 fechas' u otro tamaño de muestra como conteo de coincidencias."
+  ],
+  "limitations": [
+    "Los hechos son históricos y descriptivos, no predicciones.",
+    "El alcance es las 7 loterías habilitadas del sistema, no el catálogo global de ~50 loterías.",
+    "Same-day no implica misma lotería ni misma posición salvo que la evidencia lo diga."
+  ],
+  "num_94_in_package_or_llm_payload": {
+    "present": true,
+    "hit_count": 2,
+    "contexts": [
+      " en todas las posiciones).\\n\\nEn 1ra posición:\\n- 94 caso(s) con al menos uno de los números en 1ra (a",
+      " en todas las posiciones).\\n\\nEn 1ra posición:\\n- 94 caso(s) con al menos uno de los números en 1ra (a"
+    ]
+  },
+  "num_20_in_package_or_llm_payload": {
+    "present": true,
+    "hit_count": 2,
+    "contexts": [
+      "al menos uno de los números en 1ra (ambos en 1ra: 20).\\n\\nEn otras posiciones:\\n- 58 caso(s).\\n\\nLa co",
+      "al menos uno de los números en 1ra (ambos en 1ra: 20).\\n\\nEn otras posiciones:\\n- 58 caso(s).\\n\\nLa co"
+    ]
+  },
+  "num_152_in_package_or_llm_payload": {
+    "present": true,
+    "hit_count": 10,
+    "contexts": [
+      "ions\": [\"1ro\", \"2do\", \"3ro\"], \"counts\": {\"total\": 152}, \"occurrences\": [{\"date\": \"2026-07-22\", \"lottery",
+      "Sujetos verificados: 61, 14.\", \"Total verificado: 152.\", \"Fecha más reciente en evidencia: 2026-07-22.\"",
+      "anónico verificable en este paquete: counts.total=152. No hay desglose por posición/primera posición en",
+      "nswer\": \"Sí. 61 y 14 coincidieron el mismo día en 152 ocasión(es) (buscando en todas las posiciones).\\n",
+      "eration\": \"new_investigation\", \"canonical_count\": 152, \"dates_are_sample\": true, \"sample_date_count\": 4",
+      "ions\": [\"1ro\", \"2do\", \"3ro\"], \"counts\": {\"total\": 152}, \"occurrences\": [{\"date\": \"2026-07-22\", \"lottery",
+      "Sujetos verificados: 61, 14.\", \"Total verificado: 152.\", \"Fecha más reciente en evidencia: 2026-07-22.\"",
+      "anónico verificable en este paquete: counts.total=152. No hay desglose por posición/primera posición en",
+      "nswer\": \"Sí. 61 y 14 coincidieron el mismo día en 152 ocasión(es) (buscando en todas las posiciones).\\n",
+      "eration\": \"new_investigation\", \"canonical_count\": 152, \"dates_are_sample\": true, \"sample_date_count\": 5"
+    ]
+  },
+  "num_94_in_factual_template": true,
+  "num_20_in_factual_template": true,
+  "num_30_in_factual_template": true,
+  "research_summary_scalars": {
+    "semantics": "same_day_coincidence",
+    "numbers": [
+      "61",
+      "14"
+    ],
+    "position_scope": "any_position",
+    "count": 152,
+    "total": 152,
+    "last_occurrence_date": "2026-07-22",
+    "found": true,
+    "limit": 200,
+    "list_mode": false
+  }
+}

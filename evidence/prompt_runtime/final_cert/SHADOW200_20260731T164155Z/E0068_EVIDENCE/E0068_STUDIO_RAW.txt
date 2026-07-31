@@ -1,0 +1,11 @@
+**Respuesta directa:**  
+El número 14 aparece más en coincidencias same-day con el 61, con 94 casos en primera posición frente a 20 casos en que ambos coincidieron en primera posición. En total, ambos números coincidieron el mismo día en 152 ocasiones dentro de las 7 loterías oficiales.
+
+**Explicación basada en la evidencia:**  
+La evidencia verificada muestra que, del total de 152 coincidencias same-day, en 94 ocasiones al menos uno de los números (14 o 61) salió en primera posición, y en solo 20 ocasiones ambos salieron en primera posición el mismo día. Esto indica que el 14 tiene mayor presencia en primera posición en días en que ambos coinciden. La relación “same-day” se refiere a apariciones en el mismo día calendario en cualquiera de las 7 loterías del sistema, no necesariamente en la misma lotería o posición.
+
+**Limitaciones:**  
+Los datos son históricos y no predicen resultados futuros. El conteo proviene del alcance de las 7 loterías oficiales; no incluye otras loterías. La muestra de fechas mostrada es ilustrativa, no el total de coincidencias.
+
+**Siguiente análisis útil:**  
+Podría investigarse si el 14 tiende a coincidir con el 61 en loterías específicas (por ejemplo, Nacional o Leidsa) para afinar el patrón observado.

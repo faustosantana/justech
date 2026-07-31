@@ -1,0 +1,35 @@
+{
+  "offline": {
+    "fail_detected": 30,
+    "good_pass": 30,
+    "n": 30
+  },
+  "sanitize_removes_94": true,
+  "94_20_from_factual_answer": true,
+  "94_20_in_counts": false,
+  "guard_fail_studio": {
+    "passed": false,
+    "unauthorized_breakdown": true,
+    "reason": "unauthorized_breakdown:position"
+  },
+  "guard_good": {
+    "passed": true
+  },
+  "contract": {
+    "allowed_dimensions": [
+      "total"
+    ],
+    "allowed_counts": [
+      152
+    ],
+    "forbidden_inferences": [
+      "position_breakdown",
+      "lottery_breakdown",
+      "date_breakdown",
+      "subject_subtotals",
+      "frequency_breakdown",
+      "percentage_claims",
+      "ranking_without_totals"
+    ]
+  }
+}

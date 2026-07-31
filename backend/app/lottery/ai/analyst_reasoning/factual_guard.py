@@ -45,6 +45,7 @@ _NON_SUBJECT_CONTEXT = re.compile(
     r"|\bposici[oó]n(?:es)?\s+\d{1,2}\b"
     r"|\b\d{1,2}\s*(?:ª|º|°)\b"
     r"|\b\d{1,5}\s+(?:ocasiones|veces|coincidencias|apariciones|fechas|registros|d[ií]as|sorteos|loter[ií]as)\b"
+    r"|\blas?\s+\d{1,2}\s+(?:loter[ií]as|habilitadas|oficiales)\b"
     r"|\b(?:total|coincid(?:ieron|en|e)|conteo|cantidad)\s+(?:de\s+)?(?:en\s+)?\d{1,5}\b"
     r"|\blas?\s+otras?\s+\d{1,2}\b"
     r"|\b\d{1,2}\s+de\s+(?:enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre)\b"
@@ -68,6 +69,7 @@ class GuardResult:
     text: str
     rejection_reason: str | None = None
     violations: list[str] = field(default_factory=list)
+    unauthorized_breakdown: bool = False
 
 
 class FactualGuard:
@@ -115,7 +117,7 @@ class FactualGuard:
                         continue
                     if claimed != t:
                         # Allow explicit sample-size wording (not a coincidence total)
-                        span = raw[max(0, m.start() - 32) : m.end() + 24]
+                        span = raw[max(0, m.start() - 48) : m.end() + 40]
                         if re.search(
                             r"(?:\bla\s+muestra\s+de|\bmuestra\s+truncad|\bsample(?:\s+size)?(?:\s+of)?)\s*\d{1,5}\b",
                             span,
@@ -125,6 +127,32 @@ class FactualGuard:
                         # Also: "muestra de 40 fechas es truncada"
                         if re.search(r"\bmuestra\s+de\s+\d{1,5}\s+fechas\b", span, re.I) and re.search(
                             r"truncad|sample", span, re.I
+                        ):
+                            continue
+                        # "solo 5 fechas de ejemplo" / "5 fechas de ejemplo" — sample, not total
+                        if re.search(
+                            r"(?:"
+                            r"solo\s+\d{1,5}\s+fechas|"
+                            r"\d{1,5}\s+fechas\s+(?:de\s+)?ejemplo|"
+                            r"fechas\s+de\s+ejemplo|"
+                            r"\bejemplo\b|\bmuestra\b|\bsample\b|\btruncad"
+                            r")",
+                            span,
+                            re.I,
+                        ):
+                            continue
+                        # Threshold / comparison echoes (user asked "más de 40"; model says
+                        # "134 ocasiones… supera … umbral de 40 veces") — not a claimed total.
+                        if re.search(
+                            r"(?:"
+                            r"m[aá]s\s+de|menos\s+de|al\s+menos|"
+                            r"por\s+encima\s+de|por\s+debajo\s+de|"
+                            r"umbral(?:\s+de)?|"
+                            r"superand[oa]|supera|"
+                            r"ampliamente|claramente|mencionado"
+                            r").{0,48}?\b\d{1,5}\b",
+                            span,
+                            re.I | re.S,
                         ):
                             continue
                         violations.append(f"count_mismatch:{claimed}!={t}")
@@ -153,14 +181,30 @@ class FactualGuard:
                         raw,
                         re.I,
                     ):
-                        span = raw[max(0, m.start() - 24) : m.end() + 24]
-                        if re.search(r"\bmuestra\b|\bsample\b|\btruncad", span, re.I):
+                        span = raw[max(0, m.start() - 24) : m.end() + 40]
+                        if re.search(
+                            r"\bmuestra\b|\bsample\b|\btruncad|\bejemplo\b|"
+                            r"solo\s+\d{1,5}\s+fechas|"
+                            r"fechas\s+de\s+ejemplo",
+                            span,
+                            re.I,
+                        ):
                             continue
                         violations.append(f"count_mismatch:{sample_n}!={t}")
                         break
 
         # --- subject_guard (linguistic, not global digit scrape) ---
         violations.extend(cls._subject_guard(raw, package))
+
+        # --- unauthorized dimensional breakdowns ---
+        from app.lottery.ai.analyst_reasoning.response_dimensions import (
+            text_has_unauthorized_breakdown,
+        )
+
+        for tag in text_has_unauthorized_breakdown(
+            raw, package.counts if isinstance(package.counts, dict) else {}
+        ):
+            violations.append(tag)
 
         # --- lottery_guard ---
         for m in re.finditer(
@@ -172,10 +216,18 @@ class FactualGuard:
             if not is_official_lottery(name) and not cls._partial_official(name):
                 violations.append(f"non_official_lottery:{name}")
 
+        unauth = [v for v in violations if str(v).startswith("unauthorized_breakdown")]
         if violations:
-            result = GuardResult(False, raw, violations[0], violations)
+            reason = unauth[0] if unauth else violations[0]
+            result = GuardResult(
+                False,
+                raw,
+                reason,
+                violations,
+                unauthorized_breakdown=bool(unauth),
+            )
         else:
-            result = GuardResult(True, raw, None, [])
+            result = GuardResult(True, raw, None, [], unauthorized_breakdown=False)
         try:
             from app.lottery.ai.forensics import ForensicTraceService, get_correlation_id
 
@@ -226,9 +278,9 @@ class FactualGuard:
         scrubbed = re.sub(r"\b\d{1,2}[/-]\d{1,2}(?:[/-]\d{2,4})?\b", " ", scrubbed)
 
         claimed: set[str] = set()
-        # Explicit subject mentions
+        # Explicit subject mentions ("el 63", "número 19") — not "las 7 loterías"
         for m in re.finditer(
-            r"\b(?:el|los|la|las|n[uú]mero|numero|bola)\s+(\d{1,2})\b",
+            r"\b(?:el|los|n[uú]mero|numero|bola)\s+(\d{1,2})\b",
             scrubbed,
             re.I,
         ):

@@ -74,6 +74,10 @@ class EvidencePackage(BaseModel):
     def to_llm_payload(self) -> dict[str, Any]:
         """Compact payload for the model — no internals beyond verified fields."""
         from app.lottery.ai.analyst_reasoning.allowed_subjects import AllowedSubjectSet
+        from app.lottery.ai.analyst_reasoning.response_dimensions import (
+            enrich_response_contract,
+            sanitize_factual_answer_for_contract,
+        )
 
         allowed = AllowedSubjectSet.from_evidence_package(self)
         contract = dict(self.response_contract or {})
@@ -81,9 +85,6 @@ class EvidencePackage(BaseModel):
             contract["allowed_subjects"] = allowed.to_contract_list()
         contract.setdefault("allow_related_subjects", False)
         contract.setdefault("allowed_lotteries", list(self.official_lotteries))
-        total = self.counts.get("total") if isinstance(self.counts, dict) else None
-        if total is not None:
-            contract["canonical_count"] = total
         # Send only a few date anchors to the LLM — long date lists cause "N fechas" hallucinations.
         date_anchors = list(self.dates[:5])
         sample_n = len(date_anchors)
@@ -96,6 +97,22 @@ class EvidencePackage(BaseModel):
         )
         if self.resolved_intent and "requested_operation" not in contract:
             contract["requested_operation"] = self.resolved_intent
+        contract = enrich_response_contract(
+            contract,
+            counts=self.counts if isinstance(self.counts, dict) else {},
+            resolved_intent=self.resolved_intent,
+            relation=self.relation,
+        )
+        factual_for_llm = sanitize_factual_answer_for_contract(
+            self.factual_answer,
+            self.counts if isinstance(self.counts, dict) else {},
+        )
+        forbidden = list(self.forbidden_claims) + [
+            "Usar el tamaño de dates/occurrences como si fuera counts.total.",
+            "Decir '40 fechas' u otro tamaño de muestra como conteo de coincidencias.",
+            "Usar cifras de factual_answer que no estén en response_contract.allowed_counts.",
+            "Inventar desgloses por posición/lotería/fecha/sujeto no autorizados en allowed_dimensions.",
+        ]
         return {
             "question": self.question,
             "resolved_intent": self.resolved_intent,
@@ -113,12 +130,8 @@ class EvidencePackage(BaseModel):
             "source_rows": self.source_rows[:8],
             "limitations": self.limitations,
             "known_facts": self.known_facts,
-            "forbidden_claims": self.forbidden_claims
-            + [
-                "Usar el tamaño de dates/occurrences como si fuera counts.total.",
-                "Decir '40 fechas' u otro tamaño de muestra como conteo de coincidencias.",
-            ],
-            "factual_answer": self.factual_answer,
+            "forbidden_claims": forbidden,
+            "factual_answer": factual_for_llm,
             "response_contract": contract,
         }
 
@@ -186,19 +199,26 @@ class EvidencePackageBuilder:
 
         allowed = AllowedSubjectSet.from_values(subjects)
         total_count = counts.get("total") if isinstance(counts, dict) else None
-        response_contract = {
-            "allowed_subjects": allowed.to_contract_list(),
-            "allowed_lotteries": list(official_lottery_names()),
-            "allowed_dates": list(dates[:40]),
-            "allow_related_subjects": False,
-            "requested_operation": str(intent) if intent else (str(relation) if relation else "analysis"),
-            "canonical_count": total_count,
-            "dates_are_sample": True,
-            "sample_date_count": min(40, len(dates)),
-            "sample_note": (
-                "dates/occurrences are a truncated SAMPLE; use counts.total as the only coincidence total."
-            ),
-        }
+        from app.lottery.ai.analyst_reasoning.response_dimensions import enrich_response_contract
+
+        response_contract = enrich_response_contract(
+            {
+                "allowed_subjects": allowed.to_contract_list(),
+                "allowed_lotteries": list(official_lottery_names()),
+                "allowed_dates": list(dates[:40]),
+                "allow_related_subjects": False,
+                "requested_operation": str(intent) if intent else (str(relation) if relation else "analysis"),
+                "canonical_count": total_count,
+                "dates_are_sample": True,
+                "sample_date_count": min(40, len(dates)),
+                "sample_note": (
+                    "dates/occurrences are a truncated SAMPLE; use counts.total as the only coincidence total."
+                ),
+            },
+            counts=counts if isinstance(counts, dict) else {},
+            resolved_intent=str(intent) if intent else None,
+            relation=str(relation) if relation else None,
+        )
 
         return EvidencePackage(
             question=question or "",

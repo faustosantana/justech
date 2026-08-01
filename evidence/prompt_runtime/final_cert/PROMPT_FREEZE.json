@@ -1,0 +1,8 @@
+{
+  "name": "LOTTERY_ANALYST_REASONING_STUDIO",
+  "semantic_version": "7.0.0-rc3.5",
+  "version_id": "10a3440c-60ff-4882-b5b1-1ba240df809e",
+  "compiled_prompt_hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+  "expected_hash": "f9cb83c80271de345fb3b50a08cc9a76b31c66666d2dcb55517bbb7059d21149",
+  "note": "Freeze manifest for shadow eligible suites under rc3.5. Not a case dataset."
+}

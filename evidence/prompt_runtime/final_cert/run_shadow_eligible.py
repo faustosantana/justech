@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Shadow eligible certification runner (concurrency-controlled, classified errors).
 
-Product frozen: prompt 7.0.0-rc3.4. Harness-only remediation.
+Harness resolves EXPECTED_HASH from runtime status / env / freeze — never a silent legacy default.
 """
 from __future__ import annotations
 
 import json
 import os
 import re
+import sys
 import threading
 import time
 import traceback
@@ -21,6 +22,20 @@ from uuid import UUID, uuid4
 
 from app.core.security import create_access_token
 
+_HERE = Path(__file__).resolve().parent
+if str(_HERE) not in sys.path:
+    sys.path.insert(0, str(_HERE))
+if "/tmp" not in sys.path:
+    sys.path.insert(0, "/tmp")
+
+from prompt_hash_precheck import (  # noqa: E402
+    PromptHashPrecheckError,
+    annotate_hash_fields,
+    classify_hash_mismatch,
+    precheck_or_exit,
+    write_run_freeze,
+)
+
 BASE = os.environ.get("FORENSIC_BASE_URL", "http://127.0.0.1:8000/api/v1")
 OUT = Path(os.environ.get("SHADOW_OUT", "/tmp/shadow_eligible_out"))
 OUT.mkdir(parents=True, exist_ok=True)
@@ -31,9 +46,9 @@ AUTH = json.loads(Path("/tmp/routing3_auth.json").read_text()) if Path("/tmp/rou
 }
 UID, TID, ROLE = AUTH["uid"], AUTH["tid"], AUTH.get("role") or "owner"
 SUITE = Path(os.environ.get("SUITE_PATH", "/tmp/SHADOW200_ELIGIBLE.json"))
-EXPECTED_HASH = os.environ.get(
-    "EXPECTED_HASH", "41c64a0fc7c303222c2b492e82a0ea51cec6c16139bc2f0cde9ec9e9da642ff9"
-)
+# No hardcoded legacy default. Resolved in main() via prompt_hash_precheck.
+EXPECTED_HASH: str | None = (os.environ.get("EXPECTED_HASH") or "").strip() or None
+HASH_SOURCE: str | None = None
 CONCURRENCY = max(1, int(os.environ.get("SHADOW_CONCURRENCY", "1")))
 CASE_LIMIT = int(os.environ.get("CASE_LIMIT", "0") or "0")
 CASE_START = int(os.environ.get("CASE_START", "0") or "0")
@@ -42,6 +57,7 @@ SESSION_TIMEOUT = float(os.environ.get("SHADOW_SESSION_TIMEOUT", "90"))
 MESSAGE_TIMEOUT = float(os.environ.get("SHADOW_MESSAGE_TIMEOUT", "600"))
 MAX_INFRA_RETRIES = int(os.environ.get("SHADOW_MAX_INFRA_RETRIES", "1"))
 HEARTBEAT_SEC = 30
+FREEZE_PATH = os.environ.get("PROMPT_FREEZE_PATH", "/tmp/PROMPT_FREEZE.json")
 
 _sem = threading.Semaphore(CONCURRENCY)
 _lock = threading.Lock()
@@ -117,21 +133,27 @@ def word_stats(text: str) -> dict:
 
 
 def classify_product(row: dict) -> str:
-    """Return product_pass|product_fail|not_eligible|… already set on env errors."""
+    """Return product_pass|product_fail|not_eligible|harness_configuration_error|…"""
     if row.get("error_class") in {
         "timeout_error",
         "auth_error",
         "environment_error",
         "harness_error",
+        "harness_configuration_error",
     }:
         return row["error_class"]
     if not row.get("eligible_shadow"):
         return "not_eligible"
+    observed = row.get("observed_prompt_hash") or row.get("prompt_hash")
+    expected = row.get("expected_prompt_hash") or EXPECTED_HASH
+    mismatch_cls = classify_hash_mismatch(observed, expected)
+    if mismatch_cls:
+        # Hash mismatch is never a product_fail.
+        row["error_class"] = mismatch_cls
+        return mismatch_cls
     if row.get("hallucination") or row.get("studio_guard_passed") is False:
         return "product_fail"
     if row.get("extra_subjects") or row.get("missing_subjects") or row.get("altered_subjects"):
-        return "product_fail"
-    if row.get("prompt_hash") != EXPECTED_HASH:
         return "product_fail"
     if row.get("same_evidence_package") is False:
         return "product_fail"
@@ -205,10 +227,8 @@ def extract_row(c: dict, r: dict, *, correlation_id: str, attempts: int, env_ret
         "missing_subjects": [],
         "altered_subjects": [],
         "fallback": bool(pr.get("fallback_used")),
-        "prompt_hash": ph,
         "prompt_version": pr.get("prompt_semantic_version"),
         "prompt_version_id": pr.get("prompt_version_id"),
-        "hash_ok": (ph == EXPECTED_HASH) if (eligible and ph) else None,
         "eligible_shadow": bool(eligible),
         "attempts": attempts,
         "environment_retry": env_retry,
@@ -218,6 +238,12 @@ def extract_row(c: dict, r: dict, *, correlation_id: str, attempts: int, env_ret
         "hallucination": hallucination,
         "total_latency_ms": r.get("_latency_ms"),
     }
+    annotate_hash_fields(
+        row,
+        observed=ph,
+        expected=EXPECTED_HASH,
+        hash_source=HASH_SOURCE,
+    )
     row["result_class"] = classify_product(row)
     row["product_pass"] = row["result_class"] == "product_pass"
     row["product_fail"] = row["result_class"] == "product_fail"
@@ -361,16 +387,19 @@ def summarize(results: list[dict]) -> dict:
         "auth_error": cnt("auth_error"),
         "timeout_error": cnt("timeout_error"),
         "harness_error": cnt("harness_error"),
+        "harness_configuration_error": cnt("harness_configuration_error"),
         "not_eligible": cnt("not_eligible"),
         "hallucinations": sum(1 for r in results if r.get("hallucination")),
         "extra_subjects_cases": sum(1 for r in results if r.get("extra_subjects")),
         "missing_subjects_cases": sum(1 for r in results if r.get("missing_subjects")),
         "altered_subjects_cases": sum(1 for r in results if r.get("altered_subjects")),
         "studio_guard_pass": sum(1 for r in eligible if r.get("studio_guard_passed") is True),
-        "hash_match": sum(1 for r in eligible if r.get("hash_ok") is True),
+        "hash_match": sum(1 for r in eligible if r.get("hash_match") is True or r.get("hash_ok") is True),
         "same_evidence_package": sum(1 for r in eligible if r.get("same_evidence_package") is True),
         "fallback_true": sum(1 for r in results if r.get("fallback")),
         "retries_used": sum(1 for r in results if r.get("environment_retry")),
+        "expected_prompt_hash": EXPECTED_HASH,
+        "hash_source": HASH_SOURCE,
         "concurrency": CONCURRENCY,
         "studio_p50_ms": pct(lats, 50),
         "studio_p95_ms": pct(lats, 95),
@@ -395,13 +424,49 @@ def summarize(results: list[dict]) -> dict:
         and summary["timeout_error"] == 0
         and summary["environment_error"] == 0
         and summary["harness_error"] == 0
+        and summary["harness_configuration_error"] == 0
         and summary["not_eligible"] == 0
         and summary["eligible_product_pass"] == summary["eligible_completed"]
     )
     return summary
 
 
+def _resolve_hash_or_abort() -> None:
+    global EXPECTED_HASH, HASH_SOURCE
+    tok = create_access_token(subject=UID, tenant_id=UUID(TID), role=ROLE)
+    headers = {"Authorization": f"Bearer {tok}", "X-Tenant-Id": TID}
+    try:
+        resolved = precheck_or_exit(
+            base_url=BASE,
+            auth_headers=headers,
+            env_expected_hash=EXPECTED_HASH,
+            freeze_path=FREEZE_PATH if Path(FREEZE_PATH).exists() else None,
+        )
+    except PromptHashPrecheckError as exc:
+        print(str(exc), flush=True)
+        raise SystemExit(2) from exc
+    EXPECTED_HASH = resolved.expected_hash
+    HASH_SOURCE = resolved.hash_source
+    write_run_freeze(OUT / "PROMPT_FREEZE.json", resolved)
+    print(
+        "PROMPT_HASH_PRECHECK_OK "
+        + json.dumps(
+            {
+                "prompt_version": resolved.active_semantic_version,
+                "version_id": resolved.active_version_id,
+                "expected_hash": resolved.expected_hash,
+                "hash_source": resolved.hash_source,
+                "active_hash": resolved.active_hash,
+                "freeze_hash": resolved.freeze_hash,
+            },
+            ensure_ascii=False,
+        ),
+        flush=True,
+    )
+
+
 def main() -> None:
+    _resolve_hash_or_abort()
     cases = json.loads(SUITE.read_text())["cases"]
     if CASE_START:
         cases = cases[CASE_START:]
@@ -412,7 +477,8 @@ def main() -> None:
     checkpoint = OUT / "CHECKPOINT.json"
     results: list[dict] = []
     done_ids: set[str] = set()
-    if checkpoint.exists():
+    # Fresh runs only: never resume a prior suite checkpoint unless explicitly allowed.
+    if os.environ.get("SHADOW_ALLOW_RESUME") == "1" and checkpoint.exists():
         prev = json.loads(checkpoint.read_text())
         results = list(prev.get("results") or [])
         done_ids = {r.get("case_id") for r in results if r.get("case_id")}
@@ -425,6 +491,7 @@ def main() -> None:
     pending = [c for c in cases if c["id"] not in done_ids]
     print(
         f"START eligible_runner n={len(cases)} pending={len(pending)} concurrency={CONCURRENCY} "
+        f"expected_hash={EXPECTED_HASH} hash_source={HASH_SOURCE} "
         f"at={datetime.now(timezone.utc).isoformat()}",
         flush=True,
     )

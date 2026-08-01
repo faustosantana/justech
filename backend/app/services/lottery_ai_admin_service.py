@@ -390,20 +390,13 @@ class LotteryAiAdminService:
 
         await self.db.flush()
 
-        # Promote Prompt Maestro v5: archive prior active rows and activate v5 body.
+        # Promote Prompt Maestro v5 body sync. Never archive other prompt families here.
         if v5_code:
             rows = (
                 await self.db.execute(select(LotteryAiPromptVersion))
             ).scalars().all()
             v5_row = next((r for r in rows if r.version == "v5"), None)
             if v5_row:
-                for r in rows:
-                    if r.version != "v5" and r.status == "active" and r.version != "v6":
-                        # Leave v6 handling to analyst seed below
-                        if "analyst" not in (str(r.name or "").lower()) and "V6" not in (
-                            str(r.name or "")
-                        ):
-                            r.status = "archived"
                 v5_row.status = "motor"
                 v5_row.body = v5_code.body
                 v5_row.checksum = _checksum(v5_code.body)
@@ -458,32 +451,50 @@ class LotteryAiAdminService:
             # Sync body from code only when checksum matches seed path (no silent prod edit:
             # if DB body differs from code and status is active, keep DB and record note —
             # force sync from code on seed to guarantee platform default).
+            new_checksum = _checksum(v6_code.body)
+            changed = (
+                (v6_row.body or "") != (v6_code.body or "")
+                or (v6_row.checksum or "") != new_checksum
+                or v6_row.name != v6_code.name
+            )
             v6_row.body = v6_code.body
-            v6_row.checksum = _checksum(v6_code.body)
+            v6_row.checksum = new_checksum
             v6_row.name = v6_code.name
             v6_row.description = v6_code.description
             v6_row.changelog = v6_code.changelog
             v6_row.temperature = v6_code.temperature
             v6_row.max_tokens = v6_code.max_tokens
             v6_row.variables = v6_code.variables
-            v6_row.status = "active"
+            if v6_row.status != "active":
+                v6_row.status = "active"
+                changed = True
             v6_row.published_at = v6_row.published_at or datetime.now(timezone.utc)
-            v6_row.updated_at = datetime.now(timezone.utc)
             tags = list(v6_row.tags or []) if isinstance(v6_row.tags, list) else []
             for t in ("system", "seed", "v6", "analyst", "human"):
                 if t not in tags:
                     tags.append(t)
+                    changed = True
             v6_row.tags = tags
+            if changed:
+                v6_row.updated_at = datetime.now(timezone.utc)
 
-        # Only one chat-active analyst prompt
+        # Single-active is scoped per prompt family. V6 must not archive Reasoning Studio.
+        from app.lottery.ai.prompt_runtime.prompt_families import (
+            FAMILY_ANALYST_V6,
+            enforce_single_active_in_family,
+        )
+
         rows = (await self.db.execute(select(LotteryAiPromptVersion))).scalars().all()
         for r in rows:
-            if r.version == "v6":
-                r.status = "active"
-            elif r.version == "v5":
+            if r.version == "v5" and r.status != "motor":
                 r.status = "motor"
-            elif r.status == "active":
-                r.status = "archived"
+        v6_row.status = "active"
+        enforce_single_active_in_family(
+            list(rows),
+            family=FAMILY_ANALYST_V6,
+            keep_id=v6_row.id,
+            demote_to="archived",
+        )
         await self.db.flush()
 
         analyst_v6.set_analyst_from_db(

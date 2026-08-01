@@ -212,19 +212,26 @@ class HermesDecisionEngine:
             decision.reason_code = route.reason_code or "SOCIAL_CHITCHAT_MATCH"
             decision.inherited_subjects = []
             return decision
+        from app.lottery.ai.conversational_integrity import explicit_subjects_override
+
+        subject_override = explicit_subjects_override(msg_nums, active_pair)
+
         if route.path == "asset_operation" and route.workspace_action is not None:
-            ws = route.workspace_action
-            decision.turn_type = "asset_action"
-            decision.requires_research = False
-            decision.reuse_evidence = False
-            decision.confidence = "high"
-            decision.reason_code = route.reason_code or ws.reason_code
-            decision.inherited_subjects = active_pair[:8]
-            decision.inherited_relation = relation or "same_day"
-            decision.inherited_metric = relation or "same_day"
-            decision.workspace_action = ws.to_trace()
-            decision.requested_attribute = ws.action
-            return decision
+            # Guard: never bind workspace ops to sticky subjects when the message
+            # introduces a different explicit pair/subject.
+            if subject_override is None:
+                ws = route.workspace_action
+                decision.turn_type = "asset_action"
+                decision.requires_research = False
+                decision.reuse_evidence = False
+                decision.confidence = "high"
+                decision.reason_code = route.reason_code or ws.reason_code
+                decision.inherited_subjects = active_pair[:8]
+                decision.inherited_relation = relation or "same_day"
+                decision.inherited_metric = relation or "same_day"
+                decision.workspace_action = ws.to_trace()
+                decision.requested_attribute = ws.action
+                return decision
 
         # Investigation Workspace 1.0 — legacy detector (boot without materializable inv)
         from app.lottery.ai.investigation_workspace.speech_acts import (
@@ -239,7 +246,7 @@ class HermesDecisionEngine:
             has_active_asset=has_asset,
             has_active_investigation=False,
         )
-        if ws is not None:
+        if ws is not None and subject_override is None:
             decision.turn_type = "asset_action"
             decision.requires_research = False
             decision.reuse_evidence = False
@@ -270,9 +277,10 @@ class HermesDecisionEngine:
             decision.reason_code = "EXPLICIT_NEW_RESEARCH"
             return decision
 
-        # Explicit analyze/investiga phrases with a single subject (even without prior inv)
+        # Explicit analyze/investiga phrases with a single subject (even without prior inv).
+        # analiz\w* covers "analiza"/"analizar"; plain "analiz\b" does not.
         if len(msg_nums) == 1 and re.search(
-            r"\b(analiz|investiga|estudi|camb(iar|iemos)|olvid|hablemos|ahora\s+(analiza|el))\b",
+            r"\b(analiz\w*|investiga\w*|estudi\w*|camb(iar|iemos)|olvid\w*|hablemos|ahora\s+(analiza|el))\b",
             raw,
             re.I,
         ):

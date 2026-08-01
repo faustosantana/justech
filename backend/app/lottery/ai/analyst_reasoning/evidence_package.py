@@ -251,16 +251,26 @@ class EvidencePackageBuilder:
     @staticmethod
     def _subjects(question: str, state: Any, hermes: Any, data: dict) -> list[str]:
         out: list[str] = []
-        for src in (
-            list(getattr(hermes, "inherited_subjects", None) or []) if hermes else [],
-            list(getattr(state, "active_numbers", None) or []) if state else [],
-            list(data.get("numbers") or []),
-            [str(data["number"])] if data.get("number") else [],
-        ):
-            for n in src:
+
+        def _add(src) -> None:
+            for n in src or []:
                 s = str(n).strip()
                 if s and s not in out and re.fullmatch(r"\d{1,3}", s):
                     out.append(s.zfill(2) if len(s) <= 2 else s)
+
+        hermes_subs = list(getattr(hermes, "inherited_subjects", None) or []) if hermes else []
+        # When Hermes already carries an explicit subject set for this turn, do NOT
+        # union sticky active_numbers (prevents 35+54 leaking into a 78+14 package).
+        if hermes_subs:
+            _add(hermes_subs)
+            _add(list(data.get("numbers") or []))
+            if data.get("number"):
+                _add([data["number"]])
+        else:
+            _add(list(getattr(state, "active_numbers", None) or []) if state else [])
+            _add(list(data.get("numbers") or []))
+            if data.get("number"):
+                _add([data["number"]])
         if len(out) < 2:
             for m in re.finditer(r"\b(\d{1,2})\b", question or ""):
                 s = m.group(1).zfill(2)

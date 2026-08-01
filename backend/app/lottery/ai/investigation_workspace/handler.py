@@ -45,10 +45,28 @@ async def ensure_same_day_asset(
     investigation: Any | None = None,
     conversation_id: str | None = None,
 ) -> InvestigationAsset:
-    existing = get_active_asset(state)
-    if existing and not existing.is_expired() and existing.source_rows:
-        return existing
+    from app.lottery.ai.conversational_integrity import asset_matches_current
+
     subjects = _subjects_from(state, investigation)
+    relation = (
+        (getattr(investigation, "relation", None) if investigation else None)
+        or getattr(state, "active_relation", None)
+        or "same_day"
+    )
+    existing = get_active_asset(state)
+    # NO REUSE unless subjects + relation (+ scope) match the current intent.
+    if (
+        existing
+        and not existing.is_expired()
+        and existing.source_rows
+        and asset_matches_current(
+            existing,
+            subjects=subjects,
+            relation=relation,
+            scope=getattr(existing, "scope", None) or "official_seven",
+        )
+    ):
+        return existing
     if len(subjects) < 2:
         raise ValueError("Se necesitan dos números activos para materializar la tabla.")
     inv_id = getattr(investigation, "investigation_id", None) if investigation else None
@@ -83,7 +101,26 @@ async def execute_workspace_action(
         "export_results",
         "paginate_results",
     }:
-        if asset is None or asset.is_expired() or not asset.source_rows:
+        from app.lottery.ai.conversational_integrity import asset_matches_current
+
+        want_subjects = _subjects_from(state, investigation)
+        want_relation = (
+            (getattr(investigation, "relation", None) if investigation else None)
+            or getattr(state, "active_relation", None)
+            or "same_day"
+        )
+        reusable = (
+            asset is not None
+            and not asset.is_expired()
+            and bool(asset.source_rows)
+            and asset_matches_current(
+                asset,
+                subjects=want_subjects,
+                relation=want_relation,
+                scope=getattr(asset, "scope", None) or "official_seven",
+            )
+        )
+        if not reusable:
             asset = await ensure_same_day_asset(
                 state,
                 query_service=query_service,
@@ -91,7 +128,7 @@ async def execute_workspace_action(
                 conversation_id=conversation_id,
             )
         else:
-            # Re-bind active
+            # Re-bind active (same subjects/relation/scope)
             save_asset(state, asset)
 
     if asset is None:

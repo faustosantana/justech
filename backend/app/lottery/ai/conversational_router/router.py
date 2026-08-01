@@ -246,56 +246,27 @@ class ConversationalRouter:
         import re
 
         from app.lottery.ai.investigation_workspace.speech_acts import (
-            _EXPORT,
             _FACTUAL_BLOCK,
-            _FILTER_VERB,
-            _PAGE,
-            _SHOW,
-            _SOLO_LOTTERY,
-            _SORT,
             _bare_en_lottery,
-            _is_explicit_boot,
         )
 
         if re.search(r"^\s*nueva\s+conversaci[oó]n\s*$", raw or "", re.I):
             return True
 
+        from app.lottery.ai.conversational_integrity import explicit_subjects_override
+
         msg_nums = extract_subject_numbers(raw)
-        if len(msg_nums) >= 2 and (
-            not inv_active
-            or sorted(msg_nums[:2]) != sorted([str(x) for x in active_pair[:2]])
-        ):
-            if _is_explicit_boot(raw):
-                return False
+        # Explicit new subjects always start a new investigation — even on show/export
+        # boot phrases ("Muéstrame fechas del 78 y el 14"). Boot without new subjects
+        # still reuses the active asset.
+        override = explicit_subjects_override(msg_nums, active_pair)
+        if override is not None:
             return True
 
-        if (
-            inv_active
-            and len(msg_nums) == 1
-            and active_pair
-            and msg_nums[0] not in {str(x) for x in active_pair}
-        ):
-            if (
-                _PAGE.search(raw)
-                or _SHOW.search(raw)
-                or _SORT.search(raw)
-                or _EXPORT.search(raw)
-                or _FILTER_VERB.search(raw)
-                or _SOLO_LOTTERY.search(raw)
-            ):
-                return False
-            from app.lottery.ai.active_investigation.contextual_follow_up import (
-                ContextualFollowUpResolver,
-            )
-
-            if ContextualFollowUpResolver.is_short_contextual_follow_up(raw):
-                return False
-            # "Ahora analiza el 35" / topic switch
-            return True
-
-        # Analyze/investiga with a named subject (even without prior inv)
+        # Analyze/investiga with a named subject (even without prior inv).
+        # Use analiz\w* so "analiza"/"analizar" match (plain "analiz\b" does not).
         if len(msg_nums) == 1 and re.search(
-            r"\b(analiz|investiga|estudi|camb(iar|iemos)|olvid|hablemos)\b",
+            r"\b(analiz\w*|investiga\w*|estudi\w*|camb(iar|iemos)|olvid\w*|hablemos)\b",
             raw or "",
             re.I,
         ):

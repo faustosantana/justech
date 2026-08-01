@@ -37,7 +37,12 @@ from prompt_hash_precheck import (  # noqa: E402
 )
 
 BASE = os.environ.get("FORENSIC_BASE_URL", "http://127.0.0.1:8000/api/v1")
-OUT = Path(os.environ.get("SHADOW_OUT", "/tmp/shadow_eligible_out"))
+_SHADOW_OUT = (os.environ.get("SHADOW_OUT") or "").strip()
+if not _SHADOW_OUT:
+    raise SystemExit("SHADOW_OUT is required (run-scoped /tmp/prompt_cert/<run_id>)")
+if _SHADOW_OUT.rstrip("/") in {"/tmp/shadow_eligible_out", "/tmp/shadow_eligible_inner.log"}:
+    raise SystemExit("legacy global SHADOW_OUT is forbidden; use /tmp/prompt_cert/<run_id>")
+OUT = Path(_SHADOW_OUT)
 OUT.mkdir(parents=True, exist_ok=True)
 AUTH = json.loads(Path("/tmp/routing3_auth.json").read_text()) if Path("/tmp/routing3_auth.json").exists() else {
     "uid": "e520ca09-882a-4e8f-8d73-8045dc3c6245",
@@ -360,6 +365,20 @@ def heartbeat_loop(stop: threading.Event) -> None:
             f"rate_cpm={rate * 60:.2f} eta_s={int(eta) if eta else 'n/a'}",
             flush=True,
         )
+        try:
+            hb = {
+                "done": done,
+                "total": total,
+                "elapsed_s": int(elapsed),
+                "rate_cpm": round(rate * 60, 2),
+                "eta_s": int(eta) if eta else None,
+                "at": datetime.now(timezone.utc).isoformat(),
+            }
+            (OUT / "heartbeat.json").write_text(
+                json.dumps(hb, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+            )
+        except Exception:  # noqa: BLE001
+            pass
 
 
 def summarize(results: list[dict]) -> dict:

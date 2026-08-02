@@ -46,9 +46,11 @@ function toExcelXml(columns: string[], rows: Record<string, unknown>[]): string 
 export function ExportPanel({
   presentation,
   onStatus,
+  onExportExcel,
 }: {
   presentation: AnalysisPresentation;
   onStatus?: (msg: string) => void;
+  onExportExcel?: () => void;
 }) {
   const [busy, setBusy] = useState<"csv" | "xlsx" | null>(null);
   const { columns, rows, downloadUrl, downloadFilename, title } = presentation;
@@ -69,6 +71,10 @@ export function ExportPanel({
   };
 
   const exportXlsx = () => {
+    if (onExportExcel) {
+      onExportExcel();
+      return;
+    }
     if (downloadUrl) {
       window.open(downloadUrl, "_blank", "noopener,noreferrer");
       onStatus?.(`Descarga: ${downloadFilename || "export.xlsx"}`);

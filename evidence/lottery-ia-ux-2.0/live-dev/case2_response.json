@@ -1,0 +1,4389 @@
+{
+  "message": {
+    "id": "2459bb95-6d31-4083-8be2-95f1f9c74622",
+    "role": "assistant",
+    "content": "Ordené por posicion_a_num (asc). 105 fila(s).\nOrden: posicion_a_num asc.\n\n| fecha | loteria | numero_a | posicion_a | numero_b | posicion_b | tipo_coincidencia |\n| --- | --- | --- | --- | --- | --- | --- |\n| 2026-05-31 | Quiniela Loteka | 02 | 1ra posición | 20 | 2da posición | misma_fecha |\n| 2025-12-21 | New York 2:30 | 02 | 1ra posición | 20 | 3ra posición | misma_loteria |\n| 2025-08-15 | Loteria Nacional | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n| 2025-06-22 | New York 2:30 | 02 | 1ra posición | 20 | 2da posición | misma_fecha |\n| 2025-06-21 | New York 10:30 | 02 | 1ra posición | 20 | 2da posición | misma_fecha |\n| 2025-01-24 | New York 2:30 | 02 | 1ra posición | 20 | 2da posición | misma_loteria |\n| 2024-10-25 | Quiniela Real | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n| 2024-09-10 | Quiniela Real | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n| 2024-06-24 | Quiniela Loteka | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n| 2024-06-06 | Quiniela Loteka | 02 | 1ra posición | 20 | 2da posición | misma_fecha |\n| 2023-12-28 | Quiniela Loteka | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n| 2023-06-02 | New York 2:30 | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n| 2023-05-02 | Quiniela Real | 02 | 1ra posición | 20 | 3ra posición | misma_loteria |\n| 2023-03-29 | New York 2:30 | 02 | 1ra posición | 20 | 3ra posición | misma_fecha |\n| 2023-01-21 | Quiniela Leidsa | 02 | 1ra posición | 20 | 2da posición | misma_loteria |\n| 2023-01-19 | Gana Mas | 02 | 1ra posición | 20 | 3ra posición | misma_fecha |\n| 2022-12-27 | New York 10:30 | 02 | 1ra posición | 20 | 3ra posición | misma_fecha |\n| 2022-06-19 | Loteria Nacional | 02 | 1ra posición | 20 | 3ra posición | misma_fecha |\n| 2022-06-09 | Gana Mas | 02 | 1ra posición | 20 | 2da posición | misma_fecha |\n| 2022-05-05 | New York 2:30 | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n\nControles: Ver tabla · Filtrar · Ordenar · Exportar Excel · Ver resumen · Ver más",
+    "structured_content": {
+      "type": "investigation_workspace_table",
+      "asset": {
+        "asset_id": "451be82b24db4e47",
+        "asset_type": "result_table",
+        "title": "Coincidencias same-day: 02 y 20",
+        "subjects": [
+          "02",
+          "20"
+        ],
+        "relation": "same_day",
+        "scope": "official_seven",
+        "columns": [
+          "fecha",
+          "loteria",
+          "numero_a",
+          "posicion_a",
+          "numero_b",
+          "posicion_b",
+          "tipo_coincidencia"
+        ],
+        "rows": [
+          {
+            "fecha": "2026-05-31",
+            "loteria": "Quiniela Loteka",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "Quiniela Loteka",
+            "loteria_b": "Quiniela Real",
+            "posicion_a": "1ra posición",
+            "posicion_b": "2da posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 2,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2025-12-21",
+            "loteria": "New York 2:30",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "New York 2:30",
+            "loteria_b": "New York 2:30",
+            "posicion_a": "1ra posición",
+            "posicion_b": "3ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 3,
+            "tipo_coincidencia": "misma_loteria"
+          },
+          {
+            "fecha": "2025-08-15",
+            "loteria": "Loteria Nacional",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "Loteria Nacional",
+            "loteria_b": "Quiniela Real",
+            "posicion_a": "1ra posición",
+            "posicion_b": "1ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 1,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2025-06-22",
+            "loteria": "New York 2:30",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "New York 2:30",
+            "loteria_b": "Quiniela Real",
+            "posicion_a": "1ra posición",
+            "posicion_b": "2da posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 2,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2025-06-21",
+            "loteria": "New York 10:30",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "New York 10:30",
+            "loteria_b": "Quiniela Leidsa",
+            "posicion_a": "1ra posición",
+            "posicion_b": "2da posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 2,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2025-01-24",
+            "loteria": "New York 2:30",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "New York 2:30",
+            "loteria_b": "New York 2:30",
+            "posicion_a": "1ra posición",
+            "posicion_b": "2da posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 2,
+            "tipo_coincidencia": "misma_loteria"
+          },
+          {
+            "fecha": "2024-10-25",
+            "loteria": "Quiniela Real",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "Quiniela Real",
+            "loteria_b": "Quiniela Leidsa",
+            "posicion_a": "1ra posición",
+            "posicion_b": "1ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 1,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2024-09-10",
+            "loteria": "Quiniela Real",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "Quiniela Real",
+            "loteria_b": "Gana Mas",
+            "posicion_a": "1ra posición",
+            "posicion_b": "1ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 1,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2024-06-24",
+            "loteria": "Quiniela Loteka",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "Quiniela Loteka",
+            "loteria_b": "Gana Mas",
+            "posicion_a": "1ra posición",
+            "posicion_b": "1ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 1,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2024-06-06",
+            "loteria": "Quiniela Loteka",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "Quiniela Loteka",
+            "loteria_b": "New York 10:30",
+            "posicion_a": "1ra posición",
+            "posicion_b": "2da posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 2,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2023-12-28",
+            "loteria": "Quiniela Loteka",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "Quiniela Loteka",
+            "loteria_b": "Quiniela Leidsa",
+            "posicion_a": "1ra posición",
+            "posicion_b": "1ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 1,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2023-06-02",
+            "loteria": "New York 2:30",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "New York 2:30",
+            "loteria_b": "New York 10:30",
+            "posicion_a": "1ra posición",
+            "posicion_b": "1ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 1,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2023-05-02",
+            "loteria": "Quiniela Real",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "Quiniela Real",
+            "loteria_b": "Quiniela Real",
+            "posicion_a": "1ra posición",
+            "posicion_b": "3ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 3,
+            "tipo_coincidencia": "misma_loteria"
+          },
+          {
+            "fecha": "2023-03-29",
+            "loteria": "New York 2:30",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "New York 2:30",
+            "loteria_b": "Quiniela Leidsa",
+            "posicion_a": "1ra posición",
+            "posicion_b": "3ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 3,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2023-01-21",
+            "loteria": "Quiniela Leidsa",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "Quiniela Leidsa",
+            "loteria_b": "Quiniela Leidsa",
+            "posicion_a": "1ra posición",
+            "posicion_b": "2da posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 2,
+            "tipo_coincidencia": "misma_loteria"
+          },
+          {
+            "fecha": "2023-01-19",
+            "loteria": "Gana Mas",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "Gana Mas",
+            "loteria_b": "Quiniela Leidsa",
+            "posicion_a": "1ra posición",
+            "posicion_b": "3ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 3,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2022-12-27",
+            "loteria": "New York 10:30",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "New York 10:30",
+            "loteria_b": "Gana Mas",
+            "posicion_a": "1ra posición",
+            "posicion_b": "3ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 3,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2022-06-19",
+            "loteria": "Loteria Nacional",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "Loteria Nacional",
+            "loteria_b": "Quiniela Leidsa",
+            "posicion_a": "1ra posición",
+            "posicion_b": "3ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 3,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2022-06-09",
+            "loteria": "Gana Mas",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "Gana Mas",
+            "loteria_b": "New York 2:30",
+            "posicion_a": "1ra posición",
+            "posicion_b": "2da posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 2,
+            "tipo_coincidencia": "misma_fecha"
+          },
+          {
+            "fecha": "2022-05-05",
+            "loteria": "New York 2:30",
+            "numero_a": "02",
+            "numero_b": "20",
+            "loteria_a": "New York 2:30",
+            "loteria_b": "Quiniela Loteka",
+            "posicion_a": "1ra posición",
+            "posicion_b": "1ra posición",
+            "posicion_a_num": 1,
+            "posicion_b_num": 1,
+            "tipo_coincidencia": "misma_fecha"
+          }
+        ],
+        "row_count": 105,
+        "total_source": 105,
+        "filters": {},
+        "sort": {
+          "field": "posicion_a_num",
+          "direction": "asc"
+        },
+        "pagination": {
+          "page": 1,
+          "page_size": 20,
+          "total_pages": 6
+        },
+        "download_url": null,
+        "export_filename": null,
+        "controls": [
+          "Ver tabla",
+          "Filtrar",
+          "Ordenar",
+          "Exportar Excel",
+          "Ver resumen"
+        ]
+      }
+    },
+    "tool_trace": [],
+    "created_at": "2026-08-02T16:16:27.801049+00:00"
+  },
+  "user_message_id": "1593b310-23d4-4c57-895d-7fc23d0eab71",
+  "context": {
+    "base_date": "2026-07-08",
+    "last_days": null,
+    "last_game": null,
+    "last_tool": "lottery_get_number_occurrences",
+    "agent_trace": {
+      "provider_used": "investigation_workspace",
+      "latency_ms": 59.771834000002855,
+      "investigation_id": "d985a9f0192d438f",
+      "evidence_reused": false,
+      "hermes_decision": {
+        "hermes_decision_id": "0a7d945c504c",
+        "turn_type": "asset_action",
+        "refers_to": null,
+        "requested_attribute": "sort_results",
+        "inherited_subjects": [
+          "02",
+          "20"
+        ],
+        "inherited_metric": "same_day",
+        "inherited_relation": "same_day",
+        "requires_research": false,
+        "reuse_evidence": false,
+        "confidence": "high",
+        "reason_code": "breakdown_by_position",
+        "ambiguous": false,
+        "reasoning_mode": "skip",
+        "workspace_action": {
+          "turn_type": "asset_action",
+          "action": "sort_results",
+          "asset_id": null,
+          "filters": {
+            "lottery": null,
+            "date_from": null,
+            "date_to": null,
+            "position": null,
+            "number": null,
+            "same_lottery": null,
+            "same_position": null,
+            "limit": null
+          },
+          "sort": {
+            "field": "posicion_a_num",
+            "direction": "asc"
+          },
+          "pagination": null,
+          "export_format": null,
+          "requires_sql": false,
+          "requires_asset_load": true,
+          "requires_huawei": false,
+          "confidence": "high",
+          "reason_code": "breakdown_by_position"
+        }
+      },
+      "hermes_decision_id": "0a7d945c504c"
+    },
+    "last_lottery": "Gana Más",
+    "last_numbers": [
+      "02",
+      "20"
+    ],
+    "last_to_date": null,
+    "last_analysis": {},
+    "last_position": null,
+    "last_from_date": null,
+    "last_operation": "get_number_occurrences",
+    "saved_query_id": null,
+    "conversation_v4": {
+      "active_lotteries": [
+        "Gana Más",
+        "Nacional",
+        "New York 10:30",
+        "New York 2:30",
+        "Leidsa",
+        "Loteka",
+        "Real"
+      ],
+      "active_numbers": [
+        "02",
+        "20"
+      ],
+      "primary_lottery": null,
+      "date_context": null,
+      "range_context": null,
+      "draw_count_context": null,
+      "calendar_window": null,
+      "metric_context": null,
+      "analysis_scope": "unknown",
+      "analysis_depth": "standard",
+      "pending_slots": [],
+      "pending_intent": null,
+      "pending_params": {},
+      "last_intent": "clarification_response",
+      "last_tool": null,
+      "last_plan": [
+        "same_day_coincidence"
+      ],
+      "clarification_question": null,
+      "scope": "unknown",
+      "last_occurrences": {},
+      "default_number_position_scope": "first_position",
+      "default_primary_position": 1,
+      "last_multi_queries": [],
+      "last_position_scope": null,
+      "last_tool_results": [],
+      "last_analysis": {
+        "last": {
+          "date": "2026-07-08",
+          "lottery": null,
+          "numbers": [
+            "02",
+            "20"
+          ],
+          "lotteries": [
+            "Quiniela Loteka"
+          ],
+          "positions": [
+            "2do",
+            "1ro"
+          ],
+          "appearances": [
+            {
+              "number": "02",
+              "lottery": "Quiniela Loteka",
+              "position": 2,
+              "position_label": "2do"
+            },
+            {
+              "number": "20",
+              "lottery": "Quiniela Loteka",
+              "position": 1,
+              "position_label": "1ro"
+            }
+          ]
+        },
+        "type": "same_day_coincidence",
+        "items": [
+          {
+            "date": "2026-07-08",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Quiniela Loteka",
+                "position": 2,
+                "position_label": "2do"
+              },
+              {
+                "number": "20",
+                "lottery": "Quiniela Loteka",
+                "position": 1,
+                "position_label": "1ro"
+              }
+            ]
+          },
+          {
+            "date": "2026-05-31",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Quiniela Loteka",
+                "position": 1,
+                "position_label": "1ro"
+              },
+              {
+                "number": "20",
+                "lottery": "Quiniela Real",
+                "position": 2,
+                "position_label": "2do"
+              }
+            ]
+          },
+          {
+            "date": "2026-03-29",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "New York 2:30",
+                "position": 2,
+                "position_label": "2do"
+              },
+              {
+                "number": "20",
+                "lottery": "New York 2:30",
+                "position": 3,
+                "position_label": "3ro"
+              }
+            ]
+          },
+          {
+            "date": "2026-02-26",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "New York 10:30",
+                "position": 3,
+                "position_label": "3ro"
+              },
+              {
+                "number": "20",
+                "lottery": "New York 10:30",
+                "position": 2,
+                "position_label": "2do"
+              }
+            ]
+          },
+          {
+            "date": "2025-12-27",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Quiniela Leidsa",
+                "position": 2,
+                "position_label": "2do"
+              },
+              {
+                "number": "20",
+                "lottery": "Quiniela Real",
+                "position": 3,
+                "position_label": "3ro"
+              }
+            ]
+          },
+          {
+            "date": "2025-12-21",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "New York 2:30",
+                "position": 1,
+                "position_label": "1ro"
+              },
+              {
+                "number": "20",
+                "lottery": "New York 2:30",
+                "position": 3,
+                "position_label": "3ro"
+              }
+            ]
+          },
+          {
+            "date": "2025-12-20",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "New York 10:30",
+                "position": 3,
+                "position_label": "3ro"
+              },
+              {
+                "number": "20",
+                "lottery": "Quiniela Real",
+                "position": 3,
+                "position_label": "3ro"
+              }
+            ]
+          },
+          {
+            "date": "2025-09-25",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Loteria Nacional",
+                "position": 2,
+                "position_label": "2do"
+              },
+              {
+                "number": "20",
+                "lottery": "Gana Mas",
+                "position": 1,
+                "position_label": "1ro"
+              }
+            ]
+          },
+          {
+            "date": "2025-08-26",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Gana Mas",
+                "position": 3,
+                "position_label": "3ro"
+              },
+              {
+                "number": "20",
+                "lottery": "New York 2:30",
+                "position": 3,
+                "position_label": "3ro"
+              }
+            ]
+          },
+          {
+            "date": "2025-08-15",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Loteria Nacional",
+                "position": 1,
+                "position_label": "1ro"
+              },
+              {
+                "number": "20",
+                "lottery": "Quiniela Real",
+                "position": 1,
+                "position_label": "1ro"
+              }
+            ]
+          },
+          {
+            "date": "2025-07-26",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Gana Mas",
+                "position": 3,
+                "position_label": "3ro"
+              },
+              {
+                "number": "20",
+                "lottery": "New York 10:30",
+                "position": 1,
+                "position_label": "1ro"
+              }
+            ]
+          },
+          {
+            "date": "2025-07-10",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Loteria Nacional",
+                "position": 2,
+                "position_label": "2do"
+              },
+              {
+                "number": "20",
+                "lottery": "Quiniela Real",
+                "position": 1,
+                "position_label": "1ro"
+              }
+            ]
+          },
+          {
+            "date": "2025-06-22",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "New York 2:30",
+                "position": 1,
+                "position_label": "1ro"
+              },
+              {
+                "number": "20",
+                "lottery": "Quiniela Real",
+                "position": 2,
+                "position_label": "2do"
+              },
+              {
+                "number": "20",
+                "lottery": "Gana Mas",
+                "position": 2,
+                "position_label": "2do"
+              }
+            ]
+          },
+          {
+            "date": "2025-06-21",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "New York 10:30",
+                "position": 1,
+                "position_label": "1ro"
+              },
+              {
+                "number": "02",
+                "lottery": "New York 2:30",
+                "position": 1,
+                "position_label": "1ro"
+              },
+              {
+                "number": "20",
+                "lottery": "Quiniela Leidsa",
+                "position": 2,
+                "position_label": "2do"
+              }
+            ]
+          },
+          {
+            "date": "2025-04-08",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Gana Mas",
+                "position": 2,
+                "position_label": "2do"
+              },
+              {
+                "number": "20",
+                "lottery": "Loteria Nacional",
+                "position": 2,
+                "position_label": "2do"
+              }
+            ]
+          },
+          {
+            "date": "2025-02-16",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Quiniela Loteka",
+                "position": 3,
+                "position_label": "3ro"
+              },
+              {
+                "number": "20",
+                "lottery": "Quiniela Leidsa",
+                "position": 2,
+                "position_label": "2do"
+              }
+            ]
+          },
+          {
+            "date": "2025-01-24",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "New York 2:30",
+                "position": 1,
+                "position_label": "1ro"
+              },
+              {
+                "number": "02",
+                "lottery": "Loteria Nacional",
+                "position": 1,
+                "position_label": "1ro"
+              },
+              {
+                "number": "20",
+                "lottery": "New York 2:30",
+                "position": 2,
+                "position_label": "2do"
+              }
+            ]
+          },
+          {
+            "date": "2025-01-12",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Loteria Nacional",
+                "position": 3,
+                "position_label": "3ro"
+              },
+              {
+                "number": "20",
+                "lottery": "Quiniela Loteka",
+                "position": 3,
+                "position_label": "3ro"
+              }
+            ]
+          },
+          {
+            "date": "2024-12-26",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Quiniela Loteka",
+                "position": 3,
+                "position_label": "3ro"
+              },
+              {
+                "number": "20",
+                "lottery": "Quiniela Leidsa",
+                "position": 2,
+                "position_label": "2do"
+              }
+            ]
+          },
+          {
+            "date": "2024-12-11",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "New York 10:30",
+                "position": 2,
+                "position_label": "2do"
+              },
+              {
+                "number": "20",
+                "lottery": "Gana Mas",
+                "position": 1,
+                "position_label": "1ro"
+              }
+            ]
+          }
+        ],
+        "total": 105,
+        "numbers": [
+          "02",
+          "20"
+        ],
+        "relation": "same_day",
+        "last_coincidence_date": "2026-07-08"
+      },
+      "last_user_reference": null,
+      "provider_trace": {
+        "intent": "compare_lotteries",
+        "model_used": "deepseek-v3.2",
+        "agent_trace": {
+          "latency_ms": 30588.0,
+          "model_used": "deepseek-v3.2",
+          "tools_used": [
+            "lottery_get_number_occurrences"
+          ],
+          "provider_used": "huawei_modelarts",
+          "prompt_version": "v6",
+          "evidence_reused": false,
+          "hermes_decision": {
+            "ambiguous": false,
+            "refers_to": null,
+            "turn_type": "new_investigation",
+            "confidence": "high",
+            "reason_code": "explicit_pair_or_topic",
+            "reasoning_mode": "interpret_pattern",
+            "reuse_evidence": false,
+            "inherited_metric": null,
+            "workspace_action": null,
+            "requires_research": true,
+            "hermes_decision_id": "b7fef41a1568",
+            "inherited_relation": null,
+            "inherited_subjects": [
+              "02",
+              "20"
+            ],
+            "requested_attribute": null
+          },
+          "investigation_id": "d985a9f0192d438f",
+          "analyst_reasoning": {
+            "latency_ms": 21142.940134000015,
+            "model_used": "deepseek-v3.2",
+            "guard_passed": true,
+            "input_tokens": null,
+            "evidence_hash": "01f001a9b27e686f",
+            "fallback_used": false,
+            "output_tokens": null,
+            "provider_used": "huawei_modelarts",
+            "prompt_runtime": {
+              "shadow_meta": {
+                "prompt_version_id": "c41ec4c5-1bd5-430f-85c5-e9546e176709",
+                "compiled_prompt_hash": "41c64a0fc7c303222c2b492e82a0ea51cec6c16139bc2f0cde9ec9e9da642ff9",
+                "prompt_semantic_version": "7.0.0-rc3.4"
+              },
+              "fallback_used": false,
+              "prompt_source": "legacy",
+              "shadow_prepared": true,
+              "prompt_version_id": null,
+              "shadow_comparison": {
+                "studio_raw": "El 02 y el 20 han coincidido el mismo día en 105 ocasiones dentro de las 7 loterías oficiales. Por ejemplo, el 2026-07-08 ambos salieron en Quiniela Loteka, pero en distintas posiciones.\n\n**Limitación:** El conteo refleja coincidencias en el mismo día calendario, no necesariamente en la misma lotería o posición. La evidencia no desglosa cuántas veces salieron en la misma lotería.\n\n**Sugerencia:** Podrías investigar en cuántas de esas 105 coincidencias ambos números salieron en la misma lotería.",
+                "studio_model": "deepseek-v3.2",
+                "studio_latency_ms": 5978.718044000061,
+                "studio_prompt_hash": "41c64a0fc7c303222c2b492e82a0ea51cec6c16139bc2f0cde9ec9e9da642ff9",
+                "studio_guard_passed": true,
+                "studio_guard_reason": null,
+                "studio_input_tokens": null,
+                "studio_output_tokens": null,
+                "same_evidence_package": true
+              },
+              "legacy_prompt_used": true,
+              "prompt_runtime_mode": "shadow",
+              "compiled_prompt_hash": null,
+              "prompt_runtime_fallback": false,
+              "prompt_semantic_version": null
+            },
+            "prompt_version": "analyst-reasoning-v1.1",
+            "reasoning_mode": "interpret_pattern",
+            "used_reasoning": true,
+            "rejection_reason": null
+          },
+          "hermes_decision_id": "b7fef41a1568"
+        },
+        "fallback_used": false,
+        "provider_used": "huawei_modelarts",
+        "analyst_config": {
+          "max_steps": 8,
+          "max_tools": 6,
+          "max_tokens": 1200,
+          "research_mode": "auto",
+          "analysis_depth": "standard",
+          "timeout_seconds": 45
+        },
+        "llm_latency_ms": 30588,
+        "prompt_version": "v6",
+        "research_trace": {
+          "trace_id": "8fbe91e8-1be8-4c24-9258-36f0bd25dbfc",
+          "duration_ms": 30413,
+          "investigating": true
+        },
+        "tools_executed": [
+          "lottery_get_number_occurrences"
+        ],
+        "fallback_reason": null,
+        "hermes_decision": {
+          "ambiguous": false,
+          "refers_to": null,
+          "turn_type": "new_investigation",
+          "confidence": "high",
+          "reason_code": "explicit_pair_or_topic",
+          "reasoning_mode": "interpret_pattern",
+          "reuse_evidence": false,
+          "inherited_metric": null,
+          "workspace_action": null,
+          "requires_research": true,
+          "hermes_decision_id": "b7fef41a1568",
+          "inherited_relation": null,
+          "inherited_subjects": [
+            "02",
+            "20"
+          ],
+          "requested_attribute": null
+        },
+        "model_requested": "DeepSeek-V3.2",
+        "synthesis_status": "ok",
+        "hermes_decision_id": "b7fef41a1568",
+        "provider_requested": "huawei_modelarts",
+        "conversational_orchestrator_ab": {
+          "orchestrator_mode": "hermes",
+          "hermes_visible": true,
+          "gpt_affects_user": false,
+          "gpt_error": null,
+          "gpt_provider": null,
+          "gpt_latency_ms": null
+        }
+      },
+      "conversation_summary": null,
+      "active_date": null,
+      "active_position": null,
+      "current_primary_candidate": null,
+      "current_alternatives": [],
+      "historical_summary": null,
+      "active_pair": [
+        "02",
+        "20"
+      ],
+      "active_filters": {
+        "relation": "same_day",
+        "compare_active": true
+      },
+      "open_hypotheses": [],
+      "current_research": {
+        "mode": "deep",
+        "steps": [
+          "same_day_coincidence"
+        ],
+        "rationale": "research_engine:coincidences_only",
+        "last_trace": {
+          "steps": [
+            {
+              "tool": "lottery_get_number_occurrences",
+              "status": "success",
+              "purpose": "same_day_coincidence",
+              "duration_ms": 254
+            }
+          ],
+          "tools": [
+            "lottery_get_number_occurrences"
+          ],
+          "intent": "coincidences_only",
+          "filters": null,
+          "duration_ms": 30413
+        },
+        "step_count": 1,
+        "is_research": true,
+        "question_kind": "coincidences_only",
+        "research_meta": {
+          "kind": "coincidences_only",
+          "position": null,
+          "relation": "same_day",
+          "subjects": [
+            "02",
+            "20"
+          ],
+          "lotteries": [],
+          "case_criteria": [],
+          "message_numbers": [
+            "02",
+            "20"
+          ],
+          "lottery_explicit": false
+        }
+      },
+      "recent_memory": [
+        "compare_lotteries | nums=02,20 | refs=message_numbers,standalone_no_inherit",
+        "compare_lotteries | nums=02,20 | refs=deictic",
+        "clarification_response | nums=02,20"
+      ],
+      "research_mode": null,
+      "focus_stack": [
+        "02",
+        "20",
+        "02",
+        "20",
+        "02",
+        "20"
+      ],
+      "active_relation": "same_day",
+      "preferred_position": 1,
+      "position_scope": null,
+      "force_local_template": false,
+      "active_investigation": {
+        "investigation_id": "d985a9f0192d438f",
+        "conversation_id": "7f0c8cfc-2d16-4da8-9f40-b095a180776e",
+        "topic": "número 02",
+        "subjects": [
+          "02",
+          "20"
+        ],
+        "relation": "same_day",
+        "event_type": "same_day_coincidence",
+        "metric": "same_day",
+        "lotteries": [
+          "Quiniela Loteka"
+        ],
+        "positions": [
+          "2do",
+          "1ro"
+        ],
+        "date_anchor": "2026-07-08",
+        "time_window": {},
+        "limit": null,
+        "results": {
+          "type": "same_day_coincidence",
+          "total": 105
+        },
+        "evidence": {
+          "last": {
+            "date": "2026-07-08",
+            "appearances": [
+              {
+                "number": "02",
+                "lottery": "Quiniela Loteka",
+                "position": 2,
+                "position_label": "2do"
+              },
+              {
+                "number": "20",
+                "lottery": "Quiniela Loteka",
+                "position": 1,
+                "position_label": "1ro"
+              }
+            ]
+          },
+          "type": "same_day_coincidence",
+          "items": [
+            {
+              "date": "2026-07-08",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "Quiniela Loteka",
+                  "position": 2,
+                  "position_label": "2do"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Quiniela Loteka",
+                  "position": 1,
+                  "position_label": "1ro"
+                }
+              ]
+            },
+            {
+              "date": "2026-05-31",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "Quiniela Loteka",
+                  "position": 1,
+                  "position_label": "1ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Quiniela Real",
+                  "position": 2,
+                  "position_label": "2do"
+                }
+              ]
+            },
+            {
+              "date": "2026-03-29",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "New York 2:30",
+                  "position": 2,
+                  "position_label": "2do"
+                },
+                {
+                  "number": "20",
+                  "lottery": "New York 2:30",
+                  "position": 3,
+                  "position_label": "3ro"
+                }
+              ]
+            },
+            {
+              "date": "2026-02-26",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "New York 10:30",
+                  "position": 3,
+                  "position_label": "3ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "New York 10:30",
+                  "position": 2,
+                  "position_label": "2do"
+                }
+              ]
+            },
+            {
+              "date": "2025-12-27",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "Quiniela Leidsa",
+                  "position": 2,
+                  "position_label": "2do"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Quiniela Real",
+                  "position": 3,
+                  "position_label": "3ro"
+                }
+              ]
+            },
+            {
+              "date": "2025-12-21",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "New York 2:30",
+                  "position": 1,
+                  "position_label": "1ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "New York 2:30",
+                  "position": 3,
+                  "position_label": "3ro"
+                }
+              ]
+            },
+            {
+              "date": "2025-12-20",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "New York 10:30",
+                  "position": 3,
+                  "position_label": "3ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Quiniela Real",
+                  "position": 3,
+                  "position_label": "3ro"
+                }
+              ]
+            },
+            {
+              "date": "2025-09-25",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "Loteria Nacional",
+                  "position": 2,
+                  "position_label": "2do"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Gana Mas",
+                  "position": 1,
+                  "position_label": "1ro"
+                }
+              ]
+            },
+            {
+              "date": "2025-08-26",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "Gana Mas",
+                  "position": 3,
+                  "position_label": "3ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "New York 2:30",
+                  "position": 3,
+                  "position_label": "3ro"
+                }
+              ]
+            },
+            {
+              "date": "2025-08-15",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "Loteria Nacional",
+                  "position": 1,
+                  "position_label": "1ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Quiniela Real",
+                  "position": 1,
+                  "position_label": "1ro"
+                }
+              ]
+            },
+            {
+              "date": "2025-07-26",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "Gana Mas",
+                  "position": 3,
+                  "position_label": "3ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "New York 10:30",
+                  "position": 1,
+                  "position_label": "1ro"
+                }
+              ]
+            },
+            {
+              "date": "2025-07-10",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "Loteria Nacional",
+                  "position": 2,
+                  "position_label": "2do"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Quiniela Real",
+                  "position": 1,
+                  "position_label": "1ro"
+                }
+              ]
+            },
+            {
+              "date": "2025-06-22",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "New York 2:30",
+                  "position": 1,
+                  "position_label": "1ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Quiniela Real",
+                  "position": 2,
+                  "position_label": "2do"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Gana Mas",
+                  "position": 2,
+                  "position_label": "2do"
+                }
+              ]
+            },
+            {
+              "date": "2025-06-21",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "New York 10:30",
+                  "position": 1,
+                  "position_label": "1ro"
+                },
+                {
+                  "number": "02",
+                  "lottery": "New York 2:30",
+                  "position": 1,
+                  "position_label": "1ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Quiniela Leidsa",
+                  "position": 2,
+                  "position_label": "2do"
+                }
+              ]
+            },
+            {
+              "date": "2025-04-08",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "Gana Mas",
+                  "position": 2,
+                  "position_label": "2do"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Loteria Nacional",
+                  "position": 2,
+                  "position_label": "2do"
+                }
+              ]
+            },
+            {
+              "date": "2025-02-16",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "Quiniela Loteka",
+                  "position": 3,
+                  "position_label": "3ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Quiniela Leidsa",
+                  "position": 2,
+                  "position_label": "2do"
+                }
+              ]
+            },
+            {
+              "date": "2025-01-24",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "New York 2:30",
+                  "position": 1,
+                  "position_label": "1ro"
+                },
+                {
+                  "number": "02",
+                  "lottery": "Loteria Nacional",
+                  "position": 1,
+                  "position_label": "1ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "New York 2:30",
+                  "position": 2,
+                  "position_label": "2do"
+                }
+              ]
+            },
+            {
+              "date": "2025-01-12",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "Loteria Nacional",
+                  "position": 3,
+                  "position_label": "3ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Quiniela Loteka",
+                  "position": 3,
+                  "position_label": "3ro"
+                }
+              ]
+            },
+            {
+              "date": "2024-12-26",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "Quiniela Loteka",
+                  "position": 3,
+                  "position_label": "3ro"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Quiniela Leidsa",
+                  "position": 2,
+                  "position_label": "2do"
+                }
+              ]
+            },
+            {
+              "date": "2024-12-11",
+              "appearances": [
+                {
+                  "number": "02",
+                  "lottery": "New York 10:30",
+                  "position": 2,
+                  "position_label": "2do"
+                },
+                {
+                  "number": "20",
+                  "lottery": "Gana Mas",
+                  "position": 1,
+                  "position_label": "1ro"
+                }
+              ]
+            }
+          ],
+          "total": 105,
+          "numbers": [
+            "02",
+            "20"
+          ],
+          "lotteries": [
+            "Quiniela Loteka"
+          ],
+          "positions": [
+            "2do",
+            "1ro"
+          ],
+          "summary_text": null,
+          "official_scope": true
+        },
+        "tools_used": [
+          "lottery_get_number_occurrences"
+        ],
+        "summary": "**Respuesta directa**\nSegún la evidencia verificada, los números 02 y 20 han coincidido el mismo día en **105 ocasiones** dentro de las 7 loterías oficiales del sistema.\n\n**Explicación / Interpretación**\nEl análisis se centra en la coincidencia \"\", que significa que ambos números aparecieron en sorteos de loterías oficiales en la misma fecha, sin importar si fue en la misma lotería o en posiciones distintas.\n\n* **Patrón de coincidencia:** La evidencia muestra que las coincidencias pueden darse e",
+        "last_user_question": "Desglosar por posición.",
+        "last_answer": "Ordené por posicion_a_num (asc). 105 fila(s).\nOrden: posicion_a_num asc.\n\n| fecha | loteria | numero_a | posicion_a | numero_b | posicion_b | tipo_coincidencia |\n| --- | --- | --- | --- | --- | --- | --- |\n| 2026-05-31 | Quiniela Loteka | 02 | 1ra posición | 20 | 2da posición | misma_fecha |\n| 2025-12-21 | New York 2:30 | 02 | 1ra posición | 20 | 3ra posición | misma_loteria |\n| 2025-08-15 | Loteria Nacional | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n| 2025-06-22 | New York 2:30 | 02 | 1ra posición | 20 | 2da posición | misma_fecha |\n| 2025-06-21 | New York 10:30 | 02 | 1ra posición | 20 | 2da posición | misma_fecha |\n| 2025-01-24 | New York 2:30 | 02 | 1ra posición | 20 | 2da posición | misma_loteria |\n| 2024-10-25 | Quiniela Real | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n| 2024-09-10 | Quiniela Real | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n| 2024-06-24 | Quiniela Loteka | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n| 2024-06-06 | Quiniela Loteka | 02 | 1ra posición | 20 | 2da posición | misma_fecha |\n| 2023-12-28 | Quiniela Loteka | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n| 2023-06-02 | New York 2:30 | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n| 2023-05-02 | Quiniela Real | 02 | 1ra posición | 20 | 3ra posición | misma_loteria |\n| 2023-03-29 | New York 2:30 | 02 | 1ra posición | 20 | 3ra posición | misma_fecha |\n| 2023-01-21 | Quiniela Leidsa | 02 | 1ra posición | 20 | 2da posición | misma_loteria |\n| 2023-01-19 | Gana Mas | 02 | 1ra posición | 20 | 3ra posición | misma_fecha |\n| 2022-12-27 | New York 10:30 | 02 | 1ra posición | 20 | 3ra posición | misma_fecha |\n| 2022-06-19 | Loteria Nacional | 02 | 1ra posición | 20 | 3ra posición | misma_fecha |\n| 2022-06-09 | Gana Mas | 02 | 1ra posición | 20 | 2da posición | misma_fecha |\n| 2022-05-05 | New York 2:30 | 02 | 1ra posición | 20 | 1ra posición | misma_fecha |\n\nControles: Ver tabla · Filtrar · Ordenar · Exportar Excel · Ver resumen · Ver más",
+        "last_intent": "coincidences_only",
+        "follow_up_kind": "sort_results",
+        "last_event": {
+          "date": "2026-07-08",
+          "lottery": null,
+          "numbers": [
+            "02",
+            "20"
+          ],
+          "lotteries": [
+            "Quiniela Loteka"
+          ],
+          "positions": [
+            "2do",
+            "1ro"
+          ],
+          "appearances": [
+            {
+              "number": "02",
+              "lottery": "Quiniela Loteka",
+              "position": 2,
+              "position_label": "2do"
+            },
+            {
+              "number": "20",
+              "lottery": "Quiniela Loteka",
+              "position": 1,
+              "position_label": "1ro"
+            }
+          ]
+        },
+        "pending_questions": [],
+        "created_at": "2026-08-02T16:15:14.627526Z",
+        "updated_at": "2026-08-02T16:16:27.903812Z",
+        "expires_at": "2026-08-02T16:26:27.903812Z",
+        "status": "active"
+      },
+      "workspace_assets": {
+        "451be82b24db4e47": {
+          "asset_id": "451be82b24db4e47",
+          "investigation_id": "d985a9f0192d438f",
+          "conversation_id": "7f0c8cfc-2d16-4da8-9f40-b095a180776e",
+          "asset_type": "result_table",
+          "title": "Coincidencias same-day: 02 y 20",
+          "subjects": [
+            "02",
+            "20"
+          ],
+          "relation": "same_day",
+          "scope": "official_seven",
+          "columns": [
+            "fecha",
+            "loteria",
+            "numero_a",
+            "posicion_a",
+            "numero_b",
+            "posicion_b",
+            "tipo_coincidencia"
+          ],
+          "rows": [
+            {
+              "fecha": "2026-05-31",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-12-21",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2025-08-15",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-06-22",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-06-21",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-01-24",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2024-10-25",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-09-10",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-06-24",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-06-06",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-12-28",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-06-02",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-05-02",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2023-03-29",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-01-21",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2023-01-19",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-12-27",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-06-19",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-06-09",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-05-05",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-04-10",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-01-13",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-09-27",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-09-14",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-02-19",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2020-01-31",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2020-01-02",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-11-21",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-02-16",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-07-02",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-06-15",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-11-14",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-08-18",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-08-04",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-04-08",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2016-06-05",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2015-12-11",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2026-07-08",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2026-03-29",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2025-12-27",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-09-25",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-07-10",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-04-08",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-12-11",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-04-03",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-02-13",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-10-14",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-08-27",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-08-05",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-04-17",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-02-02",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-01-20",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2022-12-20",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-03-21",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-10-21",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-10-20",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-03-31",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-01-22",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-01-12",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2020-07-04",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2020-02-06",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2020-01-05",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-10-16",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-08-22",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-08-19",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-05-26",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-05-07",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-03-01",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-02-02",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-08-05",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2016-12-07",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2016-11-15",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2015-09-12",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2015-04-15",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2026-02-26",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2025-12-20",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-08-26",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-07-26",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-02-16",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-01-12",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-12-26",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-06-02",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-04-10",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-02-06",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-12-23",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-11-12",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-10-01",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-07-07",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-05-18",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-04-14",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2020-06-06",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2020-02-28",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2020-02-26",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-11-23",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-10-04",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-09-03",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-11-21",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-06-23",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-03-27",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-11-22",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-09-25",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-05-02",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-04-20",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2016-11-08",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2016-05-18",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_loteria"
+            }
+          ],
+          "row_count": 105,
+          "filters": {
+            "lottery": null,
+            "date_from": null,
+            "date_to": null,
+            "position": null,
+            "number": null,
+            "same_lottery": null,
+            "same_position": null,
+            "limit": null
+          },
+          "sort": {
+            "field": "posicion_a_num",
+            "direction": "asc"
+          },
+          "pagination": {
+            "page": 1,
+            "page_size": 20
+          },
+          "created_at": "2026-08-02T16:16:24.511878Z",
+          "updated_at": "2026-08-02T16:16:27.906705Z",
+          "expires_at": "2026-08-02T16:26:27.906705Z",
+          "source_query_hash": "98f4866817e05395",
+          "evidence_hash": "98f4866817e05395",
+          "source_rows": [
+            {
+              "fecha": "2026-07-08",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2026-05-31",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2026-03-29",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2026-02-26",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2025-12-27",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-12-21",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2025-12-20",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-09-25",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-08-26",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-08-15",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-07-26",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-07-10",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-06-22",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-06-21",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-04-08",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-02-16",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2025-01-24",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2025-01-12",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-12-26",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-12-11",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-10-25",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-09-10",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-06-24",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-06-06",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-06-02",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-04-03",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2024-02-13",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-12-28",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-10-14",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-08-27",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-08-05",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-06-02",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-05-02",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2023-04-17",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-04-10",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-03-29",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-02-06",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-02-02",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2023-01-21",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2023-01-20",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2023-01-19",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-12-27",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-12-23",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-12-20",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-11-12",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-10-01",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-07-07",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-06-19",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-06-09",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-05-18",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-05-05",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-04-10",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-03-21",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2022-01-13",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-10-21",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-10-20",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-09-27",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-09-14",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-04-14",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-03-31",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-02-19",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-01-22",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2021-01-12",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2020-07-04",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2020-06-06",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2020-02-28",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2020-02-26",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2020-02-06",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2020-01-31",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2020-01-05",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2020-01-02",
+              "loteria": "Loteria Nacional",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Loteria Nacional",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-11-23",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-11-21",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-10-16",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-10-04",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-09-03",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-08-22",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2019-02-16",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-11-21",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-08-19",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-07-02",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-06-23",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-06-15",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-05-26",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-05-07",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-03-27",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-03-01",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2018-02-02",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-11-22",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-11-14",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-09-25",
+              "loteria": "New York 10:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 10:30",
+              "loteria_b": "Quiniela Real",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-08-18",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-08-05",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "2da posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-08-04",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-05-02",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 10:30",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-04-20",
+              "loteria": "Gana Mas",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Gana Mas",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2017-04-08",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "1ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2016-12-07",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Loteria Nacional",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2016-11-15",
+              "loteria": "New York 2:30",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "New York 2:30",
+              "loteria_b": "New York 2:30",
+              "posicion_a": "2da posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2016-11-08",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Quiniela Loteka",
+              "posicion_a": "3ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2016-06-05",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "1ra posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2016-05-18",
+              "loteria": "Quiniela Leidsa",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Leidsa",
+              "loteria_b": "Quiniela Leidsa",
+              "posicion_a": "3ra posición",
+              "posicion_b": "1ra posición",
+              "posicion_a_num": 3,
+              "posicion_b_num": 1,
+              "tipo_coincidencia": "misma_loteria"
+            },
+            {
+              "fecha": "2015-12-11",
+              "loteria": "Quiniela Real",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Real",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "1ra posición",
+              "posicion_b": "3ra posición",
+              "posicion_a_num": 1,
+              "posicion_b_num": 3,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2015-09-12",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            },
+            {
+              "fecha": "2015-04-15",
+              "loteria": "Quiniela Loteka",
+              "numero_a": "02",
+              "numero_b": "20",
+              "loteria_a": "Quiniela Loteka",
+              "loteria_b": "Gana Mas",
+              "posicion_a": "2da posición",
+              "posicion_b": "2da posición",
+              "posicion_a_num": 2,
+              "posicion_b_num": 2,
+              "tipo_coincidencia": "misma_fecha"
+            }
+          ],
+          "export_path": null,
+          "export_filename": null,
+          "download_url": null
+        }
+      },
+      "active_asset_id": "451be82b24db4e47"
+    },
+    "last_draw_count": null,
+    "last_number_type": null,
+    "pending_ambiguity": null,
+    "compared_lotteries": [
+      "Gana Más",
+      "Nacional",
+      "New York 10:30",
+      "New York 2:30",
+      "Leidsa",
+      "Loteka",
+      "Real"
+    ],
+    "conversation_summary": null,
+    "last_query_semantics": "coincidences_only",
+    "last_result_reference": null,
+    "workspace_last_action": {
+      "turn_type": "asset_action",
+      "action": "sort_results",
+      "asset_id": null,
+      "filters": {
+        "lottery": null,
+        "date_from": null,
+        "date_to": null,
+        "position": null,
+        "number": null,
+        "same_lottery": null,
+        "same_position": null,
+        "limit": null
+      },
+      "sort": {
+        "field": "posicion_a_num",
+        "direction": "asc"
+      },
+      "pagination": null,
+      "export_format": null,
+      "requires_sql": false,
+      "requires_asset_load": true,
+      "requires_huawei": false,
+      "confidence": "high",
+      "reason_code": "breakdown_by_position"
+    },
+    "default_primary_position": 1,
+    "current_primary_candidate": null,
+    "default_number_position_scope": "first_position"
+  },
+  "active_context": {
+    "investigation_id": "d985a9f0192d438f",
+    "asset_id": "451be82b24db4e47",
+    "relation": "same_day",
+    "numbers": [
+      "02",
+      "20"
+    ]
+  },
+  "suggestions": [
+    "Muéstrame esos resultados.",
+    "Ver fechas de coincidencia.",
+    "Desglosar por posición.",
+    "Exportar Excel.",
+    "Analizar qué pasó después de 02 + 20."
+  ],
+  "synthesis_fallback": false,
+  "latency_ms": 59,
+  "runtime_trace": {
+    "provider_used": "investigation_workspace",
+    "latency_ms": 59.771834000002855,
+    "investigation_id": "d985a9f0192d438f",
+    "evidence_reused": false,
+    "hermes_decision": {
+      "hermes_decision_id": "0a7d945c504c",
+      "turn_type": "asset_action",
+      "refers_to": null,
+      "requested_attribute": "sort_results",
+      "inherited_subjects": [
+        "02",
+        "20"
+      ],
+      "inherited_metric": "same_day",
+      "inherited_relation": "same_day",
+      "requires_research": false,
+      "reuse_evidence": false,
+      "confidence": "high",
+      "reason_code": "breakdown_by_position",
+      "ambiguous": false,
+      "reasoning_mode": "skip",
+      "workspace_action": {
+        "turn_type": "asset_action",
+        "action": "sort_results",
+        "asset_id": null,
+        "filters": {
+          "lottery": null,
+          "date_from": null,
+          "date_to": null,
+          "position": null,
+          "number": null,
+          "same_lottery": null,
+          "same_position": null,
+          "limit": null
+        },
+        "sort": {
+          "field": "posicion_a_num",
+          "direction": "asc"
+        },
+        "pagination": null,
+        "export_format": null,
+        "requires_sql": false,
+        "requires_asset_load": true,
+        "requires_huawei": false,
+        "confidence": "high",
+        "reason_code": "breakdown_by_position"
+      }
+    },
+    "hermes_decision_id": "0a7d945c504c"
+  },
+  "research": null,
+  "forensic": null
+}

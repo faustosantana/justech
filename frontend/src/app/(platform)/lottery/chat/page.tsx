@@ -11,7 +11,10 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-import { AnalysisResponse } from "@/components/lottery/ux/analysis-response";
+import {
+  AnalysisResponse,
+  type WorkspaceUiAction,
+} from "@/components/lottery/ux/analysis-response";
 import { EmptyState } from "@/components/lottery/ux/empty-state";
 import { LoadingAnalysis } from "@/components/lottery/ux/loading-analysis";
 import { AppShell } from "@/components/layout/app-shell";
@@ -42,6 +45,7 @@ type UiMessage = {
   structured?: LotteryChatSendResponse["message"]["structured_content"];
   tool_trace?: LotteryChatSendResponse["message"]["tool_trace"];
   latency_ms?: number | null;
+  rawResponse?: LotteryChatSendResponse | null;
 };
 
 type ActiveContext = NonNullable<LotteryChatSendResponse["active_context"]>;
@@ -289,6 +293,7 @@ export default function LotteryChatPage() {
           structured: res.message.structured_content,
           tool_trace: res.message.tool_trace,
           latency_ms: res.latency_ms,
+          rawResponse: res,
         },
       ]);
       await refreshSessions();
@@ -298,6 +303,31 @@ export default function LotteryChatPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const workspaceActionText = (action: WorkspaceUiAction): string => {
+    switch (action.type) {
+      case "filter_lottery":
+        return `Filtrar solo ${action.lottery}.`;
+      case "sort_recent":
+        return "Ordenar por fecha más reciente.";
+      case "breakdown_positions":
+        return "Desglosar por posición.";
+      case "export_excel":
+        return "Exportar Excel.";
+      case "next_page":
+        return "Ver más.";
+      case "custom":
+        return action.text;
+      default:
+        return "";
+    }
+  };
+
+  const onWorkspaceAction = async (action: WorkspaceUiAction) => {
+    const text = workspaceActionText(action);
+    if (!text) return;
+    await send(text);
   };
 
   const onSelectSession = async (id: string) => {
@@ -609,7 +639,9 @@ export default function LotteryChatPage() {
                         toolTrace={m.tool_trace}
                         latencyMs={m.latency_ms}
                         sessionContext={sessionContext}
+                        response={m.rawResponse}
                         showSidePanel
+                        onWorkspaceAction={onWorkspaceAction}
                       />
                     </div>
                   )}
@@ -702,6 +734,7 @@ export default function LotteryChatPage() {
                             structured: res.message.structured_content,
                             tool_trace: res.message.tool_trace,
                             latency_ms: res.latency_ms,
+                            rawResponse: res,
                           },
                         ];
                       });

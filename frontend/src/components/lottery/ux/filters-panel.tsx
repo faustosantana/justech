@@ -16,6 +16,10 @@ export function FiltersPanel({
   columns,
   filters,
   onChange,
+  lotteryValue,
+  onLotteryChange,
+  onApplyWorkspaceFilter,
+  onApplyWorkspaceSort,
   className,
 }: {
   open: boolean;
@@ -23,6 +27,10 @@ export function FiltersPanel({
   columns: string[];
   filters: GridFilters;
   onChange: (next: GridFilters) => void;
+  lotteryValue?: string;
+  onLotteryChange?: (v: string) => void;
+  onApplyWorkspaceFilter?: () => void;
+  onApplyWorkspaceSort?: () => void;
   className?: string;
 }) {
   if (!open) return null;
@@ -45,7 +53,31 @@ export function FiltersPanel({
       </div>
       <div className="mt-4 space-y-3">
         <label className="block space-y-1 text-xs">
-          <span className="text-muted-foreground">Búsqueda</span>
+          <span className="text-muted-foreground">Lotería (workspace)</span>
+          <Input
+            value={lotteryValue || ""}
+            onChange={(e) => onLotteryChange?.(e.target.value)}
+            placeholder="Ej. Loteka"
+          />
+        </label>
+        <Button
+          type="button"
+          className="w-full"
+          onClick={() => onApplyWorkspaceFilter?.()}
+        >
+          Aplicar filtro en workspace
+        </Button>
+        <Button
+          type="button"
+          className="w-full"
+          variant="secondary"
+          onClick={() => onApplyWorkspaceSort?.()}
+        >
+          Ordenar por fecha más reciente
+        </Button>
+        <hr className="border-border/60" />
+        <label className="block space-y-1 text-xs">
+          <span className="text-muted-foreground">Búsqueda local (página actual)</span>
           <Input
             value={filters.search}
             onChange={(e) => onChange({ ...filters, search: e.target.value })}
@@ -53,7 +85,7 @@ export function FiltersPanel({
           />
         </label>
         <label className="block space-y-1 text-xs">
-          <span className="text-muted-foreground">Ordenar por</span>
+          <span className="text-muted-foreground">Ordenar columnas locales</span>
           <select
             className="h-9 w-full rounded-md border bg-background px-2"
             value={filters.sortKey}
@@ -83,13 +115,14 @@ export function FiltersPanel({
         <Button
           type="button"
           className="w-full"
-          variant="secondary"
+          variant="ghost"
           onClick={() => {
             onChange({ search: "", sortKey: "", sortDir: "asc" });
+            onLotteryChange?.("");
             onClose();
           }}
         >
-          Limpiar filtros
+          Limpiar filtros locales
         </Button>
       </div>
     </div>

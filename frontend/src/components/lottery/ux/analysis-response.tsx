@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { ActionToolbar } from "@/components/lottery/ux/action-toolbar";
 import { ChartsView } from "@/components/lottery/ux/charts-view";
 import { EmptyState } from "@/components/lottery/ux/empty-state";
-import { ExportPanel, toCsv, toExcelXml, downloadBlob } from "@/components/lottery/ux/export-panel";
+import { ExportPanel, toCsv, downloadBlob } from "@/components/lottery/ux/export-panel";
 import { FiltersPanel, type GridFilters } from "@/components/lottery/ux/filters-panel";
 import { InsightPanel } from "@/components/lottery/ux/insight-panel";
 import { QueryInfo } from "@/components/lottery/ux/query-info";
@@ -14,12 +14,17 @@ import { StatisticsCards } from "@/components/lottery/ux/statistics-cards";
 import { SummaryCards } from "@/components/lottery/ux/summary-cards";
 import { TimelineView } from "@/components/lottery/ux/timeline-view";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
-  buildAnalysisPresentation,
-  type AnalysisTab,
-  type Structured,
-} from "@/lib/lottery-ux-present";
+  mapLotteryChatResponseToAnalysisViewModel,
+} from "@/lib/lottery-ux-adapter";
+import type { AnalysisTab, Structured } from "@/lib/lottery-ux-present";
 import { markUxShared, saveUxQuery } from "@/lib/lottery-ux-history";
+import {
+  downloadAuthenticatedBlob,
+  fetchAuthenticatedFile,
+  normalizeApiPath,
+} from "@/lib/authenticated-file";
 import type { LotteryChatSendResponse } from "@/lib/lottery";
 import { cn } from "@/lib/utils";
 
@@ -32,6 +37,14 @@ const TABS: { id: AnalysisTab; label: string }[] = [
   { id: "exportar", label: "Exportar" },
 ];
 
+export type WorkspaceUiAction =
+  | { type: "filter_lottery"; lottery: string }
+  | { type: "sort_recent" }
+  | { type: "breakdown_positions" }
+  | { type: "export_excel" }
+  | { type: "next_page" }
+  | { type: "custom"; text: string };
+
 export function AnalysisResponse({
   content,
   structured,
@@ -40,7 +53,10 @@ export function AnalysisResponse({
   toolTrace,
   latencyMs,
   sessionContext,
+  suggestions,
+  response,
   showSidePanel = true,
+  onWorkspaceAction,
   className,
 }: {
   content: string;
@@ -50,12 +66,16 @@ export function AnalysisResponse({
   toolTrace?: LotteryChatSendResponse["message"]["tool_trace"];
   latencyMs?: number | null;
   sessionContext?: Record<string, unknown> | null;
+  suggestions?: string[];
+  response?: LotteryChatSendResponse | null;
   showSidePanel?: boolean;
+  onWorkspaceAction?: (action: WorkspaceUiAction) => void | Promise<void>;
   className?: string;
 }) {
   const presentation = useMemo(
     () =>
-      buildAnalysisPresentation({
+      mapLotteryChatResponseToAnalysisViewModel({
+        response,
         content,
         structured,
         query,
@@ -63,8 +83,19 @@ export function AnalysisResponse({
         toolTrace,
         latencyMs,
         sessionContext,
+        suggestions,
       }),
-    [content, structured, query, activeContext, toolTrace, latencyMs, sessionContext],
+    [
+      response,
+      content,
+      structured,
+      query,
+      activeContext,
+      toolTrace,
+      latencyMs,
+      sessionContext,
+      suggestions,
+    ],
   );
 
   const [tab, setTab] = useState<AnalysisTab>("resumen");
@@ -75,10 +106,20 @@ export function AnalysisResponse({
     sortKey: "",
     sortDir: "asc",
   });
+  const [lotteryFilter, setLotteryFilter] = useState("");
 
   const flash = (msg: string) => {
     setStatus(msg);
     window.setTimeout(() => setStatus(null), 2200);
+  };
+
+  const runWorkspace = async (action: WorkspaceUiAction) => {
+    if (!onWorkspaceAction) {
+      flash("Acción no conectada al chat");
+      return;
+    }
+    flash("Ejecutando en workspace…");
+    await onWorkspaceAction(action);
   };
 
   const exportCsv = () => {
@@ -89,25 +130,31 @@ export function AnalysisResponse({
     }
     const blob = new Blob([toCsv(columns, rows)], { type: "text/csv;charset=utf-8" });
     downloadBlob(blob, `${title.replace(/\s+/g, "-").toLowerCase()}.csv`);
-    flash("CSV descargado");
+    flash("CSV descargado (desde asset actual)");
   };
 
-  const exportExcel = () => {
-    if (presentation.downloadUrl) {
-      window.open(presentation.downloadUrl, "_blank", "noopener,noreferrer");
-      flash("Descarga del workspace iniciada");
+  const exportExcel = async () => {
+    // Prefer live workspace export endpoint
+    if (onWorkspaceAction && !presentation.rawDownloadUrl) {
+      await runWorkspace({ type: "export_excel" });
       return;
     }
-    const { columns, rows, title } = presentation;
-    if (!rows.length) {
-      flash("No hay filas para exportar");
+    if (presentation.rawDownloadUrl) {
+      try {
+        const path = normalizeApiPath(presentation.rawDownloadUrl);
+        const file = await fetchAuthenticatedFile(path);
+        downloadAuthenticatedBlob(
+          file.blob,
+          presentation.downloadFilename || file.filename || "export.xlsx",
+        );
+        flash("Excel descargado");
+      } catch {
+        flash("No se pudo descargar el Excel (¿sesión?)");
+      }
       return;
     }
-    const blob = new Blob([toExcelXml(columns, rows)], {
-      type: "application/vnd.ms-excel",
-    });
-    downloadBlob(blob, `${title.replace(/\s+/g, "-").toLowerCase()}.xls`);
-    flash("Excel descargado");
+    flash("Solicitando exportación al workspace…");
+    await runWorkspace({ type: "export_excel" });
   };
 
   const copyQuery = async () => {
@@ -127,7 +174,7 @@ export function AnalysisResponse({
       return;
     }
     saveUxQuery(text, { favorite: true });
-    flash("Consulta guardada en favoritas");
+    flash("Consulta guardada (local)");
   };
 
   const share = async () => {
@@ -138,7 +185,7 @@ export function AnalysisResponse({
       await navigator.clipboard.writeText(url.toString());
       const saved = saveUxQuery(text || url.toString(), { shared: true });
       markUxShared(saved.id);
-      flash("Enlace de compartir copiado");
+      flash("URL de compartir copiada");
     } catch {
       flash("No se pudo compartir");
     }
@@ -196,16 +243,48 @@ export function AnalysisResponse({
           setTab("resultados");
         }}
         onSort={() => {
-          setFiltersOpen(true);
+          void runWorkspace({ type: "sort_recent" });
           setTab("resultados");
         }}
         onExportCsv={exportCsv}
-        onExportExcel={exportExcel}
+        onExportExcel={() => void exportExcel()}
         onCopyQuery={() => void copyQuery()}
         onSaveQuery={saveQuery}
         onShare={() => void share()}
         status={status}
       />
+
+      <div className="flex flex-wrap gap-2">
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          className="h-8 text-[11px]"
+          onClick={() => void runWorkspace({ type: "breakdown_positions" })}
+        >
+          Desglosar por posición
+        </Button>
+        <Button
+          type="button"
+          size="sm"
+          variant="outline"
+          className="h-8 text-[11px]"
+          onClick={() => void runWorkspace({ type: "filter_lottery", lottery: "Loteka" })}
+        >
+          Filtrar Loteka
+        </Button>
+        {presentation.workspaceActionHints.nextPage ? (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            className="h-8 text-[11px]"
+            onClick={() => void runWorkspace({ type: "next_page" })}
+          >
+            Ver más
+          </Button>
+        ) : null}
+      </div>
 
       <div className="flex gap-1 overflow-x-auto border-b border-border/50 pb-px">
         {TABS.map((t) => (
@@ -245,8 +324,8 @@ export function AnalysisResponse({
               {presentation.barChart.length > 0 || presentation.timeline.length > 0 ? (
                 <div className="grid gap-4 lg:grid-cols-2">
                   {presentation.barChart.length > 0 ? (
-                    <div className="rounded-2xl border border-border/60 bg-card/80 p-4">
-                      <div className="mb-2 flex items-center justify-between gap-2">
+                    <div>
+                      <div className="mb-2 flex items-center justify-between">
                         <h4 className="text-sm font-semibold">Vista previa</h4>
                         <button
                           type="button"
@@ -270,7 +349,7 @@ export function AnalysisResponse({
                   ) : null}
                   {presentation.timeline.length > 0 ? (
                     <div>
-                      <div className="mb-2 flex items-center justify-between gap-2">
+                      <div className="mb-2 flex items-center justify-between">
                         <h4 className="text-sm font-semibold">Timeline reciente</h4>
                         <button
                           type="button"
@@ -287,8 +366,11 @@ export function AnalysisResponse({
               ) : null}
               {presentation.rows.length > 0 ? (
                 <p className="text-xs text-muted-foreground">
-                  La tabla completa está en Resultados ({presentation.rows.length} filas) — nunca
-                  antes del resumen.
+                  Tabla completa en Resultados ({presentation.meta.recordCount} filas
+                  {presentation.pagination
+                    ? ` · pág. ${presentation.pagination.page}/${presentation.pagination.totalPages}`
+                    : ""}
+                  ). Sin Markdown técnico.
                 </p>
               ) : null}
             </>
@@ -311,13 +393,23 @@ export function AnalysisResponse({
           {tab === "timeline" && <TimelineView items={presentation.timeline} />}
 
           {tab === "exportar" && (
-            <ExportPanel presentation={presentation} onStatus={flash} />
+            <ExportPanel
+              presentation={presentation}
+              onStatus={flash}
+              onExportExcel={() => void exportExcel()}
+            />
           )}
         </div>
 
         {showSidePanel ? (
           <div className="space-y-3 xl:sticky xl:top-2 xl:self-start">
             <QueryInfo meta={presentation.meta} />
+            {presentation.pagination ? (
+              <p className="text-[11px] text-muted-foreground">
+                Página {presentation.pagination.page} de {presentation.pagination.totalPages} ·{" "}
+                {presentation.pagination.pageSize} / pág.
+              </p>
+            ) : null}
           </div>
         ) : null}
       </div>
@@ -331,17 +423,27 @@ export function AnalysisResponse({
           setGridFilters(next);
           flash(
             next.search || next.sortKey
-              ? `Filtros: ${next.search || "—"} · orden ${next.sortKey || "—"}`
-              : "Filtros limpios",
+              ? `Filtro local: ${next.search || "—"} · orden ${next.sortKey || "—"}`
+              : "Filtros locales limpios",
           );
+        }}
+        lotteryValue={lotteryFilter}
+        onLotteryChange={setLotteryFilter}
+        onApplyWorkspaceFilter={() => {
+          const lot = lotteryFilter.trim() || "Loteka";
+          setFiltersOpen(false);
+          void runWorkspace({ type: "filter_lottery", lottery: lot });
+        }}
+        onApplyWorkspaceSort={() => {
+          setFiltersOpen(false);
+          void runWorkspace({ type: "sort_recent" });
         }}
       />
 
-      {/* keep test id used by workspace exports */}
-      {presentation.downloadUrl ? (
+      {presentation.rawDownloadUrl ? (
         <a
           className="sr-only"
-          href={presentation.downloadUrl}
+          href={presentation.rawDownloadUrl}
           data-testid="workspace-excel-download"
         >
           download

@@ -6,8 +6,7 @@ import type { LotteryChatSendResponse } from "@/lib/lottery";
 type Structured = NonNullable<LotteryChatSendResponse["message"]["structured_content"]>;
 
 /**
- * Compatibility wrapper — all structured lottery results render through UX 2.0.
- * Preserves data-testid hooks via AnalysisResponse / ExportPanel.
+ * Compatibility wrapper — structured lottery results render through UX 2.0 + live adapter.
  */
 export function LotteryStructuredRenderer({
   structured,

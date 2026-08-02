@@ -719,6 +719,47 @@ class LotteryChatService:
             investigation=ActiveInvestigationSession.from_store(state.active_investigation),
             resolution=resolution,
         )
+        # Conversational orchestrator A/B (feature flag). Default hermes.
+        # gpt_shadow: Hermes remains visible/executed; GPT compared in parallel.
+        orchestrator_telemetry: dict = {}
+        try:
+            from app.lottery.ai.conversational_orchestrator import maybe_apply_gpt_decision
+
+            hermes_decision, orchestrator_telemetry = maybe_apply_gpt_decision(
+                content,
+                state=state,
+                investigation=ActiveInvestigationSession.from_store(
+                    state.active_investigation
+                ),
+                hermes_decision=hermes_decision,
+            )
+            if orchestrator_telemetry:
+                state.provider_trace = {
+                    **(getattr(state, "provider_trace", None) or {}),
+                    "conversational_orchestrator_ab": {
+                        k: orchestrator_telemetry.get(k)
+                        for k in (
+                            "orchestrator_mode",
+                            "hermes_visible",
+                            "gpt_affects_user",
+                            "executed_by",
+                            "fallback_hermes",
+                            "comparison",
+                        )
+                        if k in orchestrator_telemetry
+                    }
+                    | {
+                        "gpt_error": (orchestrator_telemetry.get("gpt") or {}).get("error"),
+                        "gpt_provider": (orchestrator_telemetry.get("gpt") or {}).get(
+                            "provider"
+                        ),
+                        "gpt_latency_ms": (orchestrator_telemetry.get("gpt") or {}).get(
+                            "latency_ms"
+                        ),
+                    },
+                }
+        except Exception:  # noqa: BLE001
+            orchestrator_telemetry = {"orchestrator_mode": "hermes", "error": "shadow_wire_failed"}
         forensic.event(
             "hermes.decision",
             component="HermesDecisionEngine",

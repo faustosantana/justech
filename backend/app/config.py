@@ -255,6 +255,12 @@ class Settings(BaseSettings):
     lottery_prompt_cache_ttl_seconds: int = 300
     # Shadow LLM double-call (costly); metadata-only shadow when false
     lottery_analyst_prompt_shadow_llm: bool = False
+    # Conversational orchestrator A/B — hermes | gpt_shadow | gpt (default hermes)
+    # gpt_shadow: Hermes executes; GPT decides in parallel (no user impact)
+    # gpt: experimental — accept GPT decision only if schema+guard pass
+    lottery_conversational_orchestrator_mode: str = "hermes"
+    # LLM transport for conversational orchestrator — huawei | openai (default huawei)
+    lottery_conversation_provider: str = "huawei"
     lottery_export_max_rows_csv: int = 100000
     lottery_export_max_rows_xlsx: int = 50000
     lottery_export_max_rows_pdf: int = 5000

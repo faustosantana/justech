@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lottery IA UX 2.0 — Preview</title>
+    <style>
+      :root {
+        --bg: #f4f7fb;
+        --card: #ffffff;
+        --fg: #0f172a;
+        --muted: #64748b;
+        --border: #e2e8f0;
+        --primary: #2563eb;
+        --primary-soft: rgba(37, 99, 235, 0.1);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+        background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 40%, #f8fafc 100%);
+        color: var(--fg);
+        padding: 24px;
+      }
+      .shell { max-width: 1120px; margin: 0 auto; }
+      .panel {
+        background: linear-gradient(180deg, #fff, #f8fafc);
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+      }
+      .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+      .badge {
+        font-size: 11px; font-weight: 600; border-radius: 999px;
+        padding: 4px 10px; border: 1px solid var(--border); background: #fff;
+      }
+      .badge.soft { background: var(--primary-soft); color: var(--primary); border-color: transparent; }
+      h1 { margin: 0 0 12px; font-size: 28px; letter-spacing: -0.02em; }
+      .toolbar { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 16px; }
+      .btn {
+        border: 1px solid var(--border); background: #fff; border-radius: 10px;
+        padding: 7px 10px; font-size: 11px; cursor: default;
+      }
+      .btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+      .tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+      .tab { padding: 10px 12px; font-size: 12px; color: var(--muted); }
+      .tab.active { color: var(--primary); background: var(--primary-soft); border-radius: 10px 10px 0 0; font-weight: 600; }
+      .grid { display: grid; grid-template-columns: 1fr 280px; gap: 16px; }
+      @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+      .cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+      @media (max-width: 900px) { .cards { grid-template-columns: repeat(2, 1fr); } }
+      .card {
+        border: 1px solid var(--border); border-radius: 16px; padding: 14px;
+        background: linear-gradient(180deg, #fff, #f8fafc);
+      }
+      .card label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+      .card strong { display: block; margin-top: 6px; font-size: 24px; font-variant-numeric: tabular-nums; }
+      .section { border: 1px solid var(--border); border-radius: 16px; padding: 14px; background: rgba(255,255,255,.7); margin-top: 14px; }
+      .section h3 { margin: 0 0 8px; font-size: 14px; }
+      .section p { margin: 0; font-size: 14px; line-height: 1.55; color: #1e293b; }
+      .insights { display: grid; gap: 8px; margin-top: 10px; }
+      .insight { border: 1px solid var(--border); border-radius: 12px; padding: 10px 12px; background: #f8fafc; }
+      .insight b { display: block; color: var(--primary); font-size: 12px; margin-bottom: 2px; }
+      .insight span { font-size: 13px; }
+      .side dt { color: var(--muted); }
+      .side dd { margin: 0 0 10px; font-weight: 600; font-size: 12px; word-break: break-word; }
+      .side dl { display: grid; grid-template-columns: 1fr 1.2fr; gap: 8px 10px; font-size: 12px; }
+      .bars { margin-top: 10px; display: grid; gap: 8px; }
+      .bar-row { display: grid; grid-template-columns: 90px 1fr 36px; gap: 8px; align-items: center; font-size: 12px; }
+      .track { height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; }
+      .fill { height: 100%; background: rgba(37,99,235,.8); border-radius: 999px; }
+      .caption { margin-top: 14px; font-size: 12px; color: var(--muted); }
+    </style>
+  </head>
+  <body>
+    <div class="shell">
+      <div class="panel" data-testid="analysis-response">
+        <div class="badges">
+          <span class="badge soft">Lottery IA</span>
+          <span class="badge">Investigación de workspace</span>
+          <span class="badge">105 registros</span>
+        </div>
+        <h1>Coincidencias entre 02 y 20</h1>
+        <div class="toolbar">
+          <span class="btn">Ver tabla</span>
+          <span class="btn active">Ver resumen</span>
+          <span class="btn">Gráficos</span>
+          <span class="btn">Timeline</span>
+          <span class="btn">Filtrar</span>
+          <span class="btn">Ordenar</span>
+          <span class="btn">Exportar Excel</span>
+          <span class="btn">Exportar CSV</span>
+          <span class="btn">Copiar consulta</span>
+          <span class="btn">Guardar consulta</span>
+          <span class="btn">Compartir</span>
+        </div>
+        <div class="tabs">
+          <div class="tab active">Resumen</div>
+          <div class="tab">Resultados</div>
+          <div class="tab">Gráficos</div>
+          <div class="tab">Estadísticas</div>
+          <div class="tab">Timeline</div>
+          <div class="tab">Exportar</div>
+        </div>
+        <div class="grid">
+          <div>
+            <div class="cards" data-testid="summary-cards">
+              <div class="card"><label>Coincidencias</label><strong>105</strong></div>
+              <div class="card"><label>Última aparición</label><strong style="font-size:18px">31 mayo 2026</strong></div>
+              <div class="card"><label>Loterías</label><strong>6</strong></div>
+              <div class="card"><label>Período</label><strong>2024–2026</strong></div>
+              <div class="card"><label>Relación analizada</label><strong style="font-size:18px">02 → 20</strong></div>
+            </div>
+            <div class="section">
+              <h3>Explicación</h3>
+              <p>
+                Los números 02 y 20 han coincidido en 105 ocasiones. La coincidencia más reciente ocurrió el 31 de mayo de 2026.
+                La mayoría de los casos muestran al 02 en la primera posición y al 20 en la segunda.
+                Estas coincidencias se distribuyen entre seis loterías distintas.
+              </p>
+            </div>
+            <div class="section" data-testid="insight-panel">
+              <h3>Insights automáticos</h3>
+              <div class="insights">
+                <div class="insight"><b>Posición más frecuente</b><span>Primera posición concentra la mayor parte de apariciones del 02.</span></div>
+                <div class="insight"><b>Lotería dominante</b><span>Leidsa lidera con más coincidencias en el período.</span></div>
+                <div class="insight"><b>Año con más coincidencias</b><span>2025 concentra el pico de actividad.</span></div>
+                <div class="insight"><b>Tendencia</b><span>El comportamiento reciente se mantiene activo hasta mayo 2026.</span></div>
+              </div>
+            </div>
+            <div class="section">
+              <h3>Vista previa</h3>
+              <div class="bars">
+                <div class="bar-row"><span>Leidsa</span><div class="track"><div class="fill" style="width:92%"></div></div><span>28</span></div>
+                <div class="bar-row"><span>Loteka</span><div class="track"><div class="fill" style="width:70%"></div></div><span>21</span></div>
+                <div class="bar-row"><span>La Primera</span><div class="track"><div class="fill" style="width:58%"></div></div><span>18</span></div>
+                <div class="bar-row"><span>Real</span><div class="track"><div class="fill" style="width:45%"></div></div><span>14</span></div>
+              </div>
+            </div>
+            <p class="caption">La tabla completa está en Resultados (105 filas) — nunca antes del resumen.</p>
+          </div>
+          <aside class="section side" data-testid="query-info">
+            <h3>Contexto de la consulta</h3>
+            <dl>
+              <dt>Consulta original</dt><dd>¿Cuántas veces coincidieron el 02 y el 20?</dd>
+              <dt>Sujetos</dt><dd>02 · 20</dd>
+              <dt>Tipo</dt><dd>Investigación de workspace</dd>
+              <dt>Filtros activos</dt><dd>2024–2026 · 6 loterías</dd>
+              <dt>Registros</dt><dd>105</dd>
+              <dt>Workspace</dt><dd>investigation</dd>
+              <dt>Proveedor IA</dt><dd>demo</dd>
+              <dt>Modelo</dt><dd>preview</dd>
+              <dt>Tiempo SQL</dt><dd>210 ms</dd>
+              <dt>Tiempo IA</dt><dd>520 ms</dd>
+              <dt>Latencia total</dt><dd>842 ms</dd>
+            </dl>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

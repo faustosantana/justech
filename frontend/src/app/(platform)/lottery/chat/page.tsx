@@ -7,17 +7,25 @@ import {
   useMemo,
   useRef,
   useState,
-  type ReactNode,
 } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-import { LotteryStructuredRenderer } from "@/components/lottery/lottery-structured-renderer";
+import { AnalysisResponse } from "@/components/lottery/ux/analysis-response";
+import { EmptyState } from "@/components/lottery/ux/empty-state";
+import { LoadingAnalysis } from "@/components/lottery/ux/loading-analysis";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ApiError, apiClient } from "@/lib/api";
 import { getAccessToken, getUserRole } from "@/lib/auth";
+import {
+  listUxFavorites,
+  listUxHistory,
+  listUxShared,
+  rememberUxQuery,
+  type SavedUxQuery,
+} from "@/lib/lottery-ux-history";
 import {
   canAccessLotteryModule,
   DISCLAIMER,
@@ -30,8 +38,10 @@ type UiMessage = {
   id: string;
   role: string;
   content: string;
+  query?: string;
   structured?: LotteryChatSendResponse["message"]["structured_content"];
   tool_trace?: LotteryChatSendResponse["message"]["tool_trace"];
+  latency_ms?: number | null;
 };
 
 type ActiveContext = NonNullable<LotteryChatSendResponse["active_context"]>;
@@ -43,73 +53,6 @@ const STARTERS = [
 ];
 
 const NEAR_BOTTOM_PX = 80;
-
-function SimpleMarkdown({ text }: { text: string }) {
-  const blocks = useMemo(() => text.split(/\n{2,}/), [text]);
-  return (
-    <div className="space-y-2 text-sm leading-relaxed">
-      {blocks.map((block, i) => {
-        const lines = block.split("\n");
-        const isList = lines.every((l) => /^\s*([-*•]|\d+\.)\s+/.test(l) || !l.trim());
-        if (isList && lines.some((l) => l.trim())) {
-          return (
-            <ul key={i} className="list-disc space-y-1 pl-5">
-              {lines
-                .filter((l) => l.trim())
-                .map((l, j) => (
-                  <li key={j}>{renderInline(l.replace(/^\s*([-*•]|\d+\.)\s+/, ""))}</li>
-                ))}
-            </ul>
-          );
-        }
-        return (
-          <p key={i} className="whitespace-pre-wrap">
-            {lines.map((line, j) => (
-              <span key={j}>
-                {j > 0 && <br />}
-                {renderInline(line)}
-              </span>
-            ))}
-          </p>
-        );
-      })}
-    </div>
-  );
-}
-
-function renderInline(line: string): ReactNode[] {
-  const parts: ReactNode[] = [];
-  const re = /(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g;
-  let last = 0;
-  let m: RegExpExecArray | null;
-  let key = 0;
-  while ((m = re.exec(line)) !== null) {
-    if (m.index > last) parts.push(line.slice(last, m.index));
-    const token = m[0];
-    if (token.startsWith("**")) {
-      parts.push(
-        <strong key={key++} className="font-semibold">
-          {token.slice(2, -2)}
-        </strong>,
-      );
-    } else if (token.startsWith("*")) {
-      parts.push(
-        <em key={key++} className="italic">
-          {token.slice(1, -1)}
-        </em>,
-      );
-    } else {
-      parts.push(
-        <code key={key++} className="rounded bg-muted px-1 text-[0.85em]">
-          {token.slice(1, -1)}
-        </code>,
-      );
-    }
-    last = m.index + token.length;
-  }
-  if (last < line.length) parts.push(line.slice(last));
-  return parts;
-}
 
 function formatSessionMeta(s: LotteryChatSession): string {
   const ctx = s.context || {};
@@ -123,58 +66,6 @@ function formatSessionMeta(s: LotteryChatSession): string {
   return [num != null ? `Nº ${num}` : null, dateBit].filter(Boolean).join(" · ");
 }
 
-function AnalysisCard({ structured }: { structured: UiMessage["structured"] }) {
-  if (!structured || structured.type !== "lottery_complete_analysis") return null;
-  const raw = structured.data;
-  const data = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
-  const primary = (data.primary as { number?: number; reason?: string } | undefined) || {};
-  const hist = (data.historical as Record<string, unknown> | undefined) || {};
-  const why: string[] = [];
-  const t1 = (data.table1_sources as unknown[]) || [];
-  const t2 = (data.table2_confirmers as unknown[]) || [];
-  const same = (data.same_day_cross as Record<string, unknown>[]) || [];
-  if (t1.length) why.push(`Tabla 1 relaciona ${data.observed_number} con ${primary.number}.`);
-  if (t2.length) why.push(`Tabla 2 confirma ${primary.number} mediante ${t2.join(", ")}.`);
-  if (same[0]) {
-    why.push(
-      `Cruce del mismo día: ${same[0].origen} → ${same[0].companero} (confirmador ${same[0].confirmador}).`,
-    );
-  }
-  if (hist.casos_equivalentes != null) {
-    why.push(
-      `Histórico: ${hist.casos_equivalentes} casos equivalentes, ${hist.aciertos_exactos ?? "—"} aciertos exactos.`,
-    );
-  }
-  const rival = data.rival_comparison as { texto?: string } | undefined;
-  return (
-    <div className="mt-2 rounded-md border bg-background/70 p-3 text-xs text-muted-foreground">
-      <p>
-        <span className="font-medium text-foreground">Número analizado:</span>{" "}
-        {String(data.observed_number ?? "—")}
-      </p>
-      <p className="mt-1">
-        <span className="font-medium text-foreground">Resultado principal:</span>{" "}
-        {primary.number != null ? String(primary.number) : "—"}
-      </p>
-      {why.length > 0 && (
-        <div className="mt-2">
-          <p className="font-medium text-foreground">Por qué:</p>
-          <ul className="mt-1 list-disc space-y-0.5 pl-4">
-            {why.map((w) => (
-              <li key={w}>{w}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-      {rival?.texto && (
-        <p className="mt-2">
-          <span className="font-medium text-foreground">Comparación:</span> {rival.texto}
-        </p>
-      )}
-    </div>
-  );
-}
-
 export default function LotteryChatPage() {
   const router = useRouter();
   const search = useSearchParams();
@@ -183,6 +74,7 @@ export default function LotteryChatPage() {
   const [messages, setMessages] = useState<UiMessage[]>([]);
   const [suggestions, setSuggestions] = useState<string[]>(STARTERS);
   const [activeContext, setActiveContext] = useState<ActiveContext | null>(null);
+  const [sessionContext, setSessionContext] = useState<Record<string, unknown> | null>(null);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -190,11 +82,24 @@ export default function LotteryChatPage() {
   const [stickToBottom, setStickToBottom] = useState(true);
   const [renamingId, setRenamingId] = useState<string | null>(null);
   const [renameValue, setRenameValue] = useState("");
+  const [historyTab, setHistoryTab] = useState<"sesiones" | "recientes" | "favoritas" | "compartidas">(
+    "sesiones",
+  );
+  const [uxHistory, setUxHistory] = useState<SavedUxQuery[]>([]);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const pendingScrollRef = useRef(false);
+  const lastUserQueryRef = useRef("");
+
+  const refreshUxHistory = useCallback(() => {
+    setUxHistory(listUxHistory());
+  }, []);
+
+  useEffect(() => {
+    refreshUxHistory();
+  }, [refreshUxHistory]);
 
   useEffect(() => {
     const q = search.get("q") || "";
@@ -238,9 +143,11 @@ export default function LotteryChatPage() {
   const applyContextFromSession = (s: LotteryChatSession | undefined) => {
     if (!s) {
       setActiveContext(null);
+      setSessionContext(null);
       return;
     }
     const ctx = s.context || {};
+    setSessionContext(ctx);
     const v4 = (ctx.conversation_v4 as Record<string, unknown>) || {};
     const la = (v4.last_analysis as Record<string, unknown>) || {};
     const nums = (v4.active_numbers as string[]) || (ctx.last_numbers as string[]) || [];
@@ -257,14 +164,24 @@ export default function LotteryChatPage() {
 
   const loadMessages = useCallback(async (id: string) => {
     const res = await apiClient.listLotteryChatMessages(id);
+    const items = res.items.map((m: LotteryChatMessage) => ({
+      id: m.id,
+      role: m.role,
+      content: m.content,
+      structured: (m.tool_payload?.structured_content as UiMessage["structured"]) || null,
+      tool_trace: (m.tool_payload?.tool_trace as UiMessage["tool_trace"]) || [],
+      latency_ms: (m.tool_payload?.latency_ms as number | undefined) ?? null,
+    }));
+    // attach preceding user query to assistant messages for meta panel
+    let lastQ = "";
     setMessages(
-      res.items.map((m: LotteryChatMessage) => ({
-        id: m.id,
-        role: m.role,
-        content: m.content,
-        structured: (m.tool_payload?.structured_content as UiMessage["structured"]) || null,
-        tool_trace: (m.tool_payload?.tool_trace as UiMessage["tool_trace"]) || [],
-      })),
+      items.map((m) => {
+        if (m.role === "user") {
+          lastQ = m.content;
+          return m;
+        }
+        return { ...m, query: lastQ };
+      }),
     );
     pendingScrollRef.current = true;
     setStickToBottom(true);
@@ -280,6 +197,7 @@ export default function LotteryChatPage() {
       setMessages([]);
       setSuggestions(STARTERS);
       setActiveContext(null);
+      setSessionContext(null);
       await refreshSessions();
       pendingScrollRef.current = true;
     } catch (err) {
@@ -343,6 +261,9 @@ export default function LotteryChatPage() {
     setStickToBottom(true);
     pendingScrollRef.current = true;
     const draft = trimmed;
+    lastUserQueryRef.current = draft;
+    rememberUxQuery(draft);
+    refreshUxHistory();
     try {
       let sid = sessionId;
       if (!sid) {
@@ -357,14 +278,17 @@ export default function LotteryChatPage() {
       const res = await apiClient.sendLotteryChatMessage(sid, draft);
       setSuggestions(res.suggestions?.length ? res.suggestions : STARTERS);
       if (res.active_context) setActiveContext(res.active_context);
+      if (res.context) setSessionContext(res.context);
       setMessages((prev) => [
         ...prev,
         {
           id: res.message.id,
           role: "assistant",
           content: res.message.content,
+          query: draft,
           structured: res.message.structured_content,
           tool_trace: res.message.tool_trace,
+          latency_ms: res.latency_ms,
         },
       ]);
       await refreshSessions();
@@ -405,6 +329,7 @@ export default function LotteryChatPage() {
       setSessionId(null);
       setMessages([]);
       setActiveContext(null);
+      setSessionContext(null);
     }
     await refreshSessions();
   };
@@ -421,7 +346,12 @@ export default function LotteryChatPage() {
   };
 
   const contextLabel = useMemo(() => {
-    if (!activeContext?.number && !activeContext?.numbers?.length && !activeContext?.primary_candidate && !activeContext?.analyzing) {
+    if (
+      !activeContext?.number &&
+      !activeContext?.numbers?.length &&
+      !activeContext?.primary_candidate &&
+      !activeContext?.analyzing
+    ) {
       return null;
     }
     const nums = (activeContext.numbers as string[] | undefined) || [];
@@ -442,8 +372,17 @@ export default function LotteryChatPage() {
     };
   }, [activeContext]);
 
+  const historyItems =
+    historyTab === "favoritas"
+      ? listUxFavorites()
+      : historyTab === "compartidas"
+        ? listUxShared()
+        : historyTab === "recientes"
+          ? uxHistory
+          : null;
+
   return (
-    <AppShell title="Chat inteligente" description="Asistente conversacional de Lottery IA">
+    <AppShell title="Lottery IA" description="Plataforma de análisis inteligente">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-sm">
         <div className="flex flex-wrap gap-2">
           <Link className="text-primary underline-offset-2 hover:underline" href="/lottery">
@@ -459,87 +398,147 @@ export default function LotteryChatPage() {
         <p className="max-w-xl text-[11px] text-muted-foreground">{DISCLAIMER}</p>
       </div>
 
-      <div className="grid gap-4 pb-6 lg:grid-cols-[260px_1fr]">
-        <Card className="h-[min(72vh,720px)] overflow-hidden">
+      <div className="grid gap-4 pb-6 lg:grid-cols-[280px_minmax(0,1fr)]">
+        <Card className="h-[min(78vh,820px)] overflow-hidden">
           <CardContent className="flex h-full flex-col gap-2 py-4">
             <Button className="w-full" onClick={() => void startSession()} disabled={loading}>
               Nueva conversación
             </Button>
-            <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pt-1">
-              {sessions.map((s) => (
-                <div
-                  key={s.id}
-                  className={`rounded px-2 py-1.5 text-left text-xs hover:bg-muted ${
-                    sessionId === s.id ? "bg-muted font-medium" : ""
+
+            <div className="flex flex-wrap gap-1">
+              {(
+                [
+                  ["sesiones", "Sesiones"],
+                  ["recientes", "Recientes"],
+                  ["favoritas", "Favoritas"],
+                  ["compartidas", "Compartidas"],
+                ] as const
+              ).map(([id, label]) => (
+                <button
+                  key={id}
+                  type="button"
+                  className={`rounded-full px-2.5 py-1 text-[11px] ${
+                    historyTab === id
+                      ? "bg-primary/15 font-medium text-primary"
+                      : "text-muted-foreground hover:bg-muted"
                   }`}
+                  onClick={() => {
+                    setHistoryTab(id);
+                    refreshUxHistory();
+                  }}
                 >
-                  {renamingId === s.id ? (
-                    <form
-                      className="flex gap-1"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        void saveRename(s.id);
-                      }}
-                    >
-                      <input
-                        className="min-w-0 flex-1 rounded border bg-background px-1 py-0.5"
-                        value={renameValue}
-                        onChange={(e) => setRenameValue(e.target.value)}
-                        autoFocus
-                      />
-                      <button type="submit" className="text-[10px] text-primary">
-                        OK
-                      </button>
-                    </form>
-                  ) : (
-                    <>
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pt-1">
+              {historyTab === "sesiones" &&
+                sessions.map((s) => (
+                  <div
+                    key={s.id}
+                    className={`rounded-xl px-2 py-1.5 text-left text-xs hover:bg-muted ${
+                      sessionId === s.id ? "bg-muted font-medium" : ""
+                    }`}
+                  >
+                    {renamingId === s.id ? (
+                      <form
+                        className="flex gap-1"
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          void saveRename(s.id);
+                        }}
+                      >
+                        <input
+                          className="min-w-0 flex-1 rounded border bg-background px-1 py-0.5"
+                          value={renameValue}
+                          onChange={(e) => setRenameValue(e.target.value)}
+                          autoFocus
+                        />
+                        <button type="submit" className="text-[10px] text-primary">
+                          OK
+                        </button>
+                      </form>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          className="block w-full truncate text-left"
+                          onClick={() => void onSelectSession(s.id)}
+                        >
+                          {s.title || "Sin título"}
+                        </button>
+                        <p className="truncate text-[10px] text-muted-foreground">
+                          {formatSessionMeta(s)}
+                        </p>
+                        <div className="mt-0.5 flex gap-2 text-[10px]">
+                          <button
+                            type="button"
+                            className="text-muted-foreground hover:text-foreground"
+                            onClick={() => {
+                              setRenamingId(s.id);
+                              setRenameValue(s.title || "");
+                            }}
+                          >
+                            Renombrar
+                          </button>
+                          <button
+                            type="button"
+                            className="text-muted-foreground hover:text-destructive"
+                            onClick={() => void deleteSession(s.id)}
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))}
+
+              {historyItems &&
+                (historyItems.length === 0 ? (
+                  <p className="px-1 py-4 text-xs text-muted-foreground">Sin consultas aún.</p>
+                ) : (
+                  historyItems.map((h) => (
+                    <div key={h.id} className="rounded-xl px-2 py-1.5 text-xs hover:bg-muted">
                       <button
                         type="button"
-                        className="block w-full truncate text-left"
-                        onClick={() => void onSelectSession(s.id)}
+                        className="block w-full truncate text-left font-medium"
+                        onClick={() => void send(h.text)}
+                        title="Repetir consulta"
                       >
-                        {s.title || "Sin título"}
+                        {h.text}
                       </button>
-                      <p className="truncate text-[10px] text-muted-foreground">
-                        {formatSessionMeta(s)}
+                      <p className="text-[10px] text-muted-foreground">
+                        {new Date(h.lastRunAt).toLocaleString("es-DO", {
+                          day: "2-digit",
+                          month: "short",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
+                        {h.favorite ? " · ★" : ""}
+                        {h.shared ? " · compartida" : ""}
                       </p>
-                      <div className="mt-0.5 flex gap-2 text-[10px]">
-                        <button
-                          type="button"
-                          className="text-muted-foreground hover:text-foreground"
-                          onClick={() => {
-                            setRenamingId(s.id);
-                            setRenameValue(s.title || "");
-                          }}
-                        >
-                          Renombrar
-                        </button>
-                        <button
-                          type="button"
-                          className="text-muted-foreground hover:text-destructive"
-                          onClick={() => void deleteSession(s.id)}
-                        >
-                          Eliminar
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
+                      <button
+                        type="button"
+                        className="mt-0.5 text-[10px] text-primary"
+                        onClick={() => void send(h.text)}
+                      >
+                        Repetir consulta
+                      </button>
+                    </div>
+                  ))
+                ))}
             </div>
           </CardContent>
         </Card>
 
-        <div className="flex h-[min(72vh,720px)] flex-col overflow-hidden rounded-md border bg-background">
+        <div className="flex h-[min(78vh,820px)] flex-col overflow-hidden rounded-2xl border border-border/60 bg-background shadow-sm">
           {contextLabel && (
-            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-muted/20 px-3 py-1.5 text-[11px]">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-muted/15 px-3 py-2 text-[11px]">
               <div className="space-y-0.5 text-muted-foreground">
                 <p>
-                  <span className="font-medium text-foreground/80">
-                    {String(contextLabel.analyzing || "").includes("coincid")
-                      ? "Investigación:"
-                      : "Analizando:"}
-                  </span>{" "}
+                  <span className="font-medium text-foreground/80">Investigación:</span>{" "}
                   {contextLabel.analyzing || "—"}
                 </p>
                 {contextLabel.filters && (
@@ -552,14 +551,19 @@ export default function LotteryChatPage() {
                   </p>
                 )}
               </div>
-              <Button size="sm" variant="ghost" disabled={!sessionId || loading} onClick={() => void clearContext()}>
+              <Button
+                size="sm"
+                variant="ghost"
+                disabled={!sessionId || loading}
+                onClick={() => void clearContext()}
+              >
                 Limpiar contexto
               </Button>
             </div>
           )}
 
           {error && (
-            <div className="mx-3 mt-2 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800 dark:border-red-900/40 dark:bg-red-950/40 dark:text-red-200">
+            <div className="mx-3 mt-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800 dark:border-red-900/40 dark:bg-red-950/40 dark:text-red-200">
               {error}
             </div>
           )}
@@ -568,55 +572,51 @@ export default function LotteryChatPage() {
             <div
               ref={scrollRef}
               onScroll={onScrollPane}
-              className="absolute inset-0 overflow-y-auto px-3 py-3"
+              className="absolute inset-0 overflow-y-auto px-3 py-3 sm:px-4"
             >
-              {messages.length === 0 && (
-                <p className="text-sm text-muted-foreground">
-                  Pregunta en lenguaje natural. Conservo el contexto y solo pido lo imprescindible.
-                </p>
+              {messages.length === 0 && !loading && (
+                <EmptyState
+                  title="Conversando con un analista de datos"
+                  body="Haz una pregunta en lenguaje natural. Lottery IA interpreta, resume, visualiza y luego te deja explorar."
+                  action={
+                    <div className="flex flex-wrap justify-center gap-2">
+                      {STARTERS.map((s) => (
+                        <Button key={s} size="sm" variant="outline" onClick={() => void send(s)}>
+                          {s}
+                        </Button>
+                      ))}
+                    </div>
+                  }
+                />
               )}
+
               {messages.map((m) => (
                 <div
                   key={m.id}
-                  className={`mb-3 flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+                  className={`mb-4 flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
                 >
-                  {m.role === "assistant" && (
-                    <div
-                      className="mr-2 mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border/70 bg-muted text-[10px] font-semibold text-muted-foreground"
-                      aria-hidden
-                    >
-                      IA
+                  {m.role === "user" ? (
+                    <div className="max-w-[min(100%,420px)] rounded-2xl bg-primary px-3.5 py-2.5 text-sm text-primary-foreground shadow-sm">
+                      <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                    </div>
+                  ) : (
+                    <div className="w-full min-w-0 max-w-full">
+                      <AnalysisResponse
+                        content={m.content}
+                        structured={m.structured}
+                        query={m.query || lastUserQueryRef.current}
+                        activeContext={activeContext}
+                        toolTrace={m.tool_trace}
+                        latencyMs={m.latency_ms}
+                        sessionContext={sessionContext}
+                        showSidePanel
+                      />
                     </div>
                   )}
-                  <div
-                    className={`max-w-[min(100%,520px)] rounded-2xl px-3.5 py-2.5 text-sm shadow-sm ${
-                      m.role === "user"
-                        ? "bg-primary text-primary-foreground"
-                        : "border border-border/60 bg-card text-foreground"
-                    }`}
-                  >
-                    {m.role === "user" ? (
-                      <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
-                    ) : (
-                      <div className="space-y-2">
-                        <SimpleMarkdown text={m.content} />
-                        <AnalysisCard structured={m.structured} />
-                        {m.structured && m.structured.type !== "lottery_complete_analysis" && (
-                          <div className="mt-2">
-                            <LotteryStructuredRenderer structured={m.structured} />
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
                 </div>
               ))}
-              {loading && (
-                <div className="mb-3 flex items-center gap-2 text-xs text-muted-foreground">
-                  <span className="inline-flex h-1.5 w-1.5 animate-pulse rounded-full bg-primary" />
-                  <span className="animate-pulse">Analizando el histórico…</span>
-                </div>
-              )}
+
+              {loading && <LoadingAnalysis label="Interpretando el histórico…" />}
               <div ref={bottomRef} />
             </div>
 
@@ -631,7 +631,7 @@ export default function LotteryChatPage() {
             )}
           </div>
 
-          <div className="shrink-0 space-y-2 border-t bg-background px-3 py-2">
+          <div className="shrink-0 space-y-2 border-t bg-background/95 px-3 py-2 backdrop-blur">
             <div className="flex flex-wrap gap-2">
               {suggestions.map((s) => (
                 <Button
@@ -657,8 +657,8 @@ export default function LotteryChatPage() {
                 value={input}
                 rows={1}
                 disabled={loading}
-                placeholder="Escribe tu consulta…"
-                className="max-h-32 min-h-[40px] flex-1 resize-none rounded-md border bg-background px-3 py-2 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                placeholder="Pregunta a Lottery IA…"
+                className="max-h-32 min-h-[44px] flex-1 resize-none rounded-xl border bg-background px-3 py-2.5 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 onChange={(e) => {
                   setInput(e.target.value);
                   const el = e.target;
@@ -673,7 +673,7 @@ export default function LotteryChatPage() {
                 }}
               />
               <Button type="submit" disabled={loading || !input.trim()}>
-                Enviar
+                Analizar
               </Button>
               {sessionId && error && (
                 <Button
@@ -698,12 +698,15 @@ export default function LotteryChatPage() {
                             id: res.message.id,
                             role: "assistant",
                             content: res.message.content,
+                            query: lastUserQueryRef.current,
                             structured: res.message.structured_content,
                             tool_trace: res.message.tool_trace,
+                            latency_ms: res.latency_ms,
                           },
                         ];
                       });
                       if (res.active_context) setActiveContext(res.active_context);
+                      if (res.context) setSessionContext(res.context);
                       setSuggestions(res.suggestions?.length ? res.suggestions : STARTERS);
                     } catch (err) {
                       setError(err instanceof ApiError ? err.message : "Retry falló");

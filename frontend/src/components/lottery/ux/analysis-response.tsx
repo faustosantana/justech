@@ -262,7 +262,7 @@ export function AnalysisResponse({
           className="h-8 text-[11px]"
           onClick={() => void runWorkspace({ type: "breakdown_positions" })}
         >
-          Desglosar por posición
+          Ver por posiciones
         </Button>
         <Button
           type="button"

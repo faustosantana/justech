@@ -312,7 +312,7 @@ export default function LotteryChatPage() {
       case "sort_recent":
         return "Ordenar por fecha más reciente.";
       case "breakdown_positions":
-        return "Desglosar por posición.";
+        return "Ordenar y visualizar por posición.";
       case "export_excel":
         return "Exportar Excel.";
       case "next_page":

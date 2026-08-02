@@ -98,12 +98,15 @@ class GptConversationalOrchestrator:
         t0 = time.perf_counter()
         asset = get_active_asset(state) if state is not None else None
         provider, provider_meta = get_conversation_provider()
+        temperature = float(provider_meta.get("temperature") or 0.0)
+        max_tokens = int(provider_meta.get("max_tokens") or 700)
         out: dict[str, Any] = {
             "provider": provider_meta.get("provider") or provider.name,
             "requested_provider": provider_meta.get("requested_provider"),
             "provider_unavailable": bool(provider_meta.get("provider_unavailable")),
             "fallback": provider_meta.get("fallback"),
-            "model": None,
+            "settings_source": provider_meta.get("source"),
+            "model": provider_meta.get("model"),
             "schema_valid": False,
             "guard_pass": False,
             "decision_rejected": True,
@@ -132,8 +135,8 @@ class GptConversationalOrchestrator:
                 system_prompt=SYSTEM_PROMPT,
                 messages=messages,
                 schema=ORCHESTRATOR_JSON_SCHEMA_HINT,
-                temperature=0.0,
-                max_tokens=700,
+                temperature=temperature,
+                max_tokens=max_tokens,
             )
             out["model"] = result.model
             out["usage"] = result.usage or {}

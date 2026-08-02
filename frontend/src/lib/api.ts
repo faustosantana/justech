@@ -3200,6 +3200,21 @@ export const apiClient = {
   postLotteryAIModelsProbe: () =>
     request<Record<string, unknown>>("/lottery/admin/ai/models/probe", { method: "POST" }, true),
 
+  getLotteryAIConversationSettings: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/conversation-settings", {}, true),
+
+  postLotteryAIConversationSettingsTest: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/conversation-settings/test", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  putLotteryAIConversationSettings: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/conversation-settings", {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }, true),
+
   getLotteryAIAgent: () =>
     request<Record<string, unknown>>("/lottery/admin/ai/agent", {}, true),
 

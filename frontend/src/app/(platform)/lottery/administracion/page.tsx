@@ -49,9 +49,14 @@ const BLOCKS = [
     title: 'Inteligencia artificial',
     items: [
       {
+        href: '/lottery/admin/ai/configuracion',
+        label: 'Configuración IA',
+        desc: 'Proveedor conversacional (Huawei / OpenAI), modelo, temperature y prueba de conexión.',
+      },
+      {
         href: '/lottery/admin/ai',
         label: 'Configuración del Chat inteligente',
-        desc: 'Proveedor, modelo, herramientas y estado del agente.',
+        desc: 'Herramientas, agente y estado del chat.',
       },
       {
         href: '/lottery/admin/control-center/prompt-studio',

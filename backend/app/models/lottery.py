@@ -858,3 +858,34 @@ class LotteryPredictionMotorRun(UUIDPrimaryKeyMixin, Base):
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )
+
+
+class LotteryAiSettings(UUIDPrimaryKeyMixin, Base):
+    """Singleton-style Lottery IA conversational provider settings (UI-driven)."""
+
+    __tablename__ = "lottery_ai_settings"
+    __table_args__ = (Index("ix_lottery_ai_settings_active", "is_active"),)
+
+    conversation_provider: Mapped[str] = mapped_column(
+        String(32), nullable=False, default="huawei"
+    )
+    conversation_model: Mapped[str] = mapped_column(
+        String(128), nullable=False, default="deepseek-v4-flash"
+    )
+    temperature: Mapped[float] = mapped_column(Numeric(4, 2), nullable=False, default=0.0)
+    max_tokens: Mapped[int] = mapped_column(Integer, nullable=False, default=700)
+    timeout_seconds: Mapped[int] = mapped_column(Integer, nullable=False, default=45)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    last_test_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    last_test_ok: Mapped[bool | None] = mapped_column(Boolean)
+    last_test_latency_ms: Mapped[float | None] = mapped_column(Numeric(12, 2))
+    last_test_model: Mapped[str | None] = mapped_column(String(128))
+    last_test_error: Mapped[str | None] = mapped_column(Text)
+    last_test_message: Mapped[str | None] = mapped_column(Text)
+    updated_by: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )

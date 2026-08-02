@@ -721,6 +721,15 @@ class LotteryChatService:
         )
         # Conversational orchestrator A/B (feature flag). Default hermes.
         # gpt_shadow: Hermes remains visible/executed; GPT compared in parallel.
+        # Refresh Lottery AI settings cache from DB (provider/model — not ENV).
+        try:
+            from app.services.lottery_ai_conversation_settings_service import (
+                LotteryAiConversationSettingsService,
+            )
+
+            await LotteryAiConversationSettingsService(self.db).get_or_create_active()
+        except Exception:  # noqa: BLE001
+            pass
         orchestrator_telemetry: dict = {}
         try:
             from app.lottery.ai.conversational_orchestrator import maybe_apply_gpt_decision

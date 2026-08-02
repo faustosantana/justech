@@ -27,6 +27,7 @@ const NAV_GROUPS = [
   {
     label: "Configuración",
     items: [
+      { label: "Configuración IA", href: "/lottery/admin/ai/configuracion" },
       { label: "Agente", href: "/lottery/admin/ai/agent" },
       { label: "Prompts", href: "/lottery/admin/ai/prompts" },
       { label: "Modelos", href: "/lottery/admin/ai/models" },

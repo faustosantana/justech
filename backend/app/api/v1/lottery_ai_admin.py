@@ -467,6 +467,69 @@ async def ai_models_probe(
     return data
 
 
+@router.get("/conversation-settings")
+async def ai_conversation_settings_get(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_models", "lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    """Lottery IA — proveedor conversacional (BD, no ENV)."""
+    from app.services.lottery_ai_conversation_settings_service import (
+        LotteryAiConversationSettingsService,
+    )
+
+    svc = LotteryAiConversationSettingsService(db, user_id=user.id)
+    data = await svc.get_or_create_active()
+    await db.commit()
+    return data
+
+
+@router.post("/conversation-settings/test")
+async def ai_conversation_settings_test(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_models", "lottery_admin_ai", "lottery.admin")],
+    body: dict[str, Any] = Body(default_factory=dict),
+) -> dict:
+    from app.services.lottery_ai_conversation_settings_service import (
+        LotteryAiConversationSettingsService,
+    )
+
+    svc = LotteryAiConversationSettingsService(db, user_id=user.id)
+    try:
+        data = await svc.test_connection(body)
+        await db.commit()
+        return data
+    except Exception as e:
+        await db.rollback()
+        _map_err(e)
+
+
+@router.put("/conversation-settings")
+async def ai_conversation_settings_put(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_models", "lottery_admin_ai", "lottery.admin")],
+    body: dict[str, Any] = Body(default_factory=dict),
+) -> dict:
+    """Guardar solo si PROBAR CONEXIÓN pasa (test embebido)."""
+    from app.services.lottery_ai_conversation_settings_service import (
+        LotteryAiConversationSettingsService,
+    )
+
+    svc = LotteryAiConversationSettingsService(db, user_id=user.id)
+    try:
+        data = await svc.save(body, require_test_ok=True)
+        await db.commit()
+        return data
+    except Exception as e:
+        await db.rollback()
+        _map_err(e)
+
+
 @router.get("/agent")
 async def ai_agent_get(
     db: DbSession,

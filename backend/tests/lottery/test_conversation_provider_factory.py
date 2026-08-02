@@ -14,6 +14,7 @@ from app.lottery.ai.conversational_orchestrator.conversation_provider_factory im
     build_provider,
     configured_provider_name,
     get_conversation_provider,
+    set_runtime_settings_cache,
 )
 from app.lottery.ai.conversational_orchestrator.gpt_adapter import GptConversationalOrchestrator
 
@@ -24,25 +25,37 @@ def test_interface_and_implementations():
     assert hasattr(ConversationProvider, "decide")
 
 
-def test_factory_default_huawei():
-    with patch(
-        "app.lottery.ai.conversational_orchestrator.conversation_provider_factory.settings"
-    ) as s:
-        s.lottery_conversation_provider = "huawei"
-        assert configured_provider_name() == "huawei"
-        p, meta = get_conversation_provider()
-        assert p.name == "huawei"
-        assert meta["requested_provider"] == "huawei"
+def test_factory_reads_runtime_cache_not_env():
+    set_runtime_settings_cache(
+        {
+            "conversation_provider": "huawei",
+            "conversation_model": "deepseek-v4-flash",
+            "temperature": 0.0,
+            "max_tokens": 700,
+            "timeout_seconds": 45,
+        }
+    )
+    assert configured_provider_name() == "huawei"
+    p, meta = get_conversation_provider()
+    assert p.name == "huawei"
+    assert meta["requested_provider"] == "huawei"
+    assert meta["source"] == "lottery_ai_settings"
+    assert meta["model"] == "deepseek-v4-flash"
 
 
 def test_openai_unavailable_falls_back_to_huawei():
-    with patch(
-        "app.lottery.ai.conversational_orchestrator.conversation_provider_factory.settings"
-    ) as s:
-        s.lottery_conversation_provider = "openai"
-        with patch.object(OpenAIConversationProvider, "available", return_value=False):
-            with patch.object(HuaweiConversationProvider, "available", return_value=True):
-                p, meta = get_conversation_provider()
+    set_runtime_settings_cache(
+        {
+            "conversation_provider": "openai",
+            "conversation_model": "gpt-4o",
+            "temperature": 0.0,
+            "max_tokens": 700,
+            "timeout_seconds": 45,
+        }
+    )
+    with patch.object(OpenAIConversationProvider, "available", return_value=False):
+        with patch.object(HuaweiConversationProvider, "available", return_value=True):
+            p, meta = get_conversation_provider()
     assert p.name == "huawei"
     assert meta["provider_unavailable"] is True
     assert meta["fallback"] == "huawei"
@@ -50,7 +63,6 @@ def test_openai_unavailable_falls_back_to_huawei():
 
 
 def test_orchestrator_calls_provider_decide_only():
-    """Orchestrator must use provider.decide — no vendor branching in adapter source."""
     from pathlib import Path
 
     import app.lottery.ai.conversational_orchestrator.gpt_adapter as mod
@@ -83,8 +95,17 @@ def test_orchestrator_with_mock_provider_decision_ok():
 
     with patch(
         "app.lottery.ai.conversational_orchestrator.gpt_adapter.get_conversation_provider",
-        return_value=(_Fake(), {"provider": "huawei", "requested_provider": "huawei",
-                                 "provider_unavailable": False, "fallback": None}),
+        return_value=(
+            _Fake(),
+            {
+                "provider": "huawei",
+                "requested_provider": "huawei",
+                "provider_unavailable": False,
+                "fallback": None,
+                "temperature": 0.0,
+                "max_tokens": 700,
+            },
+        ),
     ):
         out = GptConversationalOrchestrator.decide(
             "¿Cuándo coincidieron el 35 y el 54?",

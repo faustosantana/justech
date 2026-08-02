@@ -134,6 +134,10 @@ def _post_chat_completions(
 class HuaweiConversationProvider(ConversationProvider):
     name = "huawei"
 
+    def __init__(self, model: str | None = None, timeout_sec: float = 45.0) -> None:
+        self.model = (model or "").strip() or None
+        self.timeout_sec = float(timeout_sec or 45.0)
+
     def available(self) -> bool:
         url = (getattr(settings, "hermes_model_api_url", None) or "").strip()
         key = (getattr(settings, "hermes_model_api_key", None) or "").strip()
@@ -156,7 +160,7 @@ class HuaweiConversationProvider(ConversationProvider):
                 error="provider_unavailable",
             )
         url = _chat_completions_url(settings.hermes_model_api_url)
-        model = (
+        model = self.model or (
             getattr(settings, "hermes_analysis_model", None)
             or getattr(settings, "hermes_default_model", None)
             or "DeepSeek-V3.2"
@@ -170,11 +174,16 @@ class HuaweiConversationProvider(ConversationProvider):
             temperature=temperature,
             max_tokens=max_tokens,
             provider_name=self.name,
+            timeout_sec=self.timeout_sec,
         )
 
 
 class OpenAIConversationProvider(ConversationProvider):
     name = "openai"
+
+    def __init__(self, model: str | None = None, timeout_sec: float = 45.0) -> None:
+        self.model = (model or "").strip() or None
+        self.timeout_sec = float(timeout_sec or 45.0)
 
     def available(self) -> bool:
         return bool((settings.openai_api_key or "").strip())
@@ -196,7 +205,7 @@ class OpenAIConversationProvider(ConversationProvider):
             )
         base = (settings.openai_base_url or "https://api.openai.com/v1").rstrip("/")
         url = _chat_completions_url(base)
-        model = settings.openai_default_model or "gpt-4o"
+        model = self.model or settings.openai_default_model or "gpt-4o"
         return _post_chat_completions(
             url=url,
             api_key=settings.openai_api_key.strip(),
@@ -206,4 +215,5 @@ class OpenAIConversationProvider(ConversationProvider):
             temperature=temperature,
             max_tokens=max_tokens,
             provider_name=self.name,
+            timeout_sec=self.timeout_sec,
         )

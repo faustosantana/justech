@@ -259,7 +259,8 @@ class Settings(BaseSettings):
     # gpt_shadow: Hermes executes; GPT decides in parallel (no user impact)
     # gpt: experimental — accept GPT decision only if schema+guard pass
     lottery_conversational_orchestrator_mode: str = "hermes"
-    # LLM transport for conversational orchestrator — huawei | openai (default huawei)
+    # DEPRECATED for selection — provider/model come from lottery_ai_settings (DB/UI).
+    # Kept only as inert fallback default if cache never loaded.
     lottery_conversation_provider: str = "huawei"
     lottery_export_max_rows_csv: int = 100000
     lottery_export_max_rows_xlsx: int = 50000

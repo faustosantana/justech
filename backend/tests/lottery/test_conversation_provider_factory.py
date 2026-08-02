@@ -11,9 +11,11 @@ from app.lottery.ai.conversational_orchestrator.conversation_provider import (
     ProviderDecisionResult,
 )
 from app.lottery.ai.conversational_orchestrator.conversation_provider_factory import (
+    _resolve_openai_credentials,
     build_provider,
     configured_provider_name,
     get_conversation_provider,
+    get_runtime_settings,
     set_runtime_settings_cache,
 )
 from app.lottery.ai.conversational_orchestrator.gpt_adapter import GptConversationalOrchestrator
@@ -121,3 +123,48 @@ def test_build_provider_names():
     assert build_provider("openai").name == "openai"
     assert build_provider("huawei").name == "huawei"
     assert build_provider("unknown").name == "huawei"
+
+
+def test_runtime_settings_never_exposes_encrypted_key():
+    set_runtime_settings_cache(
+        {
+            "conversation_provider": "openai",
+            "conversation_model": "gpt-4o",
+            "openai_api_key_encrypted": "gAAAA_fake_ciphertext",
+            "openai_base_url": "https://api.openai.com/v1",
+        }
+    )
+    pub = get_runtime_settings()
+    assert "openai_api_key_encrypted" not in pub
+    assert pub["openai_key_configured"] is True
+
+
+def test_resolve_openai_credentials_prefers_form_then_db_then_env():
+    set_runtime_settings_cache(
+        {
+            "openai_api_key_encrypted": None,
+            "openai_base_url": "https://api.openai.com/v1",
+        }
+    )
+    key, _, _, _, source = _resolve_openai_credentials(api_key_override="sk-form-key")
+    assert key == "sk-form-key"
+    assert source == "form"
+
+    with patch(
+        "app.lottery.ai.conversational_orchestrator.conversation_provider_factory.decrypt_secret",
+        return_value="sk-db-key",
+    ):
+        set_runtime_settings_cache({"openai_api_key_encrypted": "enc-blob"})
+        key, _, _, _, source = _resolve_openai_credentials()
+        assert key == "sk-db-key"
+        assert source == "database"
+
+    set_runtime_settings_cache({"openai_api_key_encrypted": None})
+    with patch(
+        "app.lottery.ai.conversational_orchestrator.conversation_provider_factory.settings"
+    ) as mock_settings:
+        mock_settings.openai_api_key = "sk-env-key"
+        mock_settings.openai_base_url = "https://api.openai.com/v1"
+        key, _, _, _, source = _resolve_openai_credentials()
+        assert key == "sk-env-key"
+        assert source == "environment"

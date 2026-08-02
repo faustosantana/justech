@@ -515,7 +515,7 @@ async def ai_conversation_settings_put(
     _: Annotated[None, require_ai_admin("lottery_admin_models", "lottery_admin_ai", "lottery.admin")],
     body: dict[str, Any] = Body(default_factory=dict),
 ) -> dict:
-    """Guardar solo si PROBAR CONEXIÓN pasa (test embebido)."""
+    """Guardar y activar solo si PROBAR CONEXIÓN pasa (test embebido)."""
     from app.services.lottery_ai_conversation_settings_service import (
         LotteryAiConversationSettingsService,
     )
@@ -523,6 +523,49 @@ async def ai_conversation_settings_put(
     svc = LotteryAiConversationSettingsService(db, user_id=user.id)
     try:
         data = await svc.save(body, require_test_ok=True)
+        await db.commit()
+        return data
+    except Exception as e:
+        await db.rollback()
+        _map_err(e)
+
+
+@router.delete("/conversation-settings/openai-credential")
+async def ai_conversation_settings_delete_openai_credential(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_models", "lottery_admin_ai", "lottery.admin")],
+) -> dict:
+    from app.services.lottery_ai_conversation_settings_service import (
+        LotteryAiConversationSettingsService,
+    )
+
+    svc = LotteryAiConversationSettingsService(db, user_id=user.id)
+    try:
+        data = await svc.delete_openai_credential()
+        await db.commit()
+        return data
+    except Exception as e:
+        await db.rollback()
+        _map_err(e)
+
+
+@router.post("/conversation-settings/openai-models")
+async def ai_conversation_settings_openai_models(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin("lottery_admin_models", "lottery_admin_ai", "lottery.admin")],
+    body: dict[str, Any] = Body(default_factory=dict),
+) -> dict:
+    from app.services.lottery_ai_conversation_settings_service import (
+        LotteryAiConversationSettingsService,
+    )
+
+    svc = LotteryAiConversationSettingsService(db, user_id=user.id)
+    try:
+        data = await svc.list_openai_models(body)
         await db.commit()
         return data
     except Exception as e:

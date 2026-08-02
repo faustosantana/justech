@@ -3215,6 +3215,17 @@ export const apiClient = {
       body: JSON.stringify(body),
     }, true),
 
+  deleteLotteryAIOpenAICredential: () =>
+    request<Record<string, unknown>>("/lottery/admin/ai/conversation-settings/openai-credential", {
+      method: "DELETE",
+    }, true),
+
+  postLotteryAIOpenAIModels: (body: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/lottery/admin/ai/conversation-settings/openai-models", {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
   getLotteryAIAgent: () =>
     request<Record<string, unknown>>("/lottery/admin/ai/agent", {}, true),
 

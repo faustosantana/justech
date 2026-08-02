@@ -882,6 +882,13 @@ class LotteryAiSettings(UUIDPrimaryKeyMixin, Base):
     last_test_model: Mapped[str | None] = mapped_column(String(128))
     last_test_error: Mapped[str | None] = mapped_column(Text)
     last_test_message: Mapped[str | None] = mapped_column(Text)
+    # OpenAI credentials (Fernet via credential_vault — never plaintext in API)
+    openai_api_key_encrypted: Mapped[str | None] = mapped_column(Text)
+    openai_base_url: Mapped[str | None] = mapped_column(String(512))
+    openai_organization: Mapped[str | None] = mapped_column(String(128))
+    openai_project: Mapped[str | None] = mapped_column(String(128))
+    credential_updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True))
+    credential_updated_by: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
     updated_by: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False

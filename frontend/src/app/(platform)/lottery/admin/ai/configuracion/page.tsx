@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { MetricLine } from "@/components/lottery/ai-admin-display";
 import { Button } from "@/components/ui/button";
@@ -14,11 +14,18 @@ type Settings = {
   max_tokens?: number;
   timeout_seconds?: number;
   is_active?: boolean;
+  openai_key_configured?: boolean;
+  openai_key_mask?: string | null;
+  openai_base_url?: string | null;
+  openai_organization?: string | null;
+  openai_project?: string | null;
+  credential_updated_at?: string | null;
   last_test_at?: string | null;
   last_test_ok?: boolean | null;
   last_test_latency_ms?: number | null;
   last_test_model?: string | null;
   last_test_error?: string | null;
+  suggested_models?: Record<string, string[]>;
   catalog?: Record<string, string[]>;
 };
 
@@ -31,6 +38,7 @@ type Probe = {
   status?: string;
   message_received?: string | null;
   schema_valid?: boolean;
+  credential_source?: string;
   errors?: string[];
 };
 
@@ -41,20 +49,23 @@ export default function LotteryAIConfiguracionPage() {
   const [temperature, setTemperature] = useState(0);
   const [maxTokens, setMaxTokens] = useState(700);
   const [timeout, setTimeoutSec] = useState(45);
+  const [openaiKey, setOpenaiKey] = useState("");
+  const [baseUrl, setBaseUrl] = useState("https://api.openai.com/v1");
+  const [organization, setOrganization] = useState("");
+  const [project, setProject] = useState("");
+  const [replaceKey, setReplaceKey] = useState(false);
+  const [remoteModels, setRemoteModels] = useState<string[]>([]);
   const [probe, setProbe] = useState<Probe | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState(false);
 
-  const catalog = settings?.catalog ?? {
-    huawei: ["deepseek-v4-flash", "deepseek-v3", "DeepSeek-V3.2", "DeepSeek-V3"],
-    openai: ["gpt-5", "gpt-5-mini", "gpt-4.1", "gpt-4o"],
-  };
-
-  const models = useMemo(
-    () => catalog[provider] ?? catalog.huawei ?? [],
-    [catalog, provider],
-  );
+  const suggested =
+    settings?.suggested_models?.[provider] ||
+    settings?.catalog?.[provider] ||
+    (provider === "openai"
+      ? ["gpt-5", "gpt-5-mini", "gpt-4.1", "gpt-4o"]
+      : ["deepseek-v4-flash", "deepseek-v3", "DeepSeek-V3.2"]);
 
   const applySettings = (data: Settings) => {
     setSettings(data);
@@ -63,6 +74,11 @@ export default function LotteryAIConfiguracionPage() {
     setTemperature(Number(data.temperature ?? 0));
     setMaxTokens(Number(data.max_tokens ?? 700));
     setTimeoutSec(Number(data.timeout_seconds ?? 45));
+    setBaseUrl(data.openai_base_url || "https://api.openai.com/v1");
+    setOrganization(data.openai_organization || "");
+    setProject(data.openai_project || "");
+    setOpenaiKey("");
+    setReplaceKey(false);
   };
 
   const load = useCallback(async () => {
@@ -82,19 +98,22 @@ export default function LotteryAIConfiguracionPage() {
     void load();
   }, [load]);
 
-  useEffect(() => {
-    if (models.length && !models.includes(model)) {
-      setModel(models[0]);
+  const draft = () => {
+    const body: Record<string, unknown> = {
+      conversation_provider: provider,
+      conversation_model: model,
+      temperature,
+      max_tokens: maxTokens,
+      timeout_seconds: timeout,
+      openai_base_url: baseUrl,
+      openai_organization: organization || null,
+      openai_project: project || null,
+    };
+    if (provider === "openai" && openaiKey.trim()) {
+      body.openai_api_key = openaiKey.trim();
     }
-  }, [models, model]);
-
-  const draft = () => ({
-    conversation_provider: provider,
-    conversation_model: model,
-    temperature,
-    max_tokens: maxTokens,
-    timeout_seconds: timeout,
-  });
+    return body;
+  };
 
   const runTest = async () => {
     setBusy(true);
@@ -120,7 +139,6 @@ export default function LotteryAIConfiguracionPage() {
       const p = (res as { probe?: Probe }).probe;
       if (saved) applySettings(saved);
       if (p) setProbe(p);
-      await load();
     } catch (err) {
       setError(
         err instanceof ApiError
@@ -132,13 +150,42 @@ export default function LotteryAIConfiguracionPage() {
     }
   };
 
+  const deleteCredential = async () => {
+    if (!window.confirm("¿Eliminar la credencial OpenAI almacenada?")) return;
+    setBusy(true);
+    setError(null);
+    try {
+      const data = await apiClient.deleteLotteryAIOpenAICredential();
+      applySettings(data as Settings);
+      setProbe(null);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "No se pudo eliminar la credencial");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  const fetchModels = async () => {
+    setBusy(true);
+    setError(null);
+    try {
+      const res = (await apiClient.postLotteryAIOpenAIModels(draft())) as {
+        models?: string[];
+      };
+      setRemoteModels(res.models || []);
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "No se pudieron listar modelos");
+    } finally {
+      setBusy(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <div>
         <h2 className="text-lg font-semibold">Configuración IA</h2>
         <p className="text-sm text-muted-foreground">
-          Proveedor conversacional de Lottery IA (guardado en base de datos). No usa variables de
-          entorno para elegir proveedor.
+          Proveedor conversacional de Lottery IA. OpenAI se configura aquí (clave cifrada en BD).
         </p>
       </div>
 
@@ -165,19 +212,88 @@ export default function LotteryAIConfiguracionPage() {
               ))}
             </div>
 
+            {provider === "openai" && (
+              <div className="space-y-3 rounded border p-3">
+                <div className="text-sm">
+                  <span className="font-medium">Clave configurada: </span>
+                  {settings?.openai_key_configured ? "sí" : "no"}
+                  {settings?.openai_key_mask ? (
+                    <span className="ml-2 font-mono text-muted-foreground">
+                      {settings.openai_key_mask}
+                    </span>
+                  ) : null}
+                </div>
+
+                {(replaceKey || !settings?.openai_key_configured) && (
+                  <label className="block space-y-1 text-sm">
+                    <span className="font-medium">API Key</span>
+                    <input
+                      type="password"
+                      autoComplete="off"
+                      className="w-full max-w-xl rounded border bg-background px-3 py-2 font-mono"
+                      value={openaiKey}
+                      placeholder="sk-…"
+                      onChange={(e) => setOpenaiKey(e.target.value)}
+                    />
+                    <span className="text-xs text-muted-foreground">
+                      No se vuelve a mostrar después de guardar.
+                    </span>
+                  </label>
+                )}
+
+                {settings?.openai_key_configured && !replaceKey && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setReplaceKey(true)}
+                  >
+                    Reemplazar clave
+                  </Button>
+                )}
+
+                <label className="block space-y-1 text-sm">
+                  <span className="font-medium">Base URL</span>
+                  <input
+                    className="w-full max-w-xl rounded border bg-background px-3 py-2"
+                    value={baseUrl}
+                    onChange={(e) => setBaseUrl(e.target.value)}
+                  />
+                </label>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <label className="block space-y-1 text-sm">
+                    <span className="font-medium">Organización (opcional)</span>
+                    <input
+                      className="w-full rounded border bg-background px-3 py-2"
+                      value={organization}
+                      onChange={(e) => setOrganization(e.target.value)}
+                    />
+                  </label>
+                  <label className="block space-y-1 text-sm">
+                    <span className="font-medium">Proyecto (opcional)</span>
+                    <input
+                      className="w-full rounded border bg-background px-3 py-2"
+                      value={project}
+                      onChange={(e) => setProject(e.target.value)}
+                    />
+                  </label>
+                </div>
+              </div>
+            )}
+
             <label className="block space-y-1 text-sm">
               <span className="font-medium">Modelo</span>
-              <select
+              <input
+                list="lottery-ai-models"
                 className="w-full max-w-md rounded border bg-background px-3 py-2"
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
-              >
-                {models.map((m) => (
-                  <option key={m} value={m}>
-                    {m}
-                  </option>
+              />
+              <datalist id="lottery-ai-models">
+                {[...suggested, ...remoteModels].map((m) => (
+                  <option key={m} value={m} />
                 ))}
-              </select>
+              </datalist>
             </label>
 
             <div className="grid gap-3 sm:grid-cols-3">
@@ -222,8 +338,18 @@ export default function LotteryAIConfiguracionPage() {
                 {busy ? "Probando…" : "Probar conexión"}
               </Button>
               <Button onClick={() => void save()} disabled={busy}>
-                Guardar
+                Guardar y activar
               </Button>
+              {provider === "openai" && (
+                <Button variant="outline" onClick={() => void fetchModels()} disabled={busy}>
+                  Consultar modelos
+                </Button>
+              )}
+              {settings?.openai_key_configured && (
+                <Button variant="destructive" onClick={() => void deleteCredential()} disabled={busy}>
+                  Eliminar credencial
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -235,11 +361,16 @@ export default function LotteryAIConfiguracionPage() {
         </CardHeader>
         <CardContent className="grid gap-2 sm:grid-cols-2">
           <MetricLine label="Activo" value={settings?.is_active ? "Sí" : "No"} />
-          <MetricLine
-            label="Proveedor activo"
-            value={settings?.conversation_provider ?? "—"}
-          />
+          <MetricLine label="Proveedor activo" value={settings?.conversation_provider ?? "—"} />
           <MetricLine label="Modelo utilizado" value={settings?.conversation_model ?? "—"} />
+          <MetricLine
+            label="Clave OpenAI"
+            value={
+              settings?.openai_key_configured
+                ? `sí (${settings.openai_key_mask || "••••"})`
+                : "no"
+            }
+          />
           <MetricLine label="Última prueba" value={settings?.last_test_at ?? "—"} />
           <MetricLine
             label="Última prueba OK"
@@ -261,12 +392,10 @@ export default function LotteryAIConfiguracionPage() {
             <MetricLine label="Estado" value={probe.status ?? (probe.ok ? "ok" : "failed")} />
             <MetricLine label="Proveedor" value={probe.provider} />
             <MetricLine label="Modelo" value={probe.model} />
+            <MetricLine label="credential_source" value={probe.credential_source} />
             <MetricLine label="Latencia" value={probe.latency_ms} />
             <MetricLine label="Tiempo total" value={probe.total_ms} />
-            <MetricLine
-              label="Schema válido"
-              value={probe.schema_valid ? "Sí" : "No"}
-            />
+            <MetricLine label="Schema válido" value={probe.schema_valid ? "Sí" : "No"} />
             <div className="sm:col-span-2 space-y-1 text-sm">
               <div className="font-medium">Mensaje recibido</div>
               <pre className="max-h-48 overflow-auto rounded border bg-muted/40 p-2 text-xs whitespace-pre-wrap">

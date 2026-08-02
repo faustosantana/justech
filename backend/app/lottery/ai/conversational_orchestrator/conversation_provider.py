@@ -68,8 +68,11 @@ def _post_chat_completions(
     max_tokens: int,
     provider_name: str,
     timeout_sec: float = 45.0,
+    extra_headers: dict[str, str] | None = None,
 ) -> ProviderDecisionResult:
     import time
+
+    from app.services.credential_vault import redact_for_logs
 
     if not url or not api_key:
         return ProviderDecisionResult(
@@ -94,16 +97,14 @@ def _post_chat_completions(
         "max_tokens": max_tokens,
         "messages": chat_messages,
     }
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+        **(extra_headers or {}),
+    }
     try:
         with httpx.Client(timeout=timeout_sec) as client:
-            resp = client.post(
-                url,
-                headers={
-                    "Authorization": f"Bearer {api_key}",
-                    "Content-Type": "application/json",
-                },
-                json=body,
-            )
+            resp = client.post(url, headers=headers, json=body)
             resp.raise_for_status()
             data = resp.json()
         content = (
@@ -124,9 +125,10 @@ def _post_chat_completions(
             latency_ms=round((time.perf_counter() - t0) * 1000, 1),
         )
     except Exception as e:  # noqa: BLE001
+        safe = redact_for_logs(f"{type(e).__name__}:{str(e)[:180]}")
         return ProviderDecisionResult(
             provider_name=provider_name,
-            error=f"llm_call_failed:{type(e).__name__}:{str(e)[:180]}",
+            error=f"llm_call_failed:{safe}",
             latency_ms=round((time.perf_counter() - t0) * 1000, 1),
         )
 
@@ -181,12 +183,27 @@ class HuaweiConversationProvider(ConversationProvider):
 class OpenAIConversationProvider(ConversationProvider):
     name = "openai"
 
-    def __init__(self, model: str | None = None, timeout_sec: float = 45.0) -> None:
+    def __init__(
+        self,
+        model: str | None = None,
+        timeout_sec: float = 45.0,
+        *,
+        api_key: str | None = None,
+        base_url: str | None = None,
+        organization: str | None = None,
+        project: str | None = None,
+        credential_source: str = "none",
+    ) -> None:
         self.model = (model or "").strip() or None
         self.timeout_sec = float(timeout_sec or 45.0)
+        self._api_key = (api_key or "").strip() or None
+        self._base_url = (base_url or "").strip() or None
+        self._organization = (organization or "").strip() or None
+        self._project = (project or "").strip() or None
+        self.credential_source = credential_source or ("database" if self._api_key else "none")
 
     def available(self) -> bool:
-        return bool((settings.openai_api_key or "").strip())
+        return bool(self._api_key)
 
     def decide(
         self,
@@ -203,12 +220,16 @@ class OpenAIConversationProvider(ConversationProvider):
                 provider_unavailable=True,
                 error="provider_unavailable",
             )
-        base = (settings.openai_base_url or "https://api.openai.com/v1").rstrip("/")
+        base = (
+            self._base_url
+            or (settings.openai_base_url or "https://api.openai.com/v1")
+        ).rstrip("/")
         url = _chat_completions_url(base)
         model = self.model or settings.openai_default_model or "gpt-4o"
+        # Optional OpenAI org/project headers via httpx — extend helper inline
         return _post_chat_completions(
             url=url,
-            api_key=settings.openai_api_key.strip(),
+            api_key=self._api_key or "",
             model=str(model),
             system_prompt=system_prompt,
             messages=messages,
@@ -216,4 +237,8 @@ class OpenAIConversationProvider(ConversationProvider):
             max_tokens=max_tokens,
             provider_name=self.name,
             timeout_sec=self.timeout_sec,
+            extra_headers={
+                **({"OpenAI-Organization": self._organization} if self._organization else {}),
+                **({"OpenAI-Project": self._project} if self._project else {}),
+            },
         )

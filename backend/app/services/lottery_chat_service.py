@@ -1094,12 +1094,36 @@ class LotteryChatService:
         model_name: str | None = None
         provider_used: str | None = None
         reasoning_telemetry: dict[str, Any] | None = None
-        provider_requested = (
-            getattr(settings, "assistant_synthesis_provider", None)
-            or getattr(settings, "hermes_default_provider", None)
-            or "huawei_modelarts"
-        )
-        model_requested = get_active_prompt().recommended_model
+        # Live chat provider comes from Lottery AI Settings (single source of truth).
+        try:
+            from app.lottery.ai.conversational_orchestrator.conversation_provider_factory import (
+                get_lottery_conversation_provider,
+                runtime_provider_label,
+            )
+
+            _prov, _pmeta = get_lottery_conversation_provider(allow_fallback=False)
+            provider_requested = runtime_provider_label(
+                str(_pmeta.get("selected_provider") or _prov.name or "huawei")
+            )
+            model_requested = str(
+                _pmeta.get("selected_model") or _pmeta.get("model") or ""
+            ) or get_active_prompt().recommended_model
+            provider_settings_meta = {
+                "provider_config_source": _pmeta.get("provider_config_source"),
+                "selected_provider": _pmeta.get("selected_provider"),
+                "selected_model": _pmeta.get("selected_model"),
+                "credential_source": _pmeta.get("credential_source"),
+                "cache_hit": _pmeta.get("cache_hit"),
+                "cache_version": _pmeta.get("cache_version"),
+            }
+        except Exception:  # noqa: BLE001
+            provider_requested = (
+                getattr(settings, "assistant_synthesis_provider", None)
+                or getattr(settings, "hermes_default_provider", None)
+                or "huawei_modelarts"
+            )
+            model_requested = get_active_prompt().recommended_model
+            provider_settings_meta = {}
         fallback_used = False
         fallback_reason: str | None = None
 
@@ -1879,14 +1903,46 @@ class LotteryChatService:
 
                         async def _reasoning_huawei(
                             messages: list[dict[str, str]], max_tokens: int
-                        ) -> tuple[str | None, str | None, dict[str, Any]]:
-                            llm_msgs = [
-                                LLMMessage(role=m["role"], content=m["content"]) for m in messages
-                            ]
-                            text, model = await self._synthesize_via_hermes(
-                                llm_msgs, max_tokens=max_tokens
+                        ) -> tuple[str | None, str | None, dict[str, Any], dict[str, Any]]:
+                            # Use active Lottery AI Settings provider (OpenAI/Huawei).
+                            # Do not silently bypass OpenAI when it is selected + available.
+                            from app.lottery.ai.conversational_orchestrator.conversation_provider_factory import (
+                                complete_with_lottery_provider,
+                                configured_provider_name,
                             )
-                            return text, model, {}
+
+                            allow_fb = configured_provider_name() != "openai"
+                            text, model, usage, pmeta = await asyncio.to_thread(
+                                complete_with_lottery_provider,
+                                messages,
+                                max_tokens=max_tokens,
+                                temperature=0.2,
+                                allow_fallback=allow_fb,
+                            )
+                            if text:
+                                return text, model, usage or {}, pmeta or {}
+                            # Compatibility fallback only when settings are Huawei/default
+                            if allow_fb:
+                                llm_msgs = [
+                                    LLMMessage(role=m["role"], content=m["content"])
+                                    for m in messages
+                                ]
+                                text2, model2 = await self._synthesize_via_hermes(
+                                    llm_msgs, max_tokens=max_tokens
+                                )
+                                return (
+                                    text2,
+                                    model2,
+                                    {},
+                                    {
+                                        **(pmeta or {}),
+                                        "provider_used": "huawei_modelarts",
+                                        "fallback_used": True,
+                                        "fallback_reason": (pmeta or {}).get("fallback_reason")
+                                        or "settings_provider_empty",
+                                    },
+                                )
+                            return None, model, usage or {}, pmeta or {}
 
                         if should_invoke_reasoning(mode):
                             studio_row: dict[str, Any] | None = None
@@ -2305,6 +2361,18 @@ class LotteryChatService:
             "hermes_decision_id": hermes_decision.hermes_decision_id,
             "hermes_decision": hermes_decision.to_trace(),
             "agent_trace": agent_trace,
+            **(
+                {
+                    "provider_config_source": provider_settings_meta.get("provider_config_source"),
+                    "selected_provider": provider_settings_meta.get("selected_provider"),
+                    "selected_model": provider_settings_meta.get("selected_model"),
+                    "credential_source": provider_settings_meta.get("credential_source"),
+                    "cache_hit": provider_settings_meta.get("cache_hit"),
+                    "cache_version": provider_settings_meta.get("cache_version"),
+                }
+                if provider_settings_meta
+                else {}
+            ),
         }
         state.provider_trace = runtime_trace
         try:
@@ -3839,44 +3907,81 @@ class LotteryChatService:
             LLMMessage(role=m["role"], content=m["content"]) for m in raw_messages
         ]
 
-        # 1) LLMRouter con reintentos
+        # 1) Lottery AI Settings provider (single source of truth for live chat)
+        from app.lottery.ai.conversational_orchestrator.conversation_provider_factory import (
+            complete_with_lottery_provider,
+            configured_provider_name,
+            runtime_provider_label,
+        )
+
+        allow_fb = configured_provider_name() != "openai"
+        msg_dicts = [{"role": m.role, "content": m.content} for m in messages]
+        try:
+            text0, model0, _usage0, pmeta0 = await asyncio.to_thread(
+                complete_with_lottery_provider,
+                msg_dicts,
+                max_tokens=token_budget,
+                temperature=0.2,
+                allow_fallback=allow_fb,
+            )
+            text0s = self._sanitize_user_facing((text0 or "").strip())
+            if text0s and len(text0s) >= 20 and not self._looks_internal(text0s):
+                used_s = runtime_provider_label(
+                    str(pmeta0.get("provider_used") or pmeta0.get("provider") or "huawei")
+                )
+                return text0s, False, model0, used_s
+            if configured_provider_name() == "openai" and (pmeta0 or {}).get("provider_unavailable"):
+                # Do not silently fall through to Hermes when OpenAI is the active setting.
+                return template, True, model0, "openai"
+        except Exception as exc:  # noqa: BLE001
+            if configured_provider_name() == "openai":
+                return template, True, None, "openai"
+            last_err: Exception | None = exc
+        else:
+            last_err = None
+
+        # 2) LLMRouter con reintentos (compat ENV) — only when settings are not OpenAI
         provider = None
         provider_name: str | None = None
-        if settings.assistant_synthesis_provider:
+        if allow_fb and settings.assistant_synthesis_provider:
             try:
                 provider = LLMProvider(settings.assistant_synthesis_provider)
                 provider_name = provider.value
             except ValueError:
                 provider = None
-        last_err: Exception | None = None
-        for attempt in range(2):
-            try:
-                response = await self.llm.complete(
-                    LLMCompletionRequest(
-                        messages=messages,
-                        provider=provider,
-                        temperature=0.2,
-                        max_tokens=token_budget,
-                    ),
-                    tenant_id=self.tenant_id,
-                )
-                text = self._sanitize_user_facing((response.content or "").strip())
-                if len(text) >= 20 and not self._looks_internal(text):
-                    used = getattr(response, "provider", None)
-                    used_s = used.value if hasattr(used, "value") else (str(used) if used else provider_name)
-                    return text, False, getattr(response, "model", None), used_s
-            except Exception as exc:  # noqa: BLE001 — fallback controlado
-                last_err = exc
-                await asyncio.sleep(0.35 * (attempt + 1))
+        if allow_fb:
+            for attempt in range(2):
+                try:
+                    response = await self.llm.complete(
+                        LLMCompletionRequest(
+                            messages=messages,
+                            provider=provider,
+                            temperature=0.2,
+                            max_tokens=token_budget,
+                        ),
+                        tenant_id=self.tenant_id,
+                    )
+                    text = self._sanitize_user_facing((response.content or "").strip())
+                    if len(text) >= 20 and not self._looks_internal(text):
+                        used = getattr(response, "provider", None)
+                        used_s = (
+                            used.value
+                            if hasattr(used, "value")
+                            else (str(used) if used else provider_name)
+                        )
+                        return text, False, getattr(response, "model", None), used_s
+                except Exception as exc:  # noqa: BLE001 — fallback controlado
+                    last_err = exc
+                    await asyncio.sleep(0.35 * (attempt + 1))
 
-        # 2) Hermes / ModelArts (credenciales ya usadas por JAIOS)
-        hermes_text, hermes_model = await self._synthesize_via_hermes(
-            messages, max_tokens=token_budget
-        )
-        if hermes_text:
-            return hermes_text, False, hermes_model, "huawei_modelarts"
+            # 3) Hermes / ModelArts compatibility path
+            hermes_text, hermes_model = await self._synthesize_via_hermes(
+                messages, max_tokens=token_budget
+            )
+            if hermes_text:
+                return hermes_text, False, hermes_model, "huawei_modelarts"
 
-        # 3) Fallback natural: plantilla local (nunca mensajes internos)
+        # 4) Fallback natural: plantilla local (nunca mensajes internos)
         _ = last_err
         return template, True, None, "local_template"
 

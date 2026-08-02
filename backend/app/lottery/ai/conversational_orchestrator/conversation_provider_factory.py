@@ -8,6 +8,7 @@ from app.lottery.ai.conversational_orchestrator.conversation_provider import (
     ConversationProvider,
     HuaweiConversationProvider,
     OpenAIConversationProvider,
+    ProviderDecisionResult,
 )
 from app.services.credential_vault import decrypt_secret
 
@@ -25,9 +26,13 @@ _RUNTIME_SETTINGS: dict[str, Any] = {
     "openai_organization": None,
     "openai_project": None,
 }
+_CACHE_VERSION: int = 0
+_CACHE_LOADED_FROM_DB: bool = False
+_LAST_CACHE_HIT: bool = False
 
 
 def set_runtime_settings_cache(data: dict[str, Any] | None) -> None:
+    global _CACHE_VERSION, _CACHE_LOADED_FROM_DB, _LAST_CACHE_HIT
     if not data:
         return
     _RUNTIME_SETTINGS["conversation_provider"] = str(
@@ -57,6 +62,9 @@ def set_runtime_settings_cache(data: dict[str, Any] | None) -> None:
         _RUNTIME_SETTINGS["openai_organization"] = data.get("openai_organization")
     if "openai_project" in data:
         _RUNTIME_SETTINGS["openai_project"] = data.get("openai_project")
+    _CACHE_VERSION += 1
+    _CACHE_LOADED_FROM_DB = True
+    _LAST_CACHE_HIT = False
 
 
 def get_runtime_settings() -> dict[str, Any]:
@@ -67,18 +75,31 @@ def get_runtime_settings() -> dict[str, Any]:
         if k != "openai_api_key_encrypted"
     }
     out["openai_key_configured"] = bool(_RUNTIME_SETTINGS.get("openai_api_key_encrypted"))
+    out["cache_version"] = _CACHE_VERSION
+    out["cache_loaded_from_db"] = _CACHE_LOADED_FROM_DB
     return out
 
 
 def invalidate_provider_cache() -> None:
-    """Explicit hook after save/delete — cache already overwritten by set_runtime_settings_cache."""
-    # Kept for call-site clarity; set_runtime_settings_cache is the real invalidation.
-    return None
+    """Bump cache version after save/delete so live chat rebuilds the provider."""
+    global _CACHE_VERSION, _LAST_CACHE_HIT
+    _CACHE_VERSION += 1
+    _LAST_CACHE_HIT = False
 
 
 def configured_provider_name() -> str:
     name = str(_RUNTIME_SETTINGS.get("conversation_provider") or "huawei").strip().lower()
     return name if name in _VALID else "huawei"
+
+
+def runtime_provider_label(name: str) -> str:
+    """Telemetry label used by live chat runtime_trace."""
+    n = (name or "").strip().lower()
+    if n == "openai":
+        return "openai"
+    if n in {"huawei", "huawei_modelarts"}:
+        return "huawei_modelarts"
+    return n or "huawei_modelarts"
 
 
 def _resolve_openai_credentials(
@@ -170,8 +191,14 @@ def build_provider(
     return HuaweiConversationProvider(model=model_s or None, timeout_sec=timeout)
 
 
-def get_conversation_provider() -> tuple[ConversationProvider, dict[str, Any]]:
+def get_conversation_provider(
+    *,
+    allow_fallback: bool = True,
+) -> tuple[ConversationProvider, dict[str, Any]]:
     """Return (provider, meta) from DB-backed runtime cache."""
+    global _LAST_CACHE_HIT
+    cache_hit = bool(_CACHE_LOADED_FROM_DB and _CACHE_VERSION > 0)
+    _LAST_CACHE_HIT = cache_hit
     requested = configured_provider_name()
     model = str(_RUNTIME_SETTINGS.get("conversation_model") or "")
     timeout = float(_RUNTIME_SETTINGS.get("timeout_seconds") or 45)
@@ -181,25 +208,114 @@ def get_conversation_provider() -> tuple[ConversationProvider, dict[str, Any]]:
     )
     meta: dict[str, Any] = {
         "requested_provider": requested,
+        "selected_provider": requested,
         "provider": primary.name,
+        "provider_used": runtime_provider_label(primary.name),
         "model": model,
+        "selected_model": model,
         "temperature": float(_RUNTIME_SETTINGS.get("temperature") or 0),
         "max_tokens": int(_RUNTIME_SETTINGS.get("max_tokens") or 700),
         "timeout_seconds": int(timeout),
         "provider_unavailable": False,
         "fallback": None,
+        "fallback_used": False,
+        "fallback_reason": None,
         "source": "lottery_ai_settings",
+        "provider_config_source": "database" if _CACHE_LOADED_FROM_DB else "default",
         "credential_source": cred_source,
+        "cache_hit": cache_hit,
+        "cache_version": _CACHE_VERSION,
     }
     if primary.available():
         return primary, meta
 
     meta["provider_unavailable"] = True
-    if requested == "openai":
+    if allow_fallback and requested == "openai":
         fallback = build_provider("huawei", model=None, timeout_sec=timeout)
         meta["fallback"] = "huawei"
+        meta["fallback_used"] = True
+        meta["fallback_reason"] = "openai_unavailable"
         meta["provider"] = fallback.name
+        meta["provider_used"] = runtime_provider_label(fallback.name)
         return fallback, meta
 
     meta["fallback"] = None
+    meta["fallback_reason"] = "provider_unavailable"
     return primary, meta
+
+
+def get_lottery_conversation_provider(
+    *,
+    allow_fallback: bool = False,
+) -> tuple[ConversationProvider, dict[str, Any]]:
+    """Single source of truth for Lottery IA live chat + UI connection tests.
+
+    Reads active Lottery AI Settings (process cache hydrated from DB). ENV is only
+    used inside OpenAI credential resolution when no DB ciphertext exists.
+    """
+    return get_conversation_provider(allow_fallback=allow_fallback)
+
+
+def complete_with_lottery_provider(
+    messages: list[dict[str, str]],
+    *,
+    max_tokens: int,
+    temperature: float | None = None,
+    allow_fallback: bool = False,
+) -> tuple[str | None, str | None, dict[str, Any], dict[str, Any]]:
+    """Run a free-form completion via the active Lottery AI Settings provider.
+
+    Returns (text, model, usage, meta).
+    """
+    provider, meta = get_lottery_conversation_provider(allow_fallback=allow_fallback)
+    if not provider.available():
+        meta = {
+            **meta,
+            "provider_unavailable": True,
+            "fallback_used": False,
+            "fallback_reason": "provider_unavailable",
+        }
+        return None, None, {}, meta
+
+    system = ""
+    rest: list[dict[str, str]] = []
+    for m in messages or []:
+        role = str(m.get("role") or "user")
+        content = str(m.get("content") or "")
+        if role == "system" and not system:
+            system = content
+        else:
+            rest.append({"role": role, "content": content})
+    if not rest:
+        rest = [{"role": "user", "content": " "}]
+
+    temp = (
+        float(temperature)
+        if temperature is not None
+        else float(meta.get("temperature") or 0.0)
+    )
+    result: ProviderDecisionResult = provider.decide(
+        system_prompt=system or "Eres el analista de Lottery IA.",
+        messages=rest,
+        schema=None,
+        temperature=temp,
+        max_tokens=int(max_tokens or meta.get("max_tokens") or 700),
+    )
+    meta = {
+        **meta,
+        "provider": provider.name,
+        "provider_used": runtime_provider_label(provider.name),
+        "selected_provider": meta.get("selected_provider") or configured_provider_name(),
+        "selected_model": meta.get("selected_model") or meta.get("model"),
+        "credential_source": getattr(provider, "credential_source", meta.get("credential_source")),
+        "latency_ms": result.latency_ms,
+        "fallback_used": False,
+        "fallback_reason": None,
+    }
+    if result.provider_unavailable or (result.error and not result.content):
+        meta["provider_unavailable"] = True
+        meta["fallback_reason"] = result.error or "provider_call_failed"
+        return None, result.model or meta.get("model"), result.usage or {}, meta
+
+    text = (result.content or "").strip() or None
+    return text, result.model or meta.get("model"), result.usage or {}, meta

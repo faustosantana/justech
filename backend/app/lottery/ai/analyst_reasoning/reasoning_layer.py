@@ -119,8 +119,26 @@ class AnalystReasoningLayer:
                 runtime_meta = dict(m["_prompt_runtime"])  # type: ignore[index]
             clean_messages.append(item)
         t0 = time.perf_counter()
-        text, model, usage = await self.huawei_caller(clean_messages, max_tokens)
+        caller_out = await self.huawei_caller(clean_messages, max_tokens)
+        # Compatible with (text, model, usage) or (text, model, usage, provider_meta)
+        if isinstance(caller_out, tuple) and len(caller_out) >= 4:
+            text, model, usage, provider_meta = (
+                caller_out[0],
+                caller_out[1],
+                caller_out[2] or {},
+                caller_out[3] if isinstance(caller_out[3], dict) else {},
+            )
+        else:
+            text, model, usage = caller_out[0], caller_out[1], (caller_out[2] or {})
+            provider_meta = {}
         latency = (time.perf_counter() - t0) * 1000.0
+        provider_label = str(
+            provider_meta.get("provider_used")
+            or provider_meta.get("provider")
+            or "huawei_modelarts"
+        )
+        if provider_label == "huawei":
+            provider_label = "huawei_modelarts"
 
         shadow_cmp: dict[str, Any] | None = None
         try:
@@ -138,7 +156,11 @@ class AnalystReasoningLayer:
                     {"role": "user", "content": clean_messages[1]["content"]},
                 ]
                 st0 = time.perf_counter()
-                s_text, s_model, s_usage = await self.huawei_caller(shadow_messages, max_tokens)
+                s_out = await self.huawei_caller(shadow_messages, max_tokens)
+                if isinstance(s_out, tuple) and len(s_out) >= 3:
+                    s_text, s_model, s_usage = s_out[0], s_out[1], (s_out[2] or {})
+                else:
+                    s_text, s_model, s_usage = None, None, {}
                 s_lat = (time.perf_counter() - st0) * 1000.0
                 s_guard = FactualGuard.validate(s_text or "", package) if s_text else None
                 shadow_cmp = {
@@ -167,6 +189,23 @@ class AnalystReasoningLayer:
         if shadow_cmp is not None:
             runtime_meta_public["shadow_comparison"] = shadow_cmp
 
+        provider_telemetry = {
+            "prompt_runtime": runtime_meta_public,
+            "provider_meta": {
+                k: provider_meta.get(k)
+                for k in (
+                    "selected_provider",
+                    "selected_model",
+                    "provider_config_source",
+                    "credential_source",
+                    "cache_hit",
+                    "cache_version",
+                    "fallback_reason",
+                )
+                if k in provider_meta
+            },
+        }
+
         if not text:
             return ReasoningResult(
                 text=rich_fallback,
@@ -175,12 +214,14 @@ class AnalystReasoningLayer:
                 provider_used="local_template",
                 model_used=model,
                 fallback_used=True,
-                rejection_reason="empty_huawei_response",
+                rejection_reason="empty_provider_response",
                 latency_ms=latency,
                 evidence_hash=ehash,
-                input_tokens=(usage or {}).get("input_tokens"),
-                output_tokens=(usage or {}).get("output_tokens"),
-                telemetry={"prompt_runtime": runtime_meta_public},
+                input_tokens=(usage or {}).get("input_tokens")
+                or (usage or {}).get("prompt_tokens"),
+                output_tokens=(usage or {}).get("output_tokens")
+                or (usage or {}).get("completion_tokens"),
+                telemetry=provider_telemetry,
             )
 
         guard: GuardResult = FactualGuard.validate(text, package)
@@ -189,31 +230,35 @@ class AnalystReasoningLayer:
                 text=rich_fallback,
                 used_reasoning=True,
                 mode=mode,
-                provider_used="huawei_modelarts",
+                provider_used=provider_label,
                 model_used=model,
                 guard_passed=False,
                 rejection_reason=guard.rejection_reason,
                 fallback_used=True,
                 latency_ms=latency,
                 evidence_hash=ehash,
-                input_tokens=(usage or {}).get("input_tokens"),
-                output_tokens=(usage or {}).get("output_tokens"),
-                telemetry={"violations": guard.violations, "prompt_runtime": runtime_meta_public},
+                input_tokens=(usage or {}).get("input_tokens")
+                or (usage or {}).get("prompt_tokens"),
+                output_tokens=(usage or {}).get("output_tokens")
+                or (usage or {}).get("completion_tokens"),
+                telemetry={**provider_telemetry, "violations": guard.violations},
             )
 
         return ReasoningResult(
             text=guard.text,
             used_reasoning=True,
             mode=mode,
-            provider_used="huawei_modelarts",
+            provider_used=provider_label,
             model_used=model,
             guard_passed=True,
             latency_ms=latency,
             evidence_hash=ehash,
-            input_tokens=(usage or {}).get("input_tokens"),
-            output_tokens=(usage or {}).get("output_tokens"),
+            input_tokens=(usage or {}).get("input_tokens")
+            or (usage or {}).get("prompt_tokens"),
+            output_tokens=(usage or {}).get("output_tokens")
+            or (usage or {}).get("completion_tokens"),
             prompt_version=str(
                 runtime_meta_public.get("prompt_semantic_version") or REASONING_PROMPT_VERSION
             ),
-            telemetry={"prompt_runtime": runtime_meta_public},
+            telemetry=provider_telemetry,
         )

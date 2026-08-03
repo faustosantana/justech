@@ -1,10 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Star } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 
-import { FavoriteToggle } from "@/components/navigation/application-sidebar";
+import { FavoriteToggle } from "@/components/navigation/favorite-toggle";
 import { usePlatformAccess } from "@/hooks/use-platform-access";
 import { JAIOS_APPS, type JaiosApp } from "@/lib/app-registry";
 import {

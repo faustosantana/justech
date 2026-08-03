@@ -497,6 +497,9 @@ export const apiClient = {
     status?: OpportunityStatus;
     company?: OpportunityCompany;
     priority?: OpportunityPriority;
+    funnel_stage?: string;
+    search?: string;
+    include_expired?: boolean;
     skip?: number;
     limit?: number;
   }) =>
@@ -1807,6 +1810,89 @@ export const apiClient = {
     request<import("@/lib/documents-hub").CompanyCompletion>(
       `/documents/companies/${id}/completion`,
       {},
+      true,
+    ),
+
+  getCompanyRepresentatives: (companyId: string) =>
+    request<import("@/lib/company-representatives").RepresentativesSummary>(
+      `/documents/companies/${companyId}/representatives`,
+      {},
+      true,
+    ),
+
+  createCompanyRepresentative: (
+    companyId: string,
+    payload: import("@/lib/company-representatives").RepresentativeCreatePayload,
+    forceNew = false,
+  ) =>
+    request<import("@/lib/company-representatives").CompanyRepresentative>(
+      `/documents/companies/${companyId}/representatives${buildQuery({ force_new: forceNew || undefined })}`,
+      { method: "POST", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  updateCompanyRepresentative: (
+    companyId: string,
+    representativeId: string,
+    payload: Partial<import("@/lib/company-representatives").RepresentativeCreatePayload>,
+  ) =>
+    request<import("@/lib/company-representatives").CompanyRepresentative>(
+      `/documents/companies/${companyId}/representatives/${representativeId}`,
+      { method: "PATCH", body: JSON.stringify(payload) },
+      true,
+    ),
+
+  deactivateCompanyRepresentative: (companyId: string, representativeId: string) =>
+    request<import("@/lib/company-representatives").CompanyRepresentative>(
+      `/documents/companies/${companyId}/representatives/${representativeId}`,
+      { method: "DELETE" },
+      true,
+    ),
+
+  deleteCompanyRepresentativePermanent: (companyId: string, representativeId: string) =>
+    request<{ ok?: boolean }>(
+      `/documents/companies/${companyId}/representatives/${representativeId}/permanent`,
+      { method: "DELETE" },
+      true,
+    ),
+
+  assignCompanyPersonRole: (
+    companyId: string,
+    representativeId: string,
+    roleType: string,
+    canSign?: boolean,
+  ) =>
+    request<import("@/lib/company-representatives").CompanyRepresentative>(
+      `/documents/companies/${companyId}/representatives/${representativeId}/assign-role${buildQuery({
+        role_type: roleType,
+        can_sign: canSign ?? false,
+      })}`,
+      { method: "POST" },
+      true,
+    ),
+
+  linkCompanyProfilePerson: (companyId: string, fieldKey: string, personId: string) =>
+    request<{ ok?: boolean; message: string }>(
+      `/documents/companies/${companyId}/profile-fields/${encodeURIComponent(fieldKey)}/link-person${buildQuery({
+        person_id: personId,
+      })}`,
+      { method: "POST" },
+      true,
+    ),
+
+  validateRepresentativeDocument: (
+    companyId: string,
+    representativeId: string,
+    documentType: string,
+    payload: { validation_status?: string; validation_notes?: string; validation_method?: string },
+  ) =>
+    request<{
+      ok: boolean;
+      message: string;
+      document: import("@/lib/company-representatives").RepresentativeDocument;
+    }>(
+      `/documents/companies/${companyId}/representatives/${representativeId}/documents/${encodeURIComponent(documentType)}/validate`,
+      { method: "POST", body: JSON.stringify(payload) },
       true,
     ),
 

@@ -88,7 +88,20 @@ export function CompanyExpedienteView({
         apiClient.getDocumentsHubCorporateIdentity(p.company_key).then(setIdentity).catch(() => setIdentity(null));
       }
     } catch (err) {
-      setError(err instanceof ApiError ? err.message : "No se pudo cargar el perfil de la empresa.");
+      if (err instanceof ApiError) {
+        if (err.status === 404) {
+          setError("Empresa no encontrada. Verifique el enlace o vuelva al listado.");
+        } else if (err.status === 403) {
+          setError("No tiene permiso para ver el perfil de esta empresa.");
+        } else if (err.status >= 500) {
+          setError("Error del servidor al cargar el perfil. Intente de nuevo.");
+        } else {
+          setError(err.message || "No se pudo cargar el perfil de la empresa.");
+        }
+      } else {
+        setError("No se pudo cargar el perfil de la empresa.");
+      }
+      setProfile(null);
     } finally {
       setLoading(false);
     }
@@ -113,10 +126,33 @@ export function CompanyExpedienteView({
     setTab("faltantes");
   };
 
-  const companyLegal = legal?.companies.find((c) => c.company_key === profile?.company_key);
+  const companyLegal = legal?.companies?.find((c) => c.company_key === profile?.company_key);
 
   if (loading && !profile) {
     return <p className="p-4 text-sm text-muted-foreground">Cargando expediente…</p>;
+  }
+
+  if (error && !profile) {
+    return (
+      <div className="space-y-4 p-1">
+        <Link href={backHref} className="text-sm text-primary hover:underline">
+          {backLabel}
+        </Link>
+        <Card className="border-amber-500/40 bg-amber-500/5">
+          <CardContent className="flex flex-wrap items-center gap-3 py-4 text-sm text-amber-800">
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+            <span className="flex-1">{error}</span>
+            <Button size="sm" variant="outline" onClick={() => void load()}>
+              <RefreshCw className="mr-1 h-4 w-4" />
+              Reintentar
+            </Button>
+            <Button size="sm" variant="ghost" asChild>
+              <Link href={backHref}>Volver al módulo</Link>
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
@@ -133,6 +169,9 @@ export function CompanyExpedienteView({
           <CardContent className="flex items-center gap-2 py-3 text-sm text-amber-800">
             <AlertTriangle className="h-4 w-4" />
             {error}
+            <Button size="sm" variant="outline" className="ml-auto" onClick={() => void load()}>
+              Reintentar
+            </Button>
           </CardContent>
         </Card>
       )}

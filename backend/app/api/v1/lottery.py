@@ -549,6 +549,20 @@ async def clear_chat_context(
     return _session_resp(session)
 
 
+@router.post("/chat/sessions/{session_id}/close-investigation")
+async def close_chat_investigation(
+    session_id: UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.chat")],
+) -> dict:
+    """Close active investigation only; keep message history."""
+    svc = _make_chat(db, user)
+    data = await svc.close_investigation(session_id)
+    await db.commit()
+    return data
+
+
 @router.get("/chat/sessions/{session_id}/messages", response_model=ChatMessageListResponse)
 async def list_chat_messages(
     session_id: UUID,

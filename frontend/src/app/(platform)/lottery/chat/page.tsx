@@ -154,16 +154,37 @@ export default function LotteryChatPage() {
     setSessionContext(ctx);
     const v4 = (ctx.conversation_v4 as Record<string, unknown>) || {};
     const la = (v4.last_analysis as Record<string, unknown>) || {};
-    const nums = (v4.active_numbers as string[]) || (ctx.last_numbers as string[]) || [];
+    const inv = (v4.active_investigation as Record<string, unknown>) || {};
+    const invStatus = String(inv.status || "");
+    const invActive = invStatus === "active";
+    const nums =
+      (invActive ? (inv.subjects as string[]) : null) ||
+      (v4.active_numbers as string[]) ||
+      (ctx.last_numbers as string[]) ||
+      [];
+    const tables = invActive
+      ? (((inv.time_window as Record<string, unknown>) || {}).tables as string[]) || []
+      : [];
     setActiveContext({
-      number: (la.observed as string | number) ?? nums[0] ?? null,
+      number: (nums[0] as string | number) ?? (la.observed as string | number) ?? null,
+      numbers: nums,
+      analyzing: invActive
+        ? String(inv.topic || (nums.length ? `número ${nums[0]}` : ""))
+        : undefined,
+      relation: invActive ? (inv.relation as string) || (v4.active_relation as string) : undefined,
+      investigation_id: invActive ? (inv.investigation_id as string) : undefined,
+      investigation_status: invStatus || undefined,
+      investigation_topic: invActive ? (inv.topic as string) : undefined,
+      tables,
+      tables_label: tables.length ? tables.join(" y ") : undefined,
+      expires_at: invActive ? (inv.expires_at as string) : undefined,
       date: (la.date as string) || (v4.active_date as string) || null,
       lottery: (la.lottery as string) || (ctx.last_lottery as string) || null,
       primary_candidate:
         (la.primary as number) ?? (v4.current_primary_candidate as number) ?? null,
       alternatives: (v4.current_alternatives as number[]) || [],
       summary: (v4.conversation_summary as string) || null,
-    });
+    } as ActiveContext);
   };
 
   const loadMessages = useCallback(async (id: string) => {
@@ -352,6 +373,24 @@ export default function LotteryChatPage() {
     await refreshSessions();
   };
 
+  const closeInvestigation = async () => {
+    if (!sessionId) return;
+    try {
+      const res = await apiClient.closeLotteryChatInvestigation(sessionId);
+      if (res.active_context) setActiveContext(res.active_context as ActiveContext);
+      else setActiveContext(null);
+      if (res.context) setSessionContext(res.context);
+      await refreshSessions();
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "No se pudo cerrar la investigación");
+    }
+  };
+
+  const changeInvestigation = () => {
+    setInput("Ahora analiza el ");
+    textareaRef.current?.focus();
+  };
+
   const deleteSession = async (id: string) => {
     if (!window.confirm("¿Eliminar esta conversación?")) return;
     await apiClient.deleteLotteryChatSession(id);
@@ -380,25 +419,30 @@ export default function LotteryChatPage() {
       !activeContext?.number &&
       !activeContext?.numbers?.length &&
       !activeContext?.primary_candidate &&
-      !activeContext?.analyzing
+      !activeContext?.analyzing &&
+      !activeContext?.investigation_id
     ) {
       return null;
     }
     const nums = (activeContext.numbers as string[] | undefined) || [];
-    const analyzing =
-      (activeContext.analyzing as string | undefined) ||
-      (nums.length >= 2 ? nums.slice(0, 4).join(" + ") : activeContext.number) ||
-      "—";
-    const dateBit = activeContext.date
-      ? new Date(`${String(activeContext.date).slice(0, 10)}T12:00:00`).toLocaleDateString(
-          "es-DO",
-          { day: "numeric", month: "short", year: "numeric" },
-        )
-      : null;
+    const numberLabel =
+      nums.length >= 2
+        ? nums.slice(0, 4).join(" · ")
+        : String(activeContext.number ?? nums[0] ?? "—");
+    const status = String(activeContext.investigation_status || "active");
+    const statusLabel =
+      status === "closed" ? "Cerrada" : status === "expired" ? "Expirada" : "Activa";
+    const tables =
+      activeContext.tables_label ||
+      ((activeContext.tables as string[] | undefined) || []).join(" y ") ||
+      "1 y 2";
     return {
-      analyzing: [analyzing, dateBit].filter(Boolean).join(" · "),
-      filters: (activeContext.filters_label as string | undefined) || null,
-      primary: activeContext.primary_candidate,
+      numberLabel,
+      tables,
+      statusLabel,
+      topic: activeContext.investigation_topic || activeContext.analyzing || null,
+      filters: activeContext.filters_label || null,
+      active: status === "active" || (!activeContext.investigation_status && Boolean(numberLabel)),
     };
   }, [activeContext]);
 
@@ -567,28 +611,56 @@ export default function LotteryChatPage() {
           {contextLabel && (
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-muted/15 px-3 py-2 text-[11px]">
               <div className="space-y-0.5 text-muted-foreground">
+                <p className="font-medium text-foreground/90">Investigación activa</p>
                 <p>
-                  <span className="font-medium text-foreground/80">Investigación:</span>{" "}
-                  {contextLabel.analyzing || "—"}
+                  <span className="font-medium text-foreground/80">Número:</span>{" "}
+                  {contextLabel.numberLabel}
                 </p>
+                <p>
+                  <span className="font-medium text-foreground/80">Tabla:</span>{" "}
+                  {contextLabel.tables}
+                </p>
+                <p>
+                  <span className="font-medium text-foreground/80">Estado:</span>{" "}
+                  {contextLabel.statusLabel}
+                </p>
+                {contextLabel.topic && (
+                  <p className="text-[10px] text-muted-foreground/80">{contextLabel.topic}</p>
+                )}
                 {contextLabel.filters && (
                   <p className="text-[10px] text-muted-foreground/80">{contextLabel.filters}</p>
                 )}
-                {contextLabel.primary != null && (
-                  <p>
-                    <span className="font-medium text-foreground/80">Candidato actual:</span>{" "}
-                    {contextLabel.primary}
-                  </p>
-                )}
               </div>
-              <Button
-                size="sm"
-                variant="ghost"
-                disabled={!sessionId || loading}
-                onClick={() => void clearContext()}
-              >
-                Limpiar contexto
-              </Button>
+              <div className="flex flex-wrap gap-1">
+                {contextLabel.active && (
+                  <>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      disabled={!sessionId || loading}
+                      onClick={changeInvestigation}
+                    >
+                      Cambiar investigación
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      disabled={!sessionId || loading}
+                      onClick={() => void closeInvestigation()}
+                    >
+                      Cerrar investigación
+                    </Button>
+                  </>
+                )}
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  disabled={!sessionId || loading}
+                  onClick={() => void clearContext()}
+                >
+                  Limpiar contexto
+                </Button>
+              </div>
             </div>
           )}
 

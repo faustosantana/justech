@@ -20,6 +20,16 @@ RequestedAttribute = Literal[
     "filter_position",
     "compare_prior",
     "other_number",
+    # Numeric-relations / table follow-ups (active investigation subject)
+    "tabla1",
+    "tabla2",
+    "companions",
+    "neighbors",
+    "table_code",
+    "history",
+    "strongest",
+    "compare_neighbors",
+    "compare_companions",
     "unknown",
 ]
 
@@ -30,10 +40,66 @@ def _norm(text: str) -> str:
 
 
 _ATTR_PATTERNS: list[tuple[RequestedAttribute, re.Pattern[str]]] = [
+    # Tables / relations first — beat generic "detalles"
+    ("compare_companions", re.compile(
+        r"\bcompara(r)?\s+(sus\s+|los\s+)?compa[nñ]eros\b|"
+        r"\bcompa[nñ]eros?\s+entre\s+(ellos|ambos)\b",
+        re.I,
+    )),
+    ("compare_neighbors", re.compile(
+        r"\bcompara(r)?\s+(sus\s+|los\s+)?vecinos\b|"
+        r"\bvecinos?\s+entre\s+(ellos|ambos)\b",
+        re.I,
+    )),
+    ("tabla1", re.compile(
+        r"\b(y\s+)?(su\s+)?relaci[oó]n\s+(en\s+)?(la\s+)?tabla\s*1\b|"
+        r"\b(muestra(me)?|ver|dame)\s+(la\s+)?tabla\s*1\b|"
+        r"\ben\s+la\s+tabla\s*1\b|\btabla\s*1\b",
+        re.I,
+    )),
+    ("tabla2", re.compile(
+        r"\b(y\s+)?(su\s+)?relaci[oó]n\s+(en\s+)?(la\s+)?tabla\s*2\b|"
+        r"\b(muestra(me)?|ver|dame)\s+(la\s+)?tabla\s*2\b|"
+        r"\ben\s+la\s+tabla\s*2\b|\btabla\s*2\b",
+        re.I,
+    )),
+    ("companions", re.compile(
+        r"\b(cu[aá]les?\s+son\s+)?(sus\s+|los\s+)?compa[nñ]eros\b|"
+        r"\bcu[aá]ntos?\s+compa[nñ]eros\b|"
+        r"\bcompa[nñ]eros?\s+(de\s+)?(tabla\s*1|codigo|c[oó]digo)\b|"
+        r"\b(muestra(me)?|dame)\s+(los\s+)?compa[nñ]eros\b|"
+        r"\bqui[eé]n(es)?\s+comparte(n)?\s+el\s+mismo\s+c[oó]digo\b",
+        re.I,
+    )),
+    ("neighbors", re.compile(
+        r"\b(cu[aá]les?\s+son\s+)?(sus\s+|los\s+)?vecinos\b|"
+        r"\bcu[aá]l\s+vecino\b|\bvecino\s+(sali[oó]|nunca)\b|"
+        r"\b(muestra(me)?|dame)\s+(los\s+)?vecinos\b|"
+        r"\bvecinos?\s+(de\s+)?(tabla\s*2)?\b",
+        re.I,
+    )),
+    ("table_code", re.compile(
+        r"\b(cu[aá]l\s+es\s+)?(su\s+)?c[oó]digo\b|"
+        r"\bc[oó]digo\s+(madre|tabla|t1|t2)\b",
+        re.I,
+    )),
+    ("history", re.compile(
+        r"\b(muestra(me)?|dame|ver)\s+(el\s+)?hist[oó]rico\b|"
+        r"\b[uú]ltimas?\s+salidas\b|\bsus\s+[uú]ltimas?\s+salidas\b|"
+        r"\bcu[aá]les?\s+fueron\s+sus\s+[uú]ltimas?\b",
+        re.I,
+    )),
+    ("strongest", re.compile(
+        r"\b(cu[aá]l\s+es\s+)?(el\s+)?m[aá]s\s+fuerte\b|"
+        r"\bm[aá]s\s+probabilidad\b|\bmejor\s+hist[oó]rico\b|"
+        r"\bm[aá]s\s+coincidencias\b|\bcon\s+qui[eé]n\s+coincidi[oó]\s+m[aá]s\b",
+        re.I,
+    )),
     ("lotteries", re.compile(
         r"\b(en\s+)?(cu[aá]les?|qu[eé])\s+loter[ií]as?\b|"
         r"\bd[oó]nde\s+ocurri[oó]\b|\bd[oó]nde\s+sali[oó]\b|"
-        r"\ben\s+qu[eé]\s+loter",
+        r"\ben\s+qu[eé]\s+loter|"
+        r"\b(muestra(me)?|solo)\s+(solamente\s+)?(loteka|nacional|leidsa|real|gana)",
         re.I,
     )),
     ("positions", re.compile(
@@ -48,14 +114,16 @@ _ATTR_PATTERNS: list[tuple[RequestedAttribute, re.Pattern[str]]] = [
         re.I,
     )),
     ("count", re.compile(
-        r"\bcu[aá]ntas?\s+veces\b|\bcu[aá]ntas?\s+coinciden",
+        r"\bcu[aá]ntas?\s+veces\b|\bcu[aá]ntas?\s+coinciden|"
+        r"\bcu[aá]ntas?\s+coincidencias\b",
         re.I,
     )),
     ("previous_list", re.compile(
         r"\b(coincidencias?\s+)?anteriores?\b|"
         r"\besas?\s+([uú]ltimas?\s+)?(\d{1,2}\s+)?(veces|fechas|coinciden)|"
         r"\bcu[aá]les\s+fueron\b|"
-        r"\blas?\s+3\s+coinciden",
+        r"\blas?\s+3\s+coinciden|"
+        r"\beste\s+a[nñ]o\b|\bel\s+anterior\b|\ba[nñ]o\s+pasado\b",
         re.I,
     )),
     ("after", re.compile(
@@ -69,11 +137,12 @@ _ATTR_PATTERNS: list[tuple[RequestedAttribute, re.Pattern[str]]] = [
         re.I,
     )),
     ("details", re.compile(
-        r"\bm[aá]s\s+detalles\b|\bdame\s+m[aá]s\s+detalle|\bamplicame\b",
+        r"\bm[aá]s\s+detalles\b|\bdame\s+m[aá]s\s+detalle|\bamplicame\b|"
+        r"\b(muestra(me)?|dame)\s+la\s+relaci[oó]n\b",
         re.I,
     )),
     ("order", re.compile(
-        r"\ben\s+qu[eé]\s+orden\s+salieron\b",
+        r"\ben\s+qu[eé]\s+orden\s+salieron\b|\bcu[aá]l\s+sali[oó]\s+primero\b",
         re.I,
     )),
     ("compare_prior", re.compile(
@@ -110,6 +179,19 @@ class ContextualFollowUpResolver:
         return None
 
     @classmethod
+    def is_table_attribute(cls, attr: str | None) -> bool:
+        return attr in {
+            "tabla1",
+            "tabla2",
+            "companions",
+            "neighbors",
+            "table_code",
+            "compare_neighbors",
+            "compare_companions",
+            "strongest",
+        }
+
+    @classmethod
     def is_short_contextual_follow_up(cls, text: str) -> bool:
         attr = cls.detect_attribute(text)
         if attr:
@@ -118,7 +200,8 @@ class ContextualFollowUpResolver:
         return bool(
             re.match(
                 r"^(y\s+)?(eso|esa|ese|ambos|los\s+dos|esa\s+coinciden|"
-                r"ese\s+resultado|la\s+anterior|esa\s+fecha)$",
+                r"ese\s+resultado|la\s+anterior|esa\s+fecha|"
+                r"la\s+tabla|tabla\s*[12]|los\s+compa[nñ]eros|los\s+vecinos)$",
                 t,
             )
         )

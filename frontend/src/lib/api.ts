@@ -2072,6 +2072,15 @@ export const apiClient = {
       method: "POST",
     }, true),
 
+  closeLotteryChatInvestigation: (sessionId: string) =>
+    request<{
+      ok: boolean;
+      active_context?: Record<string, unknown>;
+      context?: Record<string, unknown>;
+    }>(`/lottery/chat/sessions/${sessionId}/close-investigation`, {
+      method: "POST",
+    }, true),
+
   listLotteryChatMessages: (sessionId: string, limit = 50, offset = 0) =>
     request<{ items: LotteryChatMessage[]; total: number }>(
       `/lottery/chat/sessions/${sessionId}/messages${buildQuery({ limit, offset })}`,

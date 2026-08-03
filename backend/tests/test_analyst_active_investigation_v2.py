@@ -232,3 +232,122 @@ def test_remember_occurrence_does_not_collapse_same_day_pair():
     )
     st.remember_occurrence(lottery="Real", number="78", draw_date="2026-07-19", position=1)
     assert st.active_numbers == ["78", "02"]
+
+
+def _single_inv(n: str = "57") -> ActiveInvestigationSession:
+    return ActiveInvestigationSession(
+        subjects=[n],
+        relation=None,
+        metric=None,
+        topic=f"número {n}",
+        status="active",
+    )
+
+
+def test_table_follow_up_attrs_detected():
+    assert ContextualFollowUpResolver.detect_attribute("¿Cuáles son sus compañeros?") == "companions"
+    assert ContextualFollowUpResolver.detect_attribute("¿Y su relación en la Tabla 1?") == "tabla1"
+    assert ContextualFollowUpResolver.detect_attribute("Muéstrame la Tabla 2") == "tabla2"
+    assert ContextualFollowUpResolver.detect_attribute("¿Cuáles son sus vecinos?") == "neighbors"
+    assert ContextualFollowUpResolver.detect_attribute("¿Cuál es su código?") == "table_code"
+    assert ContextualFollowUpResolver.detect_attribute("Compara sus vecinos") == "compare_neighbors"
+    assert ContextualFollowUpResolver.detect_attribute("Compara sus compañeros") == "compare_companions"
+
+
+def test_hermes_reuses_catalog_for_companions_without_repeating_number():
+    inv = _single_inv("57")
+    st = ConversationState(
+        active_numbers=["57"],
+        active_investigation=inv.to_store(),
+    )
+    d = HermesDecisionEngine.decide(
+        "¿Cuáles son sus compañeros?",
+        state=st,
+        investigation=inv,
+    )
+    assert d.turn_type == "attribute_of_last_event"
+    assert d.requested_attribute == "companions"
+    assert d.inherited_subjects == ["57"]
+    assert d.reuse_evidence is True
+    assert d.requires_research is False
+
+
+def test_natural_answer_companions_from_catalog():
+    inv = _single_inv("57")
+    d = HermesDecisionEngine.decide(
+        "¿Cuáles son sus compañeros?",
+        state=ConversationState(active_numbers=["57"]),
+        investigation=inv,
+    )
+    text = NaturalResponseGenerator.answer_attribute_from_evidence(d, inv)
+    assert text
+    assert "57" in text
+    assert "Tabla 1" in text or "compañeros" in text.lower() or "código" in text.lower()
+
+
+def test_topic_switch_discards_prior_investigation():
+    inv = _single_inv("57")
+    st = ConversationState(
+        active_numbers=["57"],
+        active_investigation=inv.to_store(),
+    )
+    mgr = InvestigationStateManager()
+    d = HermesDecisionEngine.decide(
+        "Ahora analiza el 35",
+        state=st,
+        investigation=inv,
+    )
+    assert d.turn_type == "topic_switch"
+    assert d.inherited_subjects == ["35"]
+    new_inv = mgr.begin_or_continue(st, decision=d, message="Ahora analiza el 35")
+    assert new_inv is not None
+    assert new_inv.subjects == ["35"]
+    assert st.active_numbers == ["35"]
+
+
+def test_compare_creates_comparative_investigation():
+    st = ConversationState()
+    mgr = InvestigationStateManager()
+    d = HermesDecisionEngine.decide(
+        "Compara el 57 con el 35",
+        state=st,
+        investigation=None,
+    )
+    assert d.turn_type == "new_investigation"
+    assert sorted(d.inherited_subjects[:2]) == ["35", "57"]
+    assert d.inherited_relation == "compare"
+    inv = mgr.begin_or_continue(st, decision=d, message="Compara el 57 con el 35")
+    assert inv is not None
+    assert sorted(inv.subjects[:2]) == ["35", "57"]
+    assert inv.relation == "compare"
+
+
+def test_close_investigation_clears_sticky():
+    inv = _single_inv("57")
+    st = ConversationState(
+        active_numbers=["57"],
+        active_investigation=inv.to_store(),
+    )
+    mgr = InvestigationStateManager()
+    st2 = mgr.close(st)
+    assert st2.active_numbers == []
+    closed = ActiveInvestigationSession.from_store(st2.active_investigation)
+    assert closed is not None
+    assert closed.status == "closed"
+
+
+def test_state_manager_tracks_tables_on_companions_ask():
+    inv = _single_inv("57")
+    st = ConversationState(
+        active_numbers=["57"],
+        active_investigation=inv.to_store(),
+    )
+    mgr = InvestigationStateManager()
+    d = HermesDecisionEngine.decide(
+        "¿Cuáles son sus compañeros?",
+        state=st,
+        investigation=inv,
+    )
+    out = mgr.begin_or_continue(st, decision=d, message="¿Cuáles son sus compañeros?")
+    assert out is not None
+    assert "1" in (out.time_window or {}).get("tables", [])

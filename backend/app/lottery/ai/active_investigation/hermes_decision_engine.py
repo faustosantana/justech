@@ -112,8 +112,23 @@ class HermesDecisionEngine:
                 decision.inherited_relation = str(rel)
                 decision.inherited_metric = decision.inherited_metric or str(rel)
         else:
-            decision.inherited_relation = None
-            decision.inherited_metric = None
+            # Drop sticky same_day contamination on explicit new topics,
+            # but keep intentional relations from _decide_core (e.g. compare).
+            sticky = (
+                res.get("relation")
+                or res.get("active_relation")
+                or getattr(state, "active_relation", None)
+            )
+            if (
+                decision.inherited_relation
+                and decision.inherited_relation != sticky
+            ):
+                decision.inherited_metric = (
+                    decision.inherited_metric or decision.inherited_relation
+                )
+            else:
+                decision.inherited_relation = None
+                decision.inherited_metric = None
 
         if decision.turn_type == "asset_action":
             decision.reasoning_mode = "skip"
@@ -294,12 +309,15 @@ class HermesDecisionEngine:
             decision.reason_code = "EXPLICIT_NEW_RESEARCH"
             return decision
 
-        # Two new numbers → new/continue investigation
+        # Two new numbers → new/continue investigation (comparative when "compara")
         if len(msg_nums) >= 2 and (
             not inv_active or sorted(msg_nums[:2]) != sorted(active_pair[:2])
         ):
             decision.turn_type = "new_investigation"
             decision.inherited_subjects = msg_nums[:2]
+            if re.search(r"\bcompara", raw, re.I):
+                decision.inherited_relation = "compare"
+                decision.inherited_metric = "compare"
             decision.requires_research = True
             decision.confidence = "high"
             decision.reason_code = "explicit_pair_or_topic"
@@ -312,7 +330,22 @@ class HermesDecisionEngine:
             attr = follow.get("requested_attribute")
             decision.turn_type = (
                 "attribute_of_last_event"
-                if attr in {"lotteries", "positions", "date", "order", "explain", "details"}
+                if attr in {
+                    "lotteries",
+                    "positions",
+                    "date",
+                    "order",
+                    "explain",
+                    "details",
+                    "tabla1",
+                    "tabla2",
+                    "companions",
+                    "neighbors",
+                    "table_code",
+                    "strongest",
+                    "compare_neighbors",
+                    "compare_companions",
+                }
                 else "contextual_follow_up"
             )
             if attr in {"filter_lottery", "filter_position"}:
@@ -322,7 +355,8 @@ class HermesDecisionEngine:
             decision.inherited_subjects = list(follow.get("inherited_subjects") or active_pair)[:8]
             decision.inherited_metric = follow.get("inherited_metric") or relation
             decision.inherited_relation = follow.get("inherited_relation") or relation
-            # Evidence reuse for attribute asks when last_event is populated
+            # Evidence reuse for attribute asks when last_event is populated;
+            # table attrs always reuse via catalog (no research / no motor).
             last_event = follow.get("last_event") or {}
             evidence = follow.get("evidence") or {}
             can_reuse = cls._can_answer_from_evidence(attr, last_event, evidence)
@@ -396,6 +430,19 @@ class HermesDecisionEngine:
             return bool(last_event or evidence.get("summary"))
         if attr == "count":
             return evidence.get("total") is not None
+        # Tabla 1 / Tabla 2 / compañeros / vecinos — always answerable from catalog
+        # for any active subject (no historical evidence required).
+        if attr in {
+            "tabla1",
+            "tabla2",
+            "companions",
+            "neighbors",
+            "table_code",
+            "strongest",
+            "compare_neighbors",
+            "compare_companions",
+        }:
+            return True
         return False
 
 

@@ -72,6 +72,10 @@ class InvestigationStateManager:
                 last_user_question=message,
             )
             state.active_investigation = inv.to_store()
+            state.active_numbers = list(decision.inherited_subjects)[:8]
+            state.active_pair = (
+                list(state.active_numbers[:2]) if len(state.active_numbers) >= 2 else []
+            )
             return inv
 
         if inv is not None:
@@ -80,17 +84,31 @@ class InvestigationStateManager:
                 inv.subjects = list(decision.inherited_subjects)[:8]
             elif decision.inherited_subjects and not inv.subjects:
                 inv.subjects = list(decision.inherited_subjects)[:8]
+            # Single-number continue: keep sticky number mirrored
+            if inv.subjects and not state.active_numbers:
+                state.active_numbers = list(inv.subjects)[:8]
             if decision.inherited_relation:
                 inv.relation = decision.inherited_relation
             if decision.inherited_metric:
                 inv.metric = decision.inherited_metric
             inv.follow_up_kind = decision.requested_attribute or decision.turn_type
             inv.last_user_question = message
+            # Track which tables the user asked about (for UI banner)
+            attr = decision.requested_attribute or ""
+            tables = list((inv.time_window or {}).get("tables") or [])
+            before = list(tables)
+            if attr in {"tabla1", "companions", "table_code", "compare_companions"} and "1" not in tables:
+                tables.append("1")
+            if attr in {"tabla2", "neighbors", "compare_neighbors"} and "2" not in tables:
+                tables.append("2")
+            if tables != before or attr in {"tabla1", "tabla2"}:
+                inv.time_window = {**(inv.time_window or {}), "tables": tables}
             self.ttl.renew(inv)
             state.active_investigation = inv.to_store()
             # Mirror into classic sticky fields for legacy classifiers
-            if len(inv.subjects) >= 2:
+            if len(inv.subjects) >= 1:
                 state.active_numbers = list(inv.subjects[:8])
+            if len(inv.subjects) >= 2:
                 state.active_pair = list(inv.subjects[:2])
             if inv.relation:
                 state.active_relation = inv.relation
@@ -99,6 +117,32 @@ class InvestigationStateManager:
                 state.active_filters = filters
             return inv
         return None
+
+    def close(self, state: Any) -> Any:
+        """Close active investigation only — keep message history and drop sticky subjects."""
+        inv = ActiveInvestigationSession.from_store(
+            getattr(state, "active_investigation", None)
+        )
+        if inv is not None:
+            inv.status = "closed"
+            state.active_investigation = inv.to_store()
+        else:
+            state.active_investigation = None
+        state.active_numbers = []
+        state.active_pair = []
+        state.active_relation = None
+        state.active_lotteries = []
+        filters = dict(state.active_filters or {})
+        filters.pop("relation", None)
+        state.active_filters = filters
+        try:
+            from app.lottery.ai.investigation_workspace.store import clear_assets
+
+            clear_assets(state)
+        except Exception:  # noqa: BLE001
+            state.workspace_assets = {}
+            state.active_asset_id = None
+        return state
 
     def update_after_research(
         self,
@@ -122,7 +166,14 @@ class InvestigationStateManager:
                     relation="same_day",
                     metric="same_day",
                     event_type="same_day_coincidence",
-                    topic=f"coincidencia {'+'.join(nums[:2])}",
+                    topic=f"coincidencia {'+'.join(str(n) for n in nums[:2])}",
+                )
+            elif nums:
+                # Single-number (or multi without same_day) investigation bootstrap
+                investigation = ActiveInvestigationSession(
+                    subjects=[str(n) for n in nums[:8]],
+                    topic=f"número {nums[0]}" if len(nums) == 1 else f"números {'+'.join(str(n) for n in nums[:3])}",
+                    last_intent=str(intent) if intent else None,
                 )
             else:
                 return None
@@ -140,9 +191,10 @@ class InvestigationStateManager:
             investigation.lotteries = list(ev.get("lotteries") or investigation.lotteries)
             investigation.positions = list(ev.get("positions") or investigation.positions)
             investigation.date_anchor = (investigation.last_event or {}).get("date")
-            investigation.relation = investigation.relation or "same_day"
-            investigation.metric = investigation.metric or "same_day"
-            investigation.event_type = "same_day_coincidence"
+            if (summary or {}).get("relation") == "same_day" or ev.get("type") == "same_day_coincidence":
+                investigation.relation = investigation.relation or "same_day"
+                investigation.metric = investigation.metric or "same_day"
+                investigation.event_type = "same_day_coincidence"
 
         if template:
             investigation.last_answer = template[:4000]
@@ -155,9 +207,10 @@ class InvestigationStateManager:
             investigation.last_intent = str(intent)
         self.ttl.renew(investigation)
 
-        # Persist sticky pair — never collapse on same_day
-        if len(investigation.subjects) >= 2:
+        # Persist sticky subjects
+        if investigation.subjects:
             state.active_numbers = list(investigation.subjects[:8])
+        if len(investigation.subjects) >= 2 and (investigation.relation or "") == "same_day":
             state.active_pair = list(investigation.subjects[:2])
             state.active_relation = investigation.relation or "same_day"
             filters = dict(state.active_filters or {})
@@ -173,6 +226,13 @@ class InvestigationStateManager:
                 "items": (investigation.evidence or {}).get("items"),
                 "last": investigation.last_event,
             }
+        elif investigation.subjects:
+            state.last_analysis = {
+                **dict(state.last_analysis or {}),
+                "observed": investigation.subjects[0],
+                "numbers": list(investigation.subjects[:8]),
+                "type": investigation.last_intent or "number_investigation",
+            }
         state.active_investigation = investigation.to_store()
         return investigation
 
@@ -181,6 +241,8 @@ class InvestigationStateManager:
         subs = decision.inherited_subjects or []
         if len(subs) >= 2 and (decision.inherited_relation or decision.inherited_metric) == "same_day":
             return f"coincidencia {'+'.join(subs[:2])}"
+        if len(subs) >= 2:
+            return f"comparación {' vs '.join(subs[:2])}"
         if subs:
             return f"número {subs[0]}"
         return "investigación"

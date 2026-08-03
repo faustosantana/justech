@@ -158,6 +158,88 @@ class LotteryChatService:
         await self.db.flush()
         return LotterySessionContext()
 
+    async def close_investigation(self, session_id: uuid.UUID) -> dict[str, Any]:
+        """Close active investigation only — keep chat history; drop sticky subjects."""
+        from app.lottery.ai.active_investigation.state_manager import InvestigationStateManager
+        from app.lottery.ai.conversation_state import ConversationState
+
+        session = await self.get_session(session_id)
+        raw = session.context if isinstance(session.context, dict) else {}
+        state = ConversationState.from_store(raw.get("conversation_v4") or raw)
+        state = InvestigationStateManager().close(state)
+        session.context = {
+            **raw,
+            "conversation_v4": state.to_store(),
+            "reset_reason": "close_investigation",
+        }
+        await self.db.flush()
+        return {
+            "ok": True,
+            "active_context": self._build_active_context(state),
+            "context": session.context,
+        }
+
+    @staticmethod
+    def _build_active_context(state: Any) -> dict[str, Any]:
+        from app.lottery.ai.active_investigation.session import ActiveInvestigationSession
+        from app.lottery.ai.same_day_coincidence import analyzing_label
+        from app.lottery.ai.turn_policy import filters_label_es, position_label_es
+
+        inv = ActiveInvestigationSession.from_store(
+            getattr(state, "active_investigation", None)
+        )
+        nums_ctx = [str(x) for x in (getattr(state, "active_numbers", None) or [])]
+        if inv and inv.status == "active" and inv.subjects:
+            nums_ctx = [str(x) for x in inv.subjects[:8]] or nums_ctx
+        tables = []
+        if inv and isinstance(inv.time_window, dict):
+            tables = [str(t) for t in (inv.time_window.get("tables") or [])]
+        if not tables and inv and (inv.follow_up_kind or "") in {
+            "tabla1", "companions", "tabla2", "neighbors", "table_code"
+        }:
+            if inv.follow_up_kind in {"tabla1", "companions", "table_code"}:
+                tables = ["1"]
+            elif inv.follow_up_kind in {"tabla2", "neighbors"}:
+                tables = ["2"]
+        status = inv.status if inv else None
+        if inv and inv.is_expired():
+            status = "expired"
+        lotteries = list(getattr(state, "active_lotteries", None) or [])
+        pos_scope = (getattr(state, "active_filters", None) or {}).get("position") or "all"
+        return {
+            "number": (nums_ctx[0] if nums_ctx else None),
+            "numbers": nums_ctx[:8],
+            "analyzing": analyzing_label(
+                nums_ctx, relation=getattr(state, "active_relation", None)
+            ),
+            "relation": getattr(state, "active_relation", None),
+            "investigation_id": inv.investigation_id if inv and status == "active" else None,
+            "investigation_status": status if inv else None,
+            "investigation_topic": inv.topic if inv and status == "active" else None,
+            "tables": tables,
+            "tables_label": (" y ".join(tables) if tables else None),
+            "expires_at": (
+                inv.expires_at.isoformat()
+                if inv and inv.expires_at and status == "active"
+                else None
+            ),
+            "position_scope": position_label_es(pos_scope),
+            "preferred_position": getattr(state, "preferred_position", None) or 1,
+            "filters_label": filters_label_es(
+                lottery_scope=lotteries[0] if lotteries else "all",
+                position_scope=pos_scope,
+            ),
+            "date": None,
+            "lottery": None,
+            "position": None,
+            "last_result_date": (getattr(state, "last_analysis", None) or {}).get("date"),
+            "last_result_lottery": (getattr(state, "last_analysis", None) or {}).get("lottery"),
+            "primary_candidate": getattr(state, "current_primary_candidate", None)
+            or ((getattr(state, "last_analysis", None) or {}).get("primary")),
+            "alternatives": list(getattr(state, "current_alternatives", None) or [])[:4],
+            "summary": getattr(state, "conversation_summary", None),
+        }
+
     async def list_messages(
         self, session_id: uuid.UUID, *, limit: int = 50, offset: int = 0
     ) -> tuple[list[LotteryChatMessage], int]:
@@ -977,7 +1059,7 @@ class LotteryChatService:
                     },
                     "user_message_id": str(user_msg.id),
                     "context": session.context,
-                    "active_context": {"investigation_id": active_inv.investigation_id},
+                    "active_context": self._build_active_context(state),
                     "suggestions": self._suggestions(ctx, "chat", state=state),
                     "intent": "active_investigation",
                     "runtime_trace": agent_trace,
@@ -2500,35 +2582,14 @@ class LotteryChatService:
                 "compare_across_lotteries",
             }:
                 pos_scope = "all"
-        active_context = {
-            "number": (nums_ctx[0] if nums_ctx else None),
-            "numbers": nums_ctx[:8],
-            "analyzing": analyzing_label(
-                nums_ctx, relation=state.active_relation
-            ),
-            "relation": state.active_relation,
-            "position_scope": position_label_es(pos_scope),
-            "preferred_position": state.preferred_position or 1,
-            "filters_label": filters_label_es(
-                lottery_scope=explicit_lots or "all",
-                position_scope=pos_scope,
-            ),
-            # Date/lottery below are last RESULT metadata, not investigation filters
-            "date": None,
-            "lottery": None,
-            "position": None,
-            "last_result_date": (state.last_analysis or {}).get("date"),
-            "last_result_lottery": (state.last_analysis or {}).get("lottery"),
-            "last_result_position": position_label_es(
-                (state.last_analysis or {}).get("position")
-            )
-            if (state.last_analysis or {}).get("position") is not None
-            else None,
-            "primary_candidate": state.current_primary_candidate
-            or ((state.last_analysis or {}).get("primary")),
-            "alternatives": list(state.current_alternatives or [])[:4],
-            "summary": state.conversation_summary,
-        }
+        active_context = self._build_active_context(state)
+        # Preserve last-result metadata already computed above when present on state
+        if isinstance(active_context, dict):
+            la = state.last_analysis or {}
+            if la.get("date") and not active_context.get("last_result_date"):
+                active_context["last_result_date"] = la.get("date")
+            if la.get("lottery") and not active_context.get("last_result_lottery"):
+                active_context["last_result_lottery"] = la.get("lottery")
         assistant_payload = _jsonable(
             {
                 "structured_content": public_structured,

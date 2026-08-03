@@ -154,6 +154,12 @@ export interface LotteryChatSendResponse {
     numbers?: Array<string | number> | null;
     analyzing?: string | null;
     relation?: string | null;
+    investigation_id?: string | null;
+    investigation_status?: string | null;
+    investigation_topic?: string | null;
+    tables?: string[] | null;
+    tables_label?: string | null;
+    expires_at?: string | null;
     position_scope?: string | null;
     preferred_position?: number | null;
     filters_label?: string | null;

@@ -71,6 +71,189 @@ class NaturalResponseGenerator:
                 ),
                 next_step="Puedo mostrarte las tres coincidencias anteriores o filtrar el alcance.",
             )
+        if attr in {
+            "tabla1",
+            "tabla2",
+            "companions",
+            "neighbors",
+            "table_code",
+            "strongest",
+            "compare_neighbors",
+            "compare_companions",
+        }:
+            return cls.answer_table_attribute(attr, subjects)
+        return None
+
+    @classmethod
+    def answer_table_attribute(
+        cls,
+        attr: str,
+        subjects: list[Any],
+    ) -> str | None:
+        """Short catalog answers for Tabla 1 / Tabla 2 (read-only; no Motor)."""
+        from app.lottery.numeric_relations.catalog import build_catalog
+
+        nums: list[int] = []
+        for s in subjects or []:
+            try:
+                n = int(str(s).strip())
+            except (TypeError, ValueError):
+                continue
+            if 1 <= n <= 100:
+                nums.append(n)
+        if not nums:
+            return (
+                "Necesito un número activo en la investigación "
+                "(por ejemplo: «Analiza el 57») para consultar tablas."
+            )
+        cat = build_catalog()
+        primary = nums[0]
+
+        def _t1(n: int) -> tuple[int | None, list[int]]:
+            code = cat.table1_number_to_code.get(n)
+            if code is None:
+                return None, []
+            comps = [x for x in cat.get_table1_companions(code) if x != n]
+            return code, comps
+
+        def _t2(n: int) -> tuple[int | None, list[int]]:
+            try:
+                code = cat.get_table2_code_for_number(n)
+            except KeyError:
+                return None, []
+            return code, cat.get_table2_neighbors(n, exclude_self=True)
+
+        if attr == "table_code":
+            c1, _ = _t1(primary)
+            c2, _ = _t2(primary)
+            bits = [f"Para el {primary}:"]
+            if c1 is not None:
+                bits.append(f"- Tabla 1 → código {c1:02d}.")
+            if c2 is not None:
+                bits.append(f"- Tabla 2 → código {c2:02d}.")
+            return cls.compose(
+                direct="\n".join(bits),
+                next_step="¿Quieres sus compañeros (Tabla 1) o sus vecinos (Tabla 2)?",
+            )
+
+        if attr in {"tabla1", "companions"}:
+            if len(nums) >= 2 and attr == "companions":
+                lines = []
+                for n in nums[:4]:
+                    code, comps = _t1(n)
+                    if code is None:
+                        lines.append(f"- {n}: sin código Tabla 1.")
+                    else:
+                        lines.append(
+                            f"- {n} (código {code:02d}): "
+                            + (", ".join(str(x) for x in comps) if comps else "sin compañeros")
+                        )
+                return cls.compose(
+                    direct="Comparación de compañeros (Tabla 1):",
+                    evidence="\n".join(lines),
+                    next_step="¿Quieres comparar también sus vecinos de Tabla 2?",
+                )
+            code, comps = _t1(primary)
+            if code is None:
+                return f"No encontré el {primary} en Tabla 1."
+            comps_s = ", ".join(str(x) for x in comps) if comps else "ninguno adicional"
+            return cls.compose(
+                direct=(
+                    f"En Tabla 1, el {primary} pertenece al código {code:02d}."
+                ),
+                evidence=f"Compañeros: {comps_s}.",
+                next_step="¿Quieres también sus vecinos de Tabla 2?",
+            )
+
+        if attr in {"tabla2", "neighbors"}:
+            if len(nums) >= 2 and attr == "neighbors":
+                lines = []
+                for n in nums[:4]:
+                    code, neigh = _t2(n)
+                    if code is None:
+                        lines.append(f"- {n}: sin código Tabla 2.")
+                    else:
+                        lines.append(
+                            f"- {n} (código {code:02d}): "
+                            + (", ".join(str(x) for x in neigh) if neigh else "sin vecinos")
+                        )
+                return cls.compose(
+                    direct="Comparación de vecinos (Tabla 2):",
+                    evidence="\n".join(lines),
+                    next_step="¿Quieres comparar también sus compañeros de Tabla 1?",
+                )
+            code, neigh = _t2(primary)
+            if code is None:
+                return f"No encontré el {primary} en Tabla 2."
+            neigh_s = ", ".join(str(x) for x in neigh) if neigh else "ninguno adicional"
+            return cls.compose(
+                direct=(
+                    f"En Tabla 2, el {primary} pertenece al código {code:02d}."
+                ),
+                evidence=f"Vecinos: {neigh_s}.",
+                next_step="¿Quieres también sus compañeros de Tabla 1?",
+            )
+
+        if attr == "compare_companions" or (attr == "companions" and len(nums) >= 2):
+            lines = []
+            for n in nums[:4]:
+                code, comps = _t1(n)
+                if code is None:
+                    lines.append(f"- {n}: sin código Tabla 1.")
+                else:
+                    lines.append(
+                        f"- {n} (código {code:02d}): "
+                        + (", ".join(str(x) for x in comps) if comps else "sin compañeros")
+                    )
+            return cls.compose(
+                direct="Comparación de compañeros (Tabla 1):",
+                evidence="\n".join(lines),
+                next_step="¿Quieres comparar también sus vecinos de Tabla 2?",
+            )
+
+        if attr == "compare_neighbors" or (attr == "neighbors" and len(nums) >= 2):
+            lines = []
+            for n in nums[:4]:
+                code, neigh = _t2(n)
+                if code is None:
+                    lines.append(f"- {n}: sin código Tabla 2.")
+                else:
+                    lines.append(
+                        f"- {n} (código {code:02d}): "
+                        + (", ".join(str(x) for x in neigh) if neigh else "sin vecinos")
+                    )
+            return cls.compose(
+                direct="Comparación de vecinos (Tabla 2):",
+                evidence="\n".join(lines),
+                next_step="¿Quieres comparar también sus compañeros de Tabla 1?",
+            )
+
+        if attr == "strongest":
+            # Descriptive only — no prediction. Prefer subject with larger companion+neighbor set.
+            scored: list[tuple[int, int, int, int]] = []
+            for n in nums[:4]:
+                _, comps = _t1(n)
+                _, neigh = _t2(n)
+                scored.append((n, len(comps), len(neigh), len(comps) + len(neigh)))
+            scored.sort(key=lambda t: (-t[3], -t[1], t[0]))
+            top = scored[0]
+            lines = [
+                f"- {n}: {c} compañeros (T1), {v} vecinos (T2)"
+                for n, c, v, _ in scored
+            ]
+            return cls.compose(
+                direct=(
+                    f"Por estructura de tablas (sin predicción), el {top[0]} "
+                    f"tiene el grupo relacional más amplio entre los comparados."
+                ),
+                evidence="\n".join(lines),
+                explanation=(
+                    "Esto describe el tamaño de sus grupos en Tabla 1/2; "
+                    "no implica mayor probabilidad de salida."
+                ),
+                next_step="Puedo detallar compañeros o vecinos de cualquiera de ellos.",
+            )
+
         return None
 
     @classmethod

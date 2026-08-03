@@ -2081,6 +2081,44 @@ export const apiClient = {
       method: "POST",
     }, true),
 
+  getLotteryExplorerNumber: (number: number) =>
+    request<Record<string, unknown>>(`/lottery/chat/explorer/numbers/${number}`, {}, true),
+
+  getLotteryExplorerTable: (table: string) =>
+    request<Record<string, unknown>>(`/lottery/chat/explorer/tables/${table}`, {}, true),
+
+  compareLotteryExplorer: (numbers: Array<string | number>) =>
+    request<Record<string, unknown>>(`/lottery/chat/explorer/compare`, {
+      method: "POST",
+      body: JSON.stringify({ numbers }),
+    }, true),
+
+  navigateLotteryExplorer: (
+    sessionId: string,
+    body: {
+      action: string;
+      number?: string | number | null;
+      view?: string | null;
+      label?: string | null;
+      crumb_id?: string | null;
+      origin?: string;
+    },
+  ) =>
+    request<{
+      ok: boolean;
+      action?: string;
+      active_context?: Record<string, unknown>;
+      explorer?: Record<string, unknown>;
+      card?: Record<string, unknown> | null;
+      table?: Record<string, unknown> | null;
+      compare?: Record<string, unknown> | null;
+      context?: Record<string, unknown>;
+      suggested_prompt?: string | null;
+    }>(`/lottery/chat/sessions/${sessionId}/explorer/navigate`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
   listLotteryChatMessages: (sessionId: string, limit = 50, offset = 0) =>
     request<{ items: LotteryChatMessage[]; total: number }>(
       `/lottery/chat/sessions/${sessionId}/messages${buildQuery({ limit, offset })}`,

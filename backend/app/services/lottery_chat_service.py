@@ -162,11 +162,16 @@ class LotteryChatService:
         """Close active investigation only — keep chat history; drop sticky subjects."""
         from app.lottery.ai.active_investigation.state_manager import InvestigationStateManager
         from app.lottery.ai.conversation_state import ConversationState
+        from app.lottery.ai.explorer.nav_state import ExplorerNavState
 
         session = await self.get_session(session_id)
         raw = session.context if isinstance(session.context, dict) else {}
         state = ConversationState.from_store(raw.get("conversation_v4") or raw)
         state = InvestigationStateManager().close(state)
+        # Keep nav trail for "volver" but mark closed origin
+        nav = ExplorerNavState.from_store(getattr(state, "explorer_nav", None))
+        nav.origin = "closed"
+        state.explorer_nav = nav.to_store()
         session.context = {
             **raw,
             "conversation_v4": state.to_store(),
@@ -179,15 +184,223 @@ class LotteryChatService:
             "context": session.context,
         }
 
+    async def explorer_number_card(self, number: int) -> dict[str, Any]:
+        from app.lottery.ai.explorer.catalog_cards import build_number_card
+
+        return build_number_card(int(number))
+
+    async def explorer_table(self, table: str) -> dict[str, Any]:
+        from app.lottery.ai.explorer.catalog_cards import build_table_explorer
+
+        return build_table_explorer(table)  # type: ignore[arg-type]
+
+    async def explorer_compare(self, numbers: list[Any]) -> dict[str, Any]:
+        from app.lottery.ai.explorer.catalog_cards import build_compare_board
+
+        return build_compare_board(numbers)
+
+    async def explorer_navigate(
+        self,
+        session_id: uuid.UUID,
+        *,
+        action: str,
+        number: str | int | None = None,
+        view: str | None = None,
+        label: str | None = None,
+        crumb_id: str | None = None,
+        origin: str = "click",
+    ) -> dict[str, Any]:
+        """Navigate explorer without opening a new chat session or LLM turn."""
+        from datetime import datetime, timezone
+
+        from app.lottery.ai.active_investigation.session import ActiveInvestigationSession
+        from app.lottery.ai.conversation_state import ConversationState
+        from app.lottery.ai.explorer.catalog_cards import (
+            build_compare_board,
+            build_number_card,
+            build_table_explorer,
+        )
+        from app.lottery.ai.explorer.nav_state import ExplorerNavState
+
+        session = await self.get_session(session_id)
+        raw = session.context if isinstance(session.context, dict) else {}
+        state = ConversationState.from_store(raw.get("conversation_v4") or raw)
+        nav = ExplorerNavState.from_store(getattr(state, "explorer_nav", None))
+        act = (action or "focus").strip().lower()
+
+        card: dict[str, Any] | None = None
+        table_payload: dict[str, Any] | None = None
+        compare_board: dict[str, Any] | None = None
+        focus_number: str | None = None
+
+        if act == "back":
+            crumb = nav.back()
+            focus_number = crumb.number if crumb else None
+            view = crumb.view if crumb else nav.view
+        elif act == "forward":
+            crumb = nav.forward()
+            focus_number = crumb.number if crumb else None
+            view = crumb.view if crumb else nav.view
+        elif act == "breadcrumb" and crumb_id:
+            crumb = nav.jump_to(str(crumb_id))
+            focus_number = crumb.number if crumb else None
+            view = crumb.view if crumb else "root"
+        elif act == "toggle_compare" and number is not None:
+            nav.toggle_compare(str(number))
+            focus_number = str(int(number)) if str(number).isdigit() else str(number)
+            compare_board = build_compare_board(nav.compare)
+            view = "comparar"
+            nav.push(number=focus_number, view="comparar", label="Comparar", origin=origin)
+        elif act == "toggle_favorite" and number is not None:
+            nav.toggle_favorite(str(number))
+            focus_number = str(int(number)) if str(number).isdigit() else str(number)
+        elif act in {"focus", "analizar", "abrir_investigacion"} and number is not None:
+            focus_number = str(int(number)) if str(number).isdigit() else str(number)
+            view = view or "analizar"
+            nav.push(number=focus_number, view=view, label=label or focus_number, origin=origin)
+        elif act in {"tabla1", "tabla2", "companeros", "vecinos", "historico", "coincidencias", "estadisticas", "relacion"}:
+            focus_number = (
+                str(int(number)) if number is not None and str(number).isdigit()
+                else (str(number) if number is not None else (nav.current.number if nav.current else None))
+            )
+            view = act if act != "relacion" else "tabla1"
+            lab = label
+            nav.push(number=focus_number, view=view, label=lab, origin=origin)
+        else:
+            if number is not None:
+                focus_number = str(int(number)) if str(number).isdigit() else str(number)
+                nav.push(
+                    number=focus_number,
+                    view=view or "root",
+                    label=label,
+                    origin=origin,
+                )
+
+        # Apply sticky investigation subjects from focus / compare
+        if act == "toggle_compare" and nav.compare:
+            subjects = list(nav.compare)
+            relation = "compare"
+        elif focus_number:
+            subjects = [focus_number]
+            relation = None
+        else:
+            subjects = list(getattr(state, "active_numbers", None) or [])
+            relation = getattr(state, "active_relation", None)
+
+        if subjects:
+            inv = ActiveInvestigationSession.from_store(
+                getattr(state, "active_investigation", None)
+            )
+            now = datetime.now(timezone.utc)
+            if inv is None or inv.status != "active":
+                inv = ActiveInvestigationSession(
+                    subjects=subjects[:8],
+                    relation=relation,
+                    topic=(
+                        f"comparación {' vs '.join(subjects[:4])}"
+                        if relation == "compare"
+                        else f"número {subjects[0]}"
+                    ),
+                    status="active",
+                )
+            else:
+                inv.subjects = subjects[:8]
+                inv.relation = relation
+                inv.topic = (
+                    f"comparación {' vs '.join(subjects[:4])}"
+                    if relation == "compare"
+                    else f"número {subjects[0]}"
+                )
+                inv.touch()
+            # Track tables viewed
+            tables = list((inv.time_window or {}).get("tables") or [])
+            v = str(view or nav.view or "")
+            if v in {"tabla1", "companeros"} and "1" not in tables:
+                tables.append("1")
+            if v in {"tabla2", "vecinos"} and "2" not in tables:
+                tables.append("2")
+            if tables:
+                inv.time_window = {**(inv.time_window or {}), "tables": tables}
+            if nav.started_at is None:
+                nav.started_at = inv.created_at if inv.created_at else now
+            state.active_investigation = inv.to_store()
+            state.active_numbers = subjects[:8]
+            state.active_pair = subjects[:2] if len(subjects) >= 2 else []
+            state.active_relation = relation
+            filters = dict(state.active_filters or {})
+            if relation:
+                filters["relation"] = relation
+            else:
+                filters.pop("relation", None)
+            state.active_filters = filters
+
+        state.explorer_nav = nav.to_store()
+        session.context = {
+            **raw,
+            "conversation_v4": state.to_store(),
+        }
+        await self.db.flush()
+
+        # Payload for UI (catalog cache — no DB)
+        if focus_number and str(focus_number).isdigit():
+            card = build_number_card(int(focus_number))
+        v = str(view or nav.view or "")
+        if v in {"tabla1", "tabla2"}:
+            table_payload = build_table_explorer("1" if v == "tabla1" else "2")
+        if nav.compare:
+            compare_board = compare_board or build_compare_board(nav.compare)
+
+        return {
+            "ok": True,
+            "action": act,
+            "active_context": self._build_active_context(state),
+            "explorer": nav.public(),
+            "card": card,
+            "table": table_payload,
+            "compare": compare_board,
+            "context": session.context,
+            # Optional chat prompt if caller wants a narrative refresh
+            "suggested_prompt": self._explorer_suggested_prompt(act, focus_number, nav.compare),
+        }
+
+    @staticmethod
+    def _explorer_suggested_prompt(
+        action: str, number: str | None, compare: list[str]
+    ) -> str | None:
+        if action == "toggle_compare" and len(compare) >= 2:
+            return f"Compara el {' con el '.join(compare[:3])}."
+        if action in {"analizar", "abrir_investigacion", "focus"} and number:
+            return f"Analiza el {number}."
+        if action == "companeros" and number:
+            return "¿Cuáles son sus compañeros?"
+        if action == "vecinos" and number:
+            return "¿Cuáles son sus vecinos?"
+        if action == "tabla1" and number:
+            return "¿Y su relación en la Tabla 1?"
+        if action == "tabla2" and number:
+            return "¿Y en la Tabla 2?"
+        if action == "historico" and number:
+            return "Muéstrame el histórico."
+        if action == "coincidencias" and number:
+            return "¿Cuántas coincidencias tiene?"
+        if action == "estadisticas" and number:
+            return f"Estadísticas del {number}."
+        return None
+
     @staticmethod
     def _build_active_context(state: Any) -> dict[str, Any]:
+        from datetime import datetime, timezone
+
         from app.lottery.ai.active_investigation.session import ActiveInvestigationSession
+        from app.lottery.ai.explorer.catalog_cards import build_number_card
+        from app.lottery.ai.explorer.nav_state import ExplorerNavState
         from app.lottery.ai.same_day_coincidence import analyzing_label
         from app.lottery.ai.turn_policy import filters_label_es, position_label_es
 
         inv = ActiveInvestigationSession.from_store(
             getattr(state, "active_investigation", None)
         )
+        nav = ExplorerNavState.from_store(getattr(state, "explorer_nav", None))
         nums_ctx = [str(x) for x in (getattr(state, "active_numbers", None) or [])]
         if inv and inv.status == "active" and inv.subjects:
             nums_ctx = [str(x) for x in inv.subjects[:8]] or nums_ctx
@@ -206,6 +419,20 @@ class LotteryChatService:
             status = "expired"
         lotteries = list(getattr(state, "active_lotteries", None) or [])
         pos_scope = (getattr(state, "active_filters", None) or {}).get("position") or "all"
+        started = nav.started_at or (inv.created_at if inv else None)
+        analyzing_seconds = None
+        if started and status == "active":
+            try:
+                st = started if started.tzinfo else started.replace(tzinfo=timezone.utc)
+                analyzing_seconds = max(0, int((datetime.now(timezone.utc) - st).total_seconds()))
+            except Exception:  # noqa: BLE001
+                analyzing_seconds = None
+        catalog_snapshot = None
+        if nums_ctx and str(nums_ctx[0]).isdigit() and status == "active":
+            try:
+                catalog_snapshot = build_number_card(int(nums_ctx[0]))
+            except Exception:  # noqa: BLE001
+                catalog_snapshot = None
         return {
             "number": (nums_ctx[0] if nums_ctx else None),
             "numbers": nums_ctx[:8],
@@ -223,6 +450,15 @@ class LotteryChatService:
                 if inv and inv.expires_at and status == "active"
                 else None
             ),
+            "started_at": started.isoformat() if started else None,
+            "analyzing_seconds": analyzing_seconds,
+            "origin": nav.origin or ("chat" if inv else None),
+            "explorer": nav.public() if (nav.stack or nav.compare or nav.recent_numbers) else None,
+            "breadcrumbs": nav.breadcrumbs,
+            "compare": list(nav.compare),
+            "favorites": list(nav.favorites),
+            "recent_numbers": list(nav.recent_numbers),
+            "catalog_snapshot": catalog_snapshot,
             "position_scope": position_label_es(pos_scope),
             "preferred_position": getattr(state, "preferred_position", None) or 1,
             "filters_label": filters_label_es(

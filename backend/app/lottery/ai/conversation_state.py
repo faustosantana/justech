@@ -123,6 +123,8 @@ class ConversationState(BaseModel):
     # Investigation Workspace 1.0 — operable assets
     workspace_assets: dict[str, Any] = Field(default_factory=dict)
     active_asset_id: str | None = None
+    # Lottery IA Explorer — browser-like nav (stack / compare / favorites)
+    explorer_nav: dict[str, Any] = Field(default_factory=dict)
 
     def to_store(self) -> dict[str, Any]:
         return self.model_dump(mode="json")

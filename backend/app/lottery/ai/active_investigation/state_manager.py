@@ -53,6 +53,30 @@ class InvestigationStateManager:
                 filters = dict(state.active_filters or {})
                 filters.pop("relation", None)
                 state.active_filters = filters
+            # Explorer nav: push new focus from chat
+            try:
+                from app.lottery.ai.explorer.nav_state import ExplorerNavState
+
+                nav = ExplorerNavState.from_store(getattr(state, "explorer_nav", None))
+                nums = list(decision.inherited_subjects or [])[:8]
+                if len(nums) >= 2 and decision.inherited_relation == "compare":
+                    nav.compare = [str(x) for x in nums[:6]]
+                    nav.push(
+                        number=nums[0],
+                        view="comparar",
+                        label=" vs ".join(str(x) for x in nums[:3]),
+                        origin="chat",
+                    )
+                elif nums:
+                    nav.push(
+                        number=str(nums[0]),
+                        view="analizar",
+                        label=str(nums[0]),
+                        origin="chat",
+                    )
+                state.explorer_nav = nav.to_store()
+            except Exception:  # noqa: BLE001
+                pass
             try:
                 from app.lottery.ai.investigation_workspace.store import clear_assets
 

@@ -563,6 +563,70 @@ async def close_chat_investigation(
     return data
 
 
+@router.get("/chat/explorer/numbers/{number}")
+async def explorer_number_card(
+    number: int,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.chat")],
+) -> dict:
+    """Smart card from in-memory catalog (no Motor / no DB draws)."""
+    if number < 1 or number > 100:
+        raise HTTPException(status_code=400, detail="number must be 1..100")
+    svc = _make_chat(db, user)
+    return await svc.explorer_number_card(number)
+
+
+@router.get("/chat/explorer/tables/{table}")
+async def explorer_table(
+    table: str,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.chat")],
+) -> dict:
+    if table not in {"1", "2", "table1", "table2", "t1", "t2"}:
+        raise HTTPException(status_code=400, detail="table must be 1 or 2")
+    svc = _make_chat(db, user)
+    return await svc.explorer_table(table)
+
+
+@router.post("/chat/explorer/compare")
+async def explorer_compare(
+    body: dict,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.chat")],
+) -> dict:
+    nums = body.get("numbers") if isinstance(body, dict) else None
+    if not isinstance(nums, list) or not nums:
+        raise HTTPException(status_code=400, detail="numbers required")
+    svc = _make_chat(db, user)
+    return await svc.explorer_compare(nums)
+
+
+@router.post("/chat/sessions/{session_id}/explorer/navigate")
+async def explorer_navigate(
+    session_id: UUID,
+    body: dict,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.chat")],
+) -> dict:
+    """Navigate investigation like a browser — no new session, no LLM required."""
+    svc = _make_chat(db, user)
+    data = await svc.explorer_navigate(
+        session_id,
+        action=str((body or {}).get("action") or "focus"),
+        number=(body or {}).get("number"),
+        view=(body or {}).get("view"),
+        label=(body or {}).get("label"),
+        crumb_id=(body or {}).get("crumb_id"),
+        origin=str((body or {}).get("origin") or "click"),
+    )
+    await db.commit()
+    return data
+
+
 @router.get("/chat/sessions/{session_id}/messages", response_model=ChatMessageListResponse)
 async def list_chat_messages(
     session_id: UUID,

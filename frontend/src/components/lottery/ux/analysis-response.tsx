@@ -13,6 +13,8 @@ import { ResultGrid } from "@/components/lottery/ux/result-grid";
 import { StatisticsCards } from "@/components/lottery/ux/statistics-cards";
 import { SummaryCards } from "@/components/lottery/ux/summary-cards";
 import { TimelineView } from "@/components/lottery/ux/timeline-view";
+import { InteractiveContent } from "@/components/lottery/explorer/interactive-content";
+import { ExplorerSmartCard } from "@/components/lottery/explorer/smart-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +27,7 @@ import {
   fetchAuthenticatedFile,
   normalizeApiPath,
 } from "@/lib/authenticated-file";
+import type { ExplorerAction, NumberCard } from "@/lib/lottery-explorer";
 import type { LotteryChatSendResponse } from "@/lib/lottery";
 import { cn } from "@/lib/utils";
 
@@ -57,6 +60,7 @@ export function AnalysisResponse({
   response,
   showSidePanel = true,
   onWorkspaceAction,
+  onExplorerAction,
   className,
 }: {
   content: string;
@@ -70,6 +74,7 @@ export function AnalysisResponse({
   response?: LotteryChatSendResponse | null;
   showSidePanel?: boolean;
   onWorkspaceAction?: (action: WorkspaceUiAction) => void | Promise<void>;
+  onExplorerAction?: (action: ExplorerAction, number?: string) => void | Promise<void>;
   className?: string;
 }) {
   const presentation = useMemo(
@@ -314,11 +319,28 @@ export function AnalysisResponse({
           {tab === "resumen" && (
             <>
               <SummaryCards items={presentation.summaryCards} />
+              {activeContext?.catalog_snapshot && (
+                <ExplorerSmartCard
+                  card={activeContext.catalog_snapshot as unknown as NumberCard}
+                  activeNumber={activeContext.number}
+                  onAction={(a, n) => void onExplorerAction?.(a, n)}
+                />
+              )}
               <section className="rounded-2xl border border-border/50 bg-background/60 p-4">
                 <h3 className="text-sm font-semibold">Explicación</h3>
-                <p className="mt-2 whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
-                  {presentation.narrative}
-                </p>
+                <div className="mt-2">
+                  {onExplorerAction ? (
+                    <InteractiveContent
+                      content={presentation.narrative}
+                      activeNumber={activeContext?.number}
+                      onAction={(a, n) => void onExplorerAction(a, n)}
+                    />
+                  ) : (
+                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-foreground/90">
+                      {presentation.narrative}
+                    </p>
+                  )}
+                </div>
               </section>
               <InsightPanel items={presentation.insights} />
               {presentation.barChart.length > 0 || presentation.timeline.length > 0 ? (

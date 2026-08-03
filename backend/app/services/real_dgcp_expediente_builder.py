@@ -501,9 +501,23 @@ class RealDGCPExpedienteBuilder:
             zp = self.expediente_base(opportunity).parent / zip_name
             if zp.is_file():
                 return zp.read_bytes(), zip_name
-        base = Path(pkg.real_expediente_path or "")
+        raw_path = (pkg.real_expediente_path or "").strip()
+        # Path("") resolves to cwd (e.g. /app) — never treat empty path as a package root.
+        if not raw_path:
+            raise ValueError("Expediente real no generado")
+        base = Path(raw_path)
         if not base.is_dir():
             raise ValueError("Expediente real no generado")
+        # Guard against accidentally packaging application roots
+        forbidden = {"app", "alembic", "tests", "frontend", "node_modules"}
+        child_names = {p.name for p in base.iterdir()} if base.is_dir() else set()
+        if child_names & forbidden and not any(
+            n.startswith(("00_", "01_", "02_")) or n in {"manifest.json", "EXPEDIENTE"}
+            for n in child_names
+        ):
+            raise ValueError(
+                "Ruta de expediente inválida (parece un directorio de aplicación, no un paquete DGCP)"
+            )
         name = f"{self.safe_code(opportunity)}_EXPEDIENTE_DGCP.zip"
         return self._build_zip(base), name
 

@@ -1,0 +1,8 @@
+HTTP/1.1 202 Accepted
+date: Mon, 03 Aug 2026 03:39:19 GMT
+server: uvicorn
+content-length: 319
+content-type: application/json
+x-request-id: edb5f1bc-ef99-4cde-8815-4b280e8c60a4
+x-response-time-ms: 12237.50
+

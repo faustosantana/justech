@@ -1,0 +1,90 @@
+[
+  {
+    "name": "SOLICITUD_0117_signed.pdf",
+    "url": "https://comunidad.comprasdominicana.gob.do/Public/Tendering/OpportunityDetail/DownloadFile?documentFileId=13313114&mkey=32ffb2fa_7c1a_4b4e_9c1e_6094db061d00",
+    "type": "formulario",
+    "hash": "9d3bdd5ff23591ea5922ccddec5e1f5d4bd981d82a5302b35c8c3e2e4663b152",
+    "download_status": "downloaded",
+    "persist_status": "persisted",
+    "extraction_status": "analyzed",
+    "extracted_chars": 5435,
+    "error": null
+  },
+  {
+    "name": "Formulario oferta Económica.SNCC.F.033.docx",
+    "url": "https://comunidad.comprasdominicana.gob.do/Public/Tendering/OpportunityDetail/DownloadFile?documentFileId=13313110&mkey=32ffb2fa_7c1a_4b4e_9c1e_6094db061d00",
+    "type": "formulario",
+    "hash": "4f5c190969ba8ac38602856f30dd971bc13797bef2ba28a0a177557aae234e01",
+    "download_status": "downloaded",
+    "persist_status": "persisted",
+    "extraction_status": "analyzed",
+    "extracted_chars": 118,
+    "error": null
+  },
+  {
+    "name": "Formulario Presentación  de Oferta .SNCC.F.034.docx",
+    "url": "https://comunidad.comprasdominicana.gob.do/Public/Tendering/OpportunityDetail/DownloadFile?documentFileId=13313111&mkey=32ffb2fa_7c1a_4b4e_9c1e_6094db061d00",
+    "type": "formulario",
+    "hash": "d8b1549bdefdeb5447d0a519c0dd56ff3e52d22c5e652498e4daea6b4e76df2e",
+    "download_status": "downloaded",
+    "persist_status": "persisted",
+    "extraction_status": "analyzed",
+    "extracted_chars": 2566,
+    "error": null
+  },
+  {
+    "name": "DECLARACIO´N LIBRE DE COLUSIO´N.docx",
+    "url": "https://comunidad.comprasdominicana.gob.do/Public/Tendering/OpportunityDetail/DownloadFile?documentFileId=13313112&mkey=32ffb2fa_7c1a_4b4e_9c1e_6094db061d00",
+    "type": "formulario",
+    "hash": "c6b8f519509db16dea18364c0201e0d5fd97c3f2e79547792a4dc2f95874396b",
+    "download_status": "downloaded",
+    "persist_status": "persisted",
+    "extraction_status": "analyzed",
+    "extracted_chars": 1947,
+    "error": null
+  },
+  {
+    "name": "Formulario Información del oferente. SNCC.F.042.docx",
+    "url": "https://comunidad.comprasdominicana.gob.do/Public/Tendering/OpportunityDetail/DownloadFile?documentFileId=13313113&mkey=32ffb2fa_7c1a_4b4e_9c1e_6094db061d00",
+    "type": "formulario",
+    "hash": "1dde53b2a8b2c4f33acde2211c9e3144c83ddd383cbbedcef6ca75670d7ac4e5",
+    "download_status": "downloaded",
+    "persist_status": "persisted",
+    "extraction_status": "analyzed",
+    "extracted_chars": 210,
+    "error": null
+  },
+  {
+    "name": "CERTIFICACION_17_signed.pdf",
+    "url": "https://comunidad.comprasdominicana.gob.do/Public/Tendering/OpportunityDetail/DownloadFile?documentFileId=13313115&mkey=32ffb2fa_7c1a_4b4e_9c1e_6094db061d00",
+    "type": "formulario",
+    "hash": "1ea4edbf48c53f008063e725cd3fe101491ff0644b349f7ed50a539afb9ae0dc",
+    "download_status": "downloaded",
+    "persist_status": "persisted",
+    "extraction_status": "analyzed",
+    "extracted_chars": 5642,
+    "error": null
+  },
+  {
+    "name": "Acta_de_aprobacion_117_signed.pdf",
+    "url": "https://comunidad.comprasdominicana.gob.do/Public/Tendering/OpportunityDetail/DownloadFile?documentFileId=13313116&mkey=32ffb2fa_7c1a_4b4e_9c1e_6094db061d00",
+    "type": "pliego",
+    "hash": "0ab0daffada4a4f5200726e0094731654c253b873ded1aba0fa97035e43dfdbb",
+    "download_status": "downloaded",
+    "persist_status": "persisted",
+    "extraction_status": "analyzed",
+    "extracted_chars": 3273,
+    "error": null
+  },
+  {
+    "name": "TDR CM-117.pdf",
+    "url": "https://comunidad.comprasdominicana.gob.do/Public/Tendering/OpportunityDetail/DownloadFile?documentFileId=13313117&mkey=32ffb2fa_7c1a_4b4e_9c1e_6094db061d00",
+    "type": "tdr",
+    "hash": "572f6f7e72c89dba6c241ed2ced211bfbe105d341e9fe77f73245dda60607cf4",
+    "download_status": "downloaded",
+    "persist_status": "persisted",
+    "extraction_status": "analyzed",
+    "extracted_chars": 17427,
+    "error": null
+  }
+]

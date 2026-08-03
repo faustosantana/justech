@@ -3,10 +3,7 @@
 from __future__ import annotations
 
 import hashlib
-import logging
 import uuid
-
-logger = logging.getLogger(__name__)
 from datetime import date, datetime, timezone
 from pathlib import Path
 
@@ -2954,7 +2951,7 @@ class DGCPBidPackageService:
         self,
         opportunity_id: uuid.UUID,
         *,
-        company_key: str | None = None,
+        company_key: str = "justech",
     ) -> DGCPExpedientePrepareResponse:
         opportunity = await self._get_opportunity(opportunity_id)
         if not opportunity:
@@ -2967,36 +2964,24 @@ class DGCPBidPackageService:
         if not pkg:
             raise ValueError("Ejecute el análisis de requisitos primero")
 
-        resolved_company = company_key or getattr(opportunity, "company", None) or "justech"
-        validation = await self.validate_company_documents(
-            opportunity_id, company_key=resolved_company
-        )
-        # Continue with observaciones instead of hard-blocking export (keeps ZIP/structure usable).
+        validation = await self.validate_company_documents(opportunity_id, company_key=company_key)
         if validation.get("blocked"):
-            logger.warning(
-                "prepare_expediente company=%s incomplete — generating with observaciones",
-                resolved_company,
-            )
+            from app.services.dgcp_expediente_errors import ExpedienteIncompleteError
+
+            raise ExpedienteIncompleteError(validation)
 
         final_validation = self._compute_final_validation(opportunity, pkg)
         user_input = dict(pkg.user_input or {})
         user_input["_final_validation"] = final_validation
-        if validation.get("blocked"):
-            user_input["_document_validation_observaciones"] = validation
 
-        prepare_kwargs: dict = {
-            "checklist": pkg.checklist or [],
-            "matches": pkg.document_matches or [],
-            "bid_package": pkg.bid_package or {},
-            "user_input": user_input,
-            "generated_forms": pkg.generated_forms or [],
-        }
-        import inspect
-
-        if "company_key" in inspect.signature(self.expediente.prepare).parameters:
-            prepare_kwargs["company_key"] = resolved_company
-
-        result = await self.expediente.prepare(opportunity, **prepare_kwargs)
+        result = await self.expediente.prepare(
+            opportunity,
+            checklist=pkg.checklist or [],
+            matches=pkg.document_matches or [],
+            bid_package=pkg.bid_package or {},
+            user_input=user_input,
+            generated_forms=pkg.generated_forms or [],
+        )
         pkg.expediente_status = result.expediente_status
         pkg.expediente_path = result.expediente_path
         merged_manifest = dict(result.manifest or {})
@@ -3006,9 +2991,6 @@ class DGCPBidPackageService:
         if prev.get("final_validation"):
             merged_manifest.setdefault("final_validation", prev["final_validation"])
         merged_manifest["final_validation"] = final_validation
-        if validation.get("blocked"):
-            merged_manifest["validation_observaciones"] = validation
-            merged_manifest["status_note"] = "generado_con_observaciones"
         pkg.manifest = merged_manifest
         from app.services.dgcp_expediente_event_service import DGCPExpedienteEventService
 

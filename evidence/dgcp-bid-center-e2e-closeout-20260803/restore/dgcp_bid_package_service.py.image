@@ -3,10 +3,7 @@
 from __future__ import annotations
 
 import hashlib
-import logging
 import uuid
-
-logger = logging.getLogger(__name__)
 from datetime import date, datetime, timezone
 from pathlib import Path
 
@@ -90,40 +87,7 @@ OPERATIONAL_INTEREST_STATUSES = frozenset({
     "analyzing",
     "qualified",
 })
-EXPEDIENTE_TRACKING_STATUSES = frozenset({
-    "interested",
-    "preparing",
-    "to_bid",
-    "pending_documents",
-    "ready_to_submit",
-    "submitted",
-    "under_evaluation",
-    "awarded",
-    "won",
-    "lost",
-})
-
-# Estados de producto del expediente vivo (UI).
-REQUIREMENT_UX_STATUS_MAP: dict[str, str] = {
-    "pendiente": "Pendiente",
-    "encontrado": "En proceso",
-    "encontrado_vigente": "Aprobado",
-    "encontrado_por_vencer": "En proceso",
-    "requiere_actualizacion": "En proceso",
-    "requiere_revision": "Revisado",
-    "requiere_completado": "En proceso",
-    "plantilla_disponible": "En proceso",
-    "validado_manual": "Aprobado",
-    "finalizado": "Completado",
-    "pdf_final_generado": "Completado",
-    "vencido": "Rechazado",
-    "encontrado_vencido": "Rechazado",
-    "incompleto": "Pendiente",
-    "completar": "En proceso",
-    "no_cumple": "Rechazado",
-    "cumple": "Aprobado",
-    "faltante": "Pendiente",
-}
+EXPEDIENTE_TRACKING_STATUSES = frozenset({"to_bid", "won", "lost"})
 
 SNCC_FORM_MAP = {
     "sncc_f033": "SNCC.F033",
@@ -1213,21 +1177,6 @@ class DGCPBidPackageService:
 
         pkg.checklist = checklist
         pkg.document_matches = matches
-        from app.services.dgcp_expediente_event_service import DGCPExpedienteEventService
-
-        await DGCPExpedienteEventService.publish(
-            pkg,
-            event_type="comment_added",
-            actor_id=self.user_id,
-            detail={
-                "checklist_item_id": str(item_id),
-                "requirement_key": target.get("requirement_key"),
-                "requirement_label": target.get("requirement"),
-                "note": cleaned[:300],
-                "summary": f"{target.get('requirement')}: {cleaned[:120]}",
-            },
-            checklist=checklist,
-        )
         await self.audit.log(
             action="dgcp.checklist.note",
             tenant_id=self.tenant_id,
@@ -1257,8 +1206,8 @@ class DGCPBidPackageService:
         item_id: uuid.UUID,
         payload: DGCPAssociateDocumentRequest,
     ) -> DGCPAssociateDocumentResponse:
-        if not payload.document_id and not payload.knowledge_asset_id and not payload.process_document_id:
-            raise ValueError("Indique document_id, knowledge_asset_id o process_document_id")
+        if not payload.document_id and not payload.knowledge_asset_id:
+            raise ValueError("Indique document_id o knowledge_asset_id")
 
         opportunity = await self._get_opportunity(opportunity_id)
         if not opportunity:
@@ -1285,7 +1234,6 @@ class DGCPBidPackageService:
         match_source: str | None = None
         relative_path: str | None = None
         new_status = "encontrado_vigente"
-        ai_validation: dict | None = None
 
         if payload.process_document_id:
             proc = await self.db.get(DGCPProcessDocument, payload.process_document_id)
@@ -1300,22 +1248,8 @@ class DGCPBidPackageService:
             match_source = "dgcp_process_repository"
             meta = proc.metadata_ or {}
             relative_path = meta.get("storage_uri")
-            ai_validation = self._validate_uploaded_document(
-                requirement_key=str(target.get("requirement_key") or ""),
-                filename=meta.get("storage_filename") or proc.title,
-                title=proc.title,
-            )
-            target["ai_validation"] = ai_validation
-            target["ia_observations"] = ai_validation.get("observaciones")
-            target["observaciones_ia"] = ai_validation.get("observaciones")
-            if ai_validation.get("riesgo"):
-                target["risk"] = ai_validation["riesgo"]
-            if ai_validation.get("cumple") is False:
-                new_status = "no_cumple"
-            elif target.get("requirement_key", "").startswith("sncc_"):
+            if target.get("requirement_key", "").startswith("sncc_"):
                 new_status = "requiere_completado"
-            else:
-                new_status = "cumple"
 
         if payload.knowledge_asset_id:
             asset = await self.db.get(KnowledgeAsset, payload.knowledge_asset_id)
@@ -1382,19 +1316,14 @@ class DGCPBidPackageService:
         target["match_source"] = match_source
         target["relative_path"] = relative_path
         target["status"] = new_status
-        target["ux_status"] = REQUIREMENT_UX_STATUS_MAP.get(new_status, "En proceso")
         target["display_status"] = self.compliance.display_status_label(new_status)
         target.pop("manual_validation", None)
         has_evidence = self.compliance.has_document_evidence({}, target)
-        computed_risk = self.compliance.compute_risk(
+        target["risk"] = self.compliance.compute_risk(
             status=new_status,
             mandatory=bool(target.get("mandatory", True)),
             has_evidence=has_evidence,
         )
-        if ai_validation and ai_validation.get("riesgo"):
-            target["risk"] = f"{ai_validation['riesgo']} — {ai_validation.get('observaciones') or computed_risk}"
-        else:
-            target["risk"] = computed_risk
         target["recommended_action"] = COMPLIANCE_ACTION_BY_STATUS.get(new_status)
 
         matches = [dict(m) for m in (pkg.document_matches or [])]
@@ -1442,29 +1371,6 @@ class DGCPBidPackageService:
 
         await RealDGCPExpedienteBuilder.mark_stale_if_generated(
             self.db, self.tenant_id, opportunity_id
-        )
-
-        from app.services.dgcp_expediente_event_service import DGCPExpedienteEventService
-
-        event_type = "document_added"
-        if new_status in ("cumple", "encontrado_vigente", "validado_manual"):
-            event_type = "document_approved"
-        elif new_status in ("no_cumple", "vencido", "encontrado_vencido"):
-            event_type = "document_rejected"
-        await DGCPExpedienteEventService.publish(
-            pkg,
-            event_type=event_type,
-            actor_id=self.user_id,
-            detail={
-                "checklist_item_id": str(item_id),
-                "requirement_key": target.get("requirement_key"),
-                "requirement_label": target.get("requirement"),
-                "document_title": document_title,
-                "status": new_status,
-                "summary": f"{target.get('requirement')}: {document_title} → {new_status}",
-            },
-            checklist=checklist,
-            preparation_pct=bid.preparation_pct,
         )
 
         await self.audit.log(
@@ -1853,533 +1759,6 @@ class DGCPBidPackageService:
         pkg.expediente_status = status
         await self.db.commit()
         return status
-
-    def _validate_uploaded_document(
-        self,
-        *,
-        requirement_key: str,
-        filename: str | None,
-        title: str | None,
-    ) -> dict:
-        from app.services.document_requirement_validator import (
-            REQUIREMENT_KEYWORDS,
-            has_forbidden_signals,
-            keywords_match_requirement,
-        )
-
-        observaciones: list[str] = []
-        riesgo = "bajo"
-        cumple = True
-        if has_forbidden_signals(requirement_key, filename, title, requirement_key):
-            cumple = False
-            riesgo = "alto"
-            observaciones.append("El documento no corresponde a la categoría del requisito.")
-        elif requirement_key in REQUIREMENT_KEYWORDS and not keywords_match_requirement(
-            requirement_key, filename, title
-        ):
-            cumple = False
-            riesgo = "alto"
-            observaciones.append(
-                "El nombre/título no coincide con el requisito solicitado en el pliego."
-            )
-        if not observaciones:
-            observaciones.append("Documento alineado con el requisito según nombre y categoría.")
-        return {
-            "cumple": cumple,
-            "no_cumple": not cumple,
-            "observaciones": " ".join(observaciones),
-            "riesgo": riesgo,
-            "validated_at": datetime.now(timezone.utc).isoformat(),
-            "requirement_key": requirement_key,
-            "filename": filename,
-        }
-
-    @staticmethod
-    def _section_for_requirement(item: dict) -> str:
-        key = str(item.get("requirement_key") or "").lower()
-        tipo = str(item.get("tipo") or item.get("category") or "").lower()
-        label = str(item.get("requirement") or "").lower()
-        blob = f"{key} {tipo} {label}"
-        if any(t in blob for t in ("cronograma", "plazo", "entrega", "calendario")):
-            return "cronograma"
-        if any(t in blob for t in ("garantia", "fianza", "seguro")):
-            return "garantias"
-        if any(t in blob for t in ("experiencia", "antecedente", "referencia")):
-            return "experiencia"
-        if any(t in blob for t in ("personal", "curriculum", "cv", "equipo")):
-            return "personal"
-        if any(t in blob for t in ("certific", "tss", "dgii", "mipyme", "rpe")):
-            return "certificaciones"
-        if any(t in blob for t in ("econom", "precio", "cotiz", "f033", "oferta_economica")):
-            return "oferta_economica"
-        if any(t in blob for t in ("tecnic", "especif", "plano", "oferta_tecnica")):
-            return "oferta_tecnica"
-        if any(t in blob for t in ("anexo",)):
-            return "anexos"
-        if any(t in blob for t in ("formulario", "sncc", "administrativo", "legal")):
-            return "documentos_requeridos"
-        return "requisitos"
-
-    def _enrich_requirement_item(self, item: dict) -> dict:
-        status = str(item.get("status") or "pendiente")
-        enriched = dict(item)
-        enriched["ux_status"] = REQUIREMENT_UX_STATUS_MAP.get(
-            status, enriched.get("ux_status") or "Pendiente"
-        )
-        enriched["nombre"] = item.get("requirement") or item.get("requirement_key")
-        enriched["descripcion"] = (
-            item.get("ia_observations")
-            or item.get("notes")
-            or item.get("recommended_action")
-            or item.get("requirement")
-        )
-        enriched["obligatoriedad"] = "Obligatorio" if item.get("mandatory", True) else "Opcional"
-        enriched["documento_asociado"] = item.get("document_title")
-        enriched["estado"] = enriched["ux_status"]
-        enriched["responsable"] = item.get("assignee")
-        enriched["fecha_limite"] = item.get("due_date") or item.get("valid_until")
-        history = item.get("note_history") or []
-        last_mod = None
-        if history:
-            last_mod = history[-1].get("created_at")
-        last_mod = (
-            last_mod
-            or (item.get("manual_validation") or {}).get("validated_at")
-            or (item.get("ai_validation") or {}).get("validated_at")
-            or item.get("updated_at")
-        )
-        enriched["ultima_modificacion"] = last_mod
-        enriched["observaciones_ia"] = (
-            item.get("observaciones_ia")
-            or item.get("ia_observations")
-            or ((item.get("ai_validation") or {}).get("observaciones") if isinstance(item.get("ai_validation"), dict) else None)
-            or item.get("risk")
-        )
-        enriched["seccion"] = item.get("seccion") or self._section_for_requirement(item)
-        return enriched
-
-    def _build_proactive_insights(
-        self,
-        *,
-        checklist: list[dict],
-        missing_docs: list[dict],
-        upcoming: list[dict],
-        critical_alerts: list,
-        risks: list,
-        prep_pct: float,
-    ) -> dict:
-        recommendations: list[str] = []
-        critical_reqs = [
-            i
-            for i in checklist
-            if i.get("mandatory", True)
-            and i.get("ux_status") in ("Pendiente", "Rechazado", "En proceso")
-        ]
-        if missing_docs:
-            recommendations.append(
-                f"Adjuntar {len(missing_docs)} documento(s) obligatorio(s) faltante(s)."
-            )
-        expiring = [u for u in upcoming if u.get("tipo") == "vigencia_documento"]
-        if expiring:
-            recommendations.append(
-                f"Revisar {len(expiring)} documento(s) con vigencia próxima a vencer."
-            )
-        if critical_alerts:
-            recommendations.append(
-                f"Atender {len(critical_alerts)} alerta(s) crítica(s) del expediente."
-            )
-        if prep_pct < 80:
-            recommendations.append(
-                "El expediente está por debajo del 80% — priorice requisitos obligatorios pendientes."
-            )
-        elif prep_pct >= 95:
-            recommendations.append(
-                "Expediente casi completo — ejecute «Validar Expediente» antes de exportar."
-            )
-        if not recommendations:
-            recommendations.append("Sin acciones críticas pendientes detectadas por la IA.")
-        return {
-            "documentos_faltantes": [
-                {
-                    "id": i.get("id"),
-                    "nombre": i.get("nombre") or i.get("requirement"),
-                    "responsable": i.get("responsable") or i.get("assignee"),
-                    "estado": i.get("estado") or i.get("ux_status"),
-                }
-                for i in missing_docs[:20]
-            ],
-            "proximos_a_vencer": upcoming[:10],
-            "riesgos": risks[:15],
-            "requisitos_criticos": [
-                {
-                    "id": i.get("id"),
-                    "nombre": i.get("nombre") or i.get("requirement"),
-                    "estado": i.get("ux_status"),
-                    "responsable": i.get("assignee"),
-                    "riesgo": i.get("risk"),
-                }
-                for i in critical_reqs[:20]
-            ],
-            "recomendaciones": recommendations,
-        }
-
-    def _compute_final_validation(self, opportunity, pkg) -> dict:
-        checklist = [self._enrich_requirement_item(i) for i in (pkg.checklist or [])]
-        bid = pkg.bid_package or {}
-        prep_pct = float(bid.get("preparation_pct") or 0)
-        missing = []
-        rejected = []
-        in_review = []
-        for item in checklist:
-            if not item.get("mandatory", True):
-                continue
-            ux = item.get("ux_status")
-            has_doc = bool(
-                item.get("document_title")
-                or item.get("process_document_id")
-                or item.get("document_id")
-                or item.get("knowledge_asset_id")
-            )
-            if ux == "Rechazado" or item.get("status") in ("no_cumple", "vencido", "encontrado_vencido"):
-                rejected.append(item.get("nombre") or item.get("requirement"))
-            elif not has_doc or ux == "Pendiente":
-                missing.append(item.get("nombre") or item.get("requirement"))
-            elif ux in ("En proceso", "Revisado") or item.get("status") in (
-                "requiere_completado",
-                "requiere_revision",
-                "requiere_actualizacion",
-            ):
-                in_review.append(item.get("nombre") or item.get("requirement"))
-
-        can_ready = self.compliance.can_mark_ready_for_review(pkg.checklist or [])
-        listo = bool(can_ready and not missing and not rejected and prep_pct >= 90)
-        gaps = []
-        if missing:
-            gaps.append({"tipo": "faltante", "items": missing})
-        if rejected:
-            gaps.append({"tipo": "rechazado", "items": rejected})
-        if in_review:
-            gaps.append({"tipo": "en_revision", "items": in_review})
-        if prep_pct < 90:
-            gaps.append(
-                {
-                    "tipo": "progreso",
-                    "items": [f"Preparación actual {prep_pct:.0f}% (mínimo recomendado 90%)"],
-                }
-            )
-        explanation = (
-            "Listo para presentar."
-            if listo
-            else "No listo. "
-            + "; ".join(
-                f"{g['tipo']}: {', '.join(g['items'][:5])}"
-                + ("…" if len(g["items"]) > 5 else "")
-                for g in gaps
-            )
-        )
-        return {
-            "listo_para_presentar": listo,
-            "estado": "Listo para presentar" if listo else "No listo",
-            "preparation_pct": prep_pct,
-            "faltantes": missing,
-            "rechazados": rejected,
-            "en_revision": in_review,
-            "gaps": gaps,
-            "explicacion": explanation,
-            "validaciones_ia": [
-                {
-                    "requirement_key": i.get("requirement_key"),
-                    "nombre": i.get("nombre") or i.get("requirement"),
-                    "resultado": (i.get("ai_validation") or {}).get("cumple"),
-                    "observaciones": i.get("observaciones_ia") or i.get("ia_observations"),
-                    "riesgo": i.get("risk"),
-                    "estado": i.get("ux_status"),
-                }
-                for i in checklist
-                if i.get("ai_validation") or i.get("ia_observations") or i.get("manual_validation")
-            ],
-            "validated_at": datetime.now(timezone.utc).isoformat(),
-            "opportunity_code": opportunity.code,
-        }
-
-    async def get_expediente_dashboard(self, opportunity_id: uuid.UUID) -> dict:
-        opportunity = await self._get_opportunity(opportunity_id)
-        if not opportunity:
-            raise ValueError("Licitación no encontrada")
-        pkg = await self._get_package(opportunity_id)
-        checklist = [self._enrich_requirement_item(i) for i in ((pkg.checklist if pkg else None) or [])]
-        bid = (pkg.bid_package if pkg else None) or {}
-        alerts = (pkg.alerts if pkg else None) or []
-        matches = (pkg.document_matches if pkg else None) or []
-        risks = (pkg.requirement_risks if pkg else None) or []
-
-        approved = [i for i in checklist if i.get("ux_status") in ("Aprobado", "Completado")]
-        rejected = [i for i in checklist if i.get("ux_status") == "Rechazado"]
-        pending = [i for i in checklist if i.get("ux_status") == "Pendiente"]
-        in_progress = [i for i in checklist if i.get("ux_status") == "En proceso"]
-        in_review = [i for i in checklist if i.get("ux_status") == "Revisado"]
-        missing_docs = [
-            i
-            for i in checklist
-            if i.get("mandatory", True)
-            and not (
-                i.get("document_title")
-                or i.get("process_document_id")
-                or i.get("document_id")
-                or i.get("knowledge_asset_id")
-            )
-        ]
-
-        sections_order = [
-            ("cronograma", "Cronograma"),
-            ("requisitos", "Requisitos"),
-            ("documentos_requeridos", "Documentos requeridos"),
-            ("oferta_tecnica", "Oferta técnica"),
-            ("oferta_economica", "Oferta económica"),
-            ("garantias", "Garantías"),
-            ("experiencia", "Experiencia"),
-            ("personal", "Personal"),
-            ("certificaciones", "Certificaciones"),
-            ("anexos", "Anexos"),
-        ]
-        by_section: dict[str, list] = {k: [] for k, _ in sections_order}
-        for item in checklist:
-            sec = item.get("seccion") or "requisitos"
-            if sec not in by_section:
-                sec = "requisitos"
-            by_section[sec].append(item)
-
-        general = {
-            "code": opportunity.code,
-            "title": opportunity.title,
-            "institution": opportunity.institution,
-            "amount": str(opportunity.amount) if opportunity.amount is not None else None,
-            "currency": opportunity.currency,
-            "deadline": opportunity.deadline.isoformat() if opportunity.deadline else None,
-            "modalidad": opportunity.modalidad,
-            "status": opportunity.status,
-            "source_url": opportunity.source_url,
-            "objeto": opportunity.objeto_proceso or opportunity.description,
-        }
-        prep_pct = float(bid.get("preparation_pct") or 0)
-        critical_alerts = [
-            a
-            for a in alerts
-            if str((a or {}).get("severity") or (a or {}).get("nivel") or "").lower()
-            in ("critica", "crítica", "alto", "high", "critical")
-        ]
-        risk_critical = [
-            r
-            for r in risks
-            if str((r or {}).get("nivel") or "").lower() in ("alto", "critica", "crítica", "high")
-        ]
-        upcoming = []
-        if opportunity.deadline:
-            upcoming.append(
-                {
-                    "tipo": "cierre_proceso",
-                    "fecha": opportunity.deadline.isoformat(),
-                    "descripcion": f"Cierre / presentación — {opportunity.code}",
-                }
-            )
-        for item in checklist:
-            vu = item.get("valid_until") or item.get("fecha_limite")
-            if vu:
-                upcoming.append(
-                    {
-                        "tipo": "vigencia_documento",
-                        "fecha": str(vu),
-                        "descripcion": item.get("nombre") or item.get("requirement"),
-                    }
-                )
-        upcoming.sort(key=lambda x: x.get("fecha") or "")
-
-        from app.services.dgcp_expediente_event_service import DGCPExpedienteEventService
-
-        timeline = DGCPExpedienteEventService.timeline(pkg, limit=40) if pkg else []
-        proactive = self._build_proactive_insights(
-            checklist=checklist,
-            missing_docs=missing_docs,
-            upcoming=upcoming,
-            critical_alerts=critical_alerts,
-            risks=risk_critical or risks,
-            prep_pct=prep_pct,
-        )
-        validation_preview = (
-            self._compute_final_validation(opportunity, pkg) if pkg else None
-        )
-        score = None
-        if pkg:
-            from app.services.dgcp_expediente_enterprise_service import (
-                DGCPExpedienteEnterpriseService,
-            )
-
-            score = DGCPExpedienteEnterpriseService(
-                self.db, self.tenant_id, self.user_id
-            )._compute_score(pkg)
-
-        return {
-            "opportunity_id": str(opportunity_id),
-            "opportunity_code": opportunity.code,
-            "expediente_status": (pkg.expediente_status if pkg else None) or "sin_preparar",
-            "preparation_pct": prep_pct,
-            "score": score,
-            "progreso": {
-                "total_requisitos": len(checklist),
-                "completados": len(approved),
-                "pendientes": len(pending) + len(in_progress),
-                "en_revision": len(in_review),
-                "riesgos_criticos": len(risk_critical) or len(critical_alerts),
-                "porcentaje_real": prep_pct,
-            },
-            "kpis": {
-                "porcentaje_completado": prep_pct,
-                "requisitos_pendientes": len(pending) + len(in_progress),
-                "documentos_faltantes": len(missing_docs),
-                "documentos_rechazados": len(rejected),
-                "documentos_aprobados": len(approved),
-                "en_revision": len(in_review),
-                "proximos_vencimientos": len(upcoming),
-                "alertas_criticas": len(critical_alerts),
-                "total_requisitos": len(checklist),
-                "riesgos_criticos": len(risk_critical) or len(critical_alerts),
-            },
-            "ia_proactiva": proactive,
-            "timeline": timeline,
-            "validacion_preview": validation_preview,
-            "informacion_general": general,
-            "cronograma": {
-                "deadline": general["deadline"],
-                "items": by_section.get("cronograma") or [],
-            },
-            "secciones": [
-                {
-                    "id": sid,
-                    "nombre": sname,
-                    "total": len(by_section.get(sid) or []),
-                    "pendientes": sum(
-                        1
-                        for i in (by_section.get(sid) or [])
-                        if i.get("ux_status") in ("Pendiente", "En proceso")
-                    ),
-                    "items": by_section.get(sid) or [],
-                }
-                for sid, sname in sections_order
-            ],
-            "requisitos": checklist,
-            "documentos_faltantes": missing_docs,
-            "documentos_rechazados": rejected,
-            "documentos_aprobados": approved,
-            "proximos_vencimientos": upcoming[:10],
-            "alertas_criticas": critical_alerts,
-            "document_matches_count": len(matches),
-            "analyzed_at": pkg.analyzed_at.isoformat() if pkg and pkg.analyzed_at else None,
-        }
-
-    async def assign_checklist_item(
-        self,
-        opportunity_id: uuid.UUID,
-        item_id: uuid.UUID,
-        *,
-        assignee: str,
-        due_date: date | None = None,
-    ) -> dict:
-        opportunity = await self._get_opportunity(opportunity_id)
-        if not opportunity:
-            raise ValueError("Licitación no encontrada")
-        self._require_operational_interest(opportunity)
-        pkg = await self._get_package(opportunity_id)
-        if not pkg:
-            raise ValueError("Ejecute el análisis de requisitos primero")
-        cleaned = (assignee or "").strip()
-        if not cleaned:
-            raise ValueError("Indique un responsable")
-
-        checklist = self._deep_copy_checklist(pkg.checklist)
-        target = next((i for i in checklist if str(i.get("id")) == str(item_id)), None)
-        if not target:
-            raise ValueError("Ítem de checklist no encontrado")
-
-        previous = target.get("assignee")
-        target["assignee"] = cleaned
-        if due_date:
-            target["due_date"] = due_date.isoformat()
-        target["updated_at"] = datetime.now(timezone.utc).isoformat()
-        await self._append_note_history(
-            target,
-            f"Responsable: {cleaned}"
-            + (f" · Fecha límite: {due_date.isoformat()}" if due_date else ""),
-            action="assignee",
-        )
-        pkg.checklist = checklist
-        from app.services.dgcp_expediente_event_service import DGCPExpedienteEventService
-
-        await DGCPExpedienteEventService.publish(
-            pkg,
-            event_type="assignee_changed",
-            actor_id=self.user_id,
-            detail={
-                "checklist_item_id": str(item_id),
-                "requirement_key": target.get("requirement_key"),
-                "requirement_label": target.get("requirement"),
-                "previous_assignee": previous,
-                "assignee": cleaned,
-                "due_date": due_date.isoformat() if due_date else target.get("due_date"),
-                "summary": f"{target.get('requirement')}: responsable → {cleaned}",
-            },
-            checklist=checklist,
-        )
-        await self.audit.log(
-            action="dgcp.checklist.assign",
-            tenant_id=self.tenant_id,
-            user_id=self.user_id,
-            resource_type="dgcp_bid_package",
-            resource_id=pkg.id,
-            details={
-                "opportunity_id": str(opportunity_id),
-                "checklist_item_id": str(item_id),
-                "assignee": cleaned,
-                "due_date": due_date.isoformat() if due_date else None,
-            },
-        )
-        await self.db.commit()
-        return {
-            "opportunity_id": str(opportunity_id),
-            "checklist_item_id": str(item_id),
-            "assignee": cleaned,
-            "due_date": target.get("due_date"),
-            "checklist": self._checklist_response(opportunity_id, checklist),
-        }
-
-    async def validate_expediente_final(self, opportunity_id: uuid.UUID) -> dict:
-        opportunity = await self._get_opportunity(opportunity_id)
-        if not opportunity:
-            raise ValueError("Licitación no encontrada")
-        self._require_operational_interest(opportunity)
-        pkg = await self._get_package(opportunity_id)
-        if not pkg:
-            raise ValueError("Ejecute el análisis de requisitos primero")
-
-        result = self._compute_final_validation(opportunity, pkg)
-        from app.services.dgcp_expediente_event_service import DGCPExpedienteEventService
-
-        await DGCPExpedienteEventService.publish(
-            pkg,
-            event_type="expediente_validated",
-            actor_id=self.user_id,
-            detail={
-                "listo_para_presentar": result["listo_para_presentar"],
-                "estado": result["estado"],
-                "summary": result["explicacion"][:300],
-            },
-            checklist=pkg.checklist or [],
-            preparation_pct=result["preparation_pct"],
-        )
-        manifest = dict(pkg.manifest or {})
-        manifest["final_validation"] = result
-        pkg.manifest = manifest
-        await self.db.commit()
-        return result
 
     async def get_document_preview(
         self,
@@ -2954,76 +2333,34 @@ class DGCPBidPackageService:
         self,
         opportunity_id: uuid.UUID,
         *,
-        company_key: str | None = None,
+        company_key: str = "justech",
     ) -> DGCPExpedientePrepareResponse:
         opportunity = await self._get_opportunity(opportunity_id)
         if not opportunity:
             raise ValueError("Licitación no encontrada")
         if opportunity.status not in EXPEDIENTE_TRACKING_STATUSES:
-            raise ValueError(
-                "Marque «Mostrar interés» (o avance a preparación) antes de preparar el expediente"
-            )
+            raise ValueError("Marque «Licitar» (en preparación) antes de preparar el expediente")
         pkg = await self._get_package(opportunity_id)
         if not pkg:
             raise ValueError("Ejecute el análisis de requisitos primero")
 
-        resolved_company = company_key or getattr(opportunity, "company", None) or "justech"
-        validation = await self.validate_company_documents(
-            opportunity_id, company_key=resolved_company
+        validation = await self.validate_company_documents(opportunity_id, company_key=company_key)
+        if validation.get("blocked"):
+            from app.services.dgcp_expediente_errors import ExpedienteIncompleteError
+
+            raise ExpedienteIncompleteError(validation)
+
+        result = await self.expediente.prepare(
+            opportunity,
+            checklist=pkg.checklist or [],
+            matches=pkg.document_matches or [],
+            bid_package=pkg.bid_package or {},
+            user_input=pkg.user_input or {},
+            generated_forms=pkg.generated_forms or [],
         )
-        # Continue with observaciones instead of hard-blocking export (keeps ZIP/structure usable).
-        if validation.get("blocked"):
-            logger.warning(
-                "prepare_expediente company=%s incomplete — generating with observaciones",
-                resolved_company,
-            )
-
-        final_validation = self._compute_final_validation(opportunity, pkg)
-        user_input = dict(pkg.user_input or {})
-        user_input["_final_validation"] = final_validation
-        if validation.get("blocked"):
-            user_input["_document_validation_observaciones"] = validation
-
-        prepare_kwargs: dict = {
-            "checklist": pkg.checklist or [],
-            "matches": pkg.document_matches or [],
-            "bid_package": pkg.bid_package or {},
-            "user_input": user_input,
-            "generated_forms": pkg.generated_forms or [],
-        }
-        import inspect
-
-        if "company_key" in inspect.signature(self.expediente.prepare).parameters:
-            prepare_kwargs["company_key"] = resolved_company
-
-        result = await self.expediente.prepare(opportunity, **prepare_kwargs)
         pkg.expediente_status = result.expediente_status
         pkg.expediente_path = result.expediente_path
-        merged_manifest = dict(result.manifest or {})
-        prev = dict(pkg.manifest or {})
-        if prev.get("event_history"):
-            merged_manifest["event_history"] = prev["event_history"]
-        if prev.get("final_validation"):
-            merged_manifest.setdefault("final_validation", prev["final_validation"])
-        merged_manifest["final_validation"] = final_validation
-        if validation.get("blocked"):
-            merged_manifest["validation_observaciones"] = validation
-            merged_manifest["status_note"] = "generado_con_observaciones"
-        pkg.manifest = merged_manifest
-        from app.services.dgcp_expediente_event_service import DGCPExpedienteEventService
-
-        await DGCPExpedienteEventService.publish(
-            pkg,
-            event_type="expediente_prepared",
-            actor_id=self.user_id,
-            detail={
-                "summary": f"Expediente preparado ({result.preparation_pct:.0f}%)",
-                "copied_documents": result.copied_documents,
-                "listo": final_validation.get("listo_para_presentar"),
-            },
-            checklist=pkg.checklist or [],
-            preparation_pct=result.preparation_pct,
-        )
+        pkg.manifest = result.manifest
         await self.db.commit()
         return result
 

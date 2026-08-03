@@ -1,0 +1,208 @@
+{
+  "opportunity_id": "15090dc8-c90e-41cd-a86a-77903a5b4a0a",
+  "opportunity_code": "PROCURADURIA-DAF-CM-2026-0117",
+  "expediente_status": "expediente_en_preparacion",
+  "expediente_path": null,
+  "preparation_pct": 0.0,
+  "total_requirements": 1,
+  "mandatory_requirements": 1,
+  "compliant_count": 0,
+  "found_documents": 0,
+  "pending_documents": 0,
+  "expired_documents": 0,
+  "forms_to_complete": 0,
+  "review_count": 0,
+  "alerts_count": 5,
+  "manifest": {
+    "last_event": {
+      "at": "2026-08-03T03:04:40.649830+00:00",
+      "label": "Validación final del expediente",
+      "detail": {
+        "estado": "No listo",
+        "summary": "No listo. progreso: Preparación actual 0% (mínimo recomendado 90%)",
+        "listo_para_presentar": false
+      },
+      "actor_id": "fdf725a9-c65f-4aca-8e44-887f5e9e2331",
+      "event_type": "expediente_validated"
+    },
+    "event_history": [
+      {
+        "at": "2026-08-03T02:58:34.536297+00:00",
+        "label": "Technical sheets detected",
+        "detail": {
+          "count": 0,
+          "message": "No se detectaron fichas técnicas requeridas."
+        },
+        "actor_id": "fdf725a9-c65f-4aca-8e44-887f5e9e2331",
+        "event_type": "technical_sheets_detected"
+      },
+      {
+        "at": "2026-08-03T03:00:42.140186+00:00",
+        "label": "Documento aprobado",
+        "detail": {
+          "status": "cumple",
+          "summary": "Muestras físicas solicitadas en pliego: Muestras físicas solicitadas en pliego — qa_test_doc.pdf → cumple",
+          "document_title": "Muestras físicas solicitadas en pliego — qa_test_doc.pdf",
+          "requirement_key": "muestra_0",
+          "checklist_item_id": "6be73178-2dcb-4cfa-9e25-032aa6f65da4",
+          "requirement_label": "Muestras físicas solicitadas en pliego"
+        },
+        "actor_id": "fdf725a9-c65f-4aca-8e44-887f5e9e2331",
+        "event_type": "document_approved"
+      },
+      {
+        "at": "2026-08-03T03:00:52.904856+00:00",
+        "label": "Validación final del expediente",
+        "detail": {
+          "estado": "No listo",
+          "summary": "No listo. progreso: Preparación actual 0% (mínimo recomendado 90%)",
+          "listo_para_presentar": false
+        },
+        "actor_id": "fdf725a9-c65f-4aca-8e44-887f5e9e2331",
+        "event_type": "expediente_validated"
+      },
+      {
+        "at": "2026-08-03T03:04:40.649830+00:00",
+        "label": "Validación final del expediente",
+        "detail": {
+          "estado": "No listo",
+          "summary": "No listo. progreso: Preparación actual 0% (mínimo recomendado 90%)",
+          "listo_para_presentar": false
+        },
+        "actor_id": "fdf725a9-c65f-4aca-8e44-887f5e9e2331",
+        "event_type": "expediente_validated"
+      }
+    ],
+    "final_validation": {
+      "gaps": [
+        {
+          "tipo": "progreso",
+          "items": [
+            "Preparación actual 0% (mínimo recomendado 90%)"
+          ]
+        }
+      ],
+      "estado": "No listo",
+      "faltantes": [],
+      "rechazados": [],
+      "en_revision": [],
+      "explicacion": "No listo. progreso: Preparación actual 0% (mínimo recomendado 90%)",
+      "validated_at": "2026-08-03T03:04:40.649795+00:00",
+      "preparation_pct": 0.0,
+      "validaciones_ia": [
+        {
+          "estado": "Aprobado",
+          "nombre": "Muestras físicas solicitadas en pliego",
+          "riesgo": "bajo — Documento alineado con el requisito según nombre y categoría.",
+          "resultado": true,
+          "observaciones": "Documento alineado con el requisito según nombre y categoría.",
+          "requirement_key": "muestra_0"
+        }
+      ],
+      "opportunity_code": "PROCURADURIA-DAF-CM-2026-0117",
+      "listo_para_presentar": false
+    },
+    "technical_sheets": {
+      "items": [],
+      "message": "No se detectaron fichas técnicas requeridas.",
+      "version": 1,
+      "detected_at": "2026-08-03T02:58:34.505178+00:00",
+      "requires_technical_sheets": false
+    },
+    "expediente_unified": {
+      "total": 1,
+      "by_status": {
+        "detectado": 1
+      },
+      "synced_at": "2026-08-03T03:04:40.649863+00:00",
+      "estado_general": "expediente_en_preparacion",
+      "preparation_pct": 0.0,
+      "total_requisitos": 1,
+      "requisitos_vencidos": 0,
+      "requisitos_no_aplica": 0,
+      "requisitos_detectados": 1,
+      "requisitos_pendientes": 0,
+      "requisitos_rechazados": 0,
+      "requisitos_completados": 0,
+      "requisitos_requiere_revision": 0
+    },
+    "process_updates_meta": {
+      "pending_count": 0,
+      "critical_count": 0,
+      "last_change_at": null,
+      "last_checked_at": "2026-08-03T02:58:34.692917+00:00",
+      "requires_reanalysis": false,
+      "notification_hook_ready": true
+    },
+    "product_intelligence": {
+      "items": [],
+      "message": "No se detectaron fichas técnicas requeridas.",
+      "version": 1,
+      "analyzed_at": "2026-08-03T02:58:34.664552+00:00"
+    },
+    "process_update_snapshot": {
+      "dates": {
+        "deadline": "2026-08-04",
+        "fecha_enmienda": "2026-08-04T12:15:00Z",
+        "fecha_publicacion": "2026-07-31T17:15:03.713333Z",
+        "fecha_apertura_ofertas": "2026-08-05T08:00:00Z",
+        "fecha_estimada_adjudicacion": "2026-08-13T16:00:00Z",
+        "fecha_fin_recepcion_ofertas": "2026-08-04T17:15:00Z",
+        "fecha_habilitacion_oferente": "2026-08-13T20:15:00Z"
+      },
+      "deadline": "2026-08-04",
+      "documents": [
+        {
+          "id": "65e0b2ae-38e5-46a5-ab67-47e81bc1b234",
+          "title": "Portal DGCP — PROCURADURIA-DAF-CM-2026-0117",
+          "doc_role": "portal",
+          "source_url": "https://comunidad.comprasdominicana.gob.do/Public/Tendering/OpportunityDetail/Index?noticeUID=DO1.NTC.1750345",
+          "fingerprint": "8001f92a9d1b7aa4"
+        },
+        {
+          "id": "49cbdcb7-a5ca-471a-8ce2-95b2d5d92614",
+          "title": "SOLICITUD_0117_signed",
+          "doc_role": "general",
+          "source_url": "https://comunidad.comprasdominicana.gob.do/Public/Archive/RetrieveFile/Index?DocumentId=13313114&InCommunity=False&InPaymentGateway=False&DocUniqueIdentifier=",
+          "fingerprint": "237bb89439522b05"
+        }
+      ],
+      "dgcp_status": "Proceso publicado",
+      "snapshot_at": "2026-08-03T02:58:34.689907+00:00",
+      "payload_hash": "ec6d60f33773f97b7cd1852321292186005b6932d2047bbf1caefb90ca6c3e4a",
+      "snapshot_hash": "6af12c77050b61b4b5f19fb6f156db1b09295d7816b5d41e4cb53d4e2353a3a8",
+      "monto_estimado": 883400.0,
+      "description_hash": "eff1bbb8097d3c9f"
+    },
+    "hermes_document_analysis": {
+      "reason": "hermes_timeout_or_error",
+      "status": "failed",
+      "message": "Hermes no respondió a tiempo; se aplicó extracción heurística.",
+      "confidence": 0.0,
+      "analyzed_at": "2026-08-03T02:58:34.180675+00:00",
+      "fallback_used": true
+    },
+    "technical_sheets_summary": {
+      "total": 0,
+      "message": "No se detectaron fichas técnicas requeridas.",
+      "by_status": {},
+      "pending_human_review": 0,
+      "requires_technical_sheets": false
+    },
+    "product_intelligence_summary": {
+      "analyzed_at": "2026-08-03T02:58:34.664552+00:00",
+      "approved_count": 0,
+      "avg_compliance_pct": null,
+      "requirements_count": 0
+    },
+    "technical_intelligence_summary": {
+      "analyzed_at": "2026-08-03T02:58:34.664552+00:00",
+      "approved_count": 0,
+      "avg_compliance_pct": null,
+      "requirements_count": 0
+    }
+  },
+  "can_mark_ready": false,
+  "can_download": false,
+  "present_enabled": false
+}

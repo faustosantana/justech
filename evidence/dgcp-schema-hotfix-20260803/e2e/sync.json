@@ -1,0 +1,13 @@
+{
+  "id": "044ffdfd-2568-4026-a7a5-16625fa7401f",
+  "tenant_id": "a1787712-9913-4797-8255-6cdc5b65dc10",
+  "trigger": "manual",
+  "status": "completed",
+  "pages_synced": 1,
+  "created_count": 0,
+  "updated_count": 10,
+  "skipped_count": 0,
+  "error_message": null,
+  "started_at": "2026-08-03T03:09:45.829533Z",
+  "completed_at": "2026-08-03T03:09:46.300722Z"
+}

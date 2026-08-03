@@ -1,0 +1,276 @@
+{
+  "started_at": "2026-08-03T03:09:38.424948+00:00",
+  "process_code": "PROCURADURIA-DAF-CM-2026-0117",
+  "steps": [
+    {
+      "name": "login",
+      "ok": true,
+      "status": 200,
+      "detail": null
+    },
+    {
+      "name": "api_health",
+      "ok": true,
+      "status": 200,
+      "detail": null
+    },
+    {
+      "name": "dgcp_opportunities",
+      "ok": true,
+      "status": 200,
+      "detail": null
+    },
+    {
+      "name": "executive_dashboard",
+      "ok": true,
+      "status": 200,
+      "detail": null
+    },
+    {
+      "name": "dgcp_sync",
+      "ok": true,
+      "status": 202,
+      "detail": {
+        "id": "044ffdfd-2568-4026-a7a5-16625fa7401f",
+        "tenant_id": "a1787712-9913-4797-8255-6cdc5b65dc10",
+        "trigger": "manual",
+        "status": "completed",
+        "pages_synced": 1,
+        "created_count": 0,
+        "updated_count": 10,
+        "skipped_count": 0,
+        "error_message": null,
+        "started_at": "2026-08-03T03:09:45.829533Z",
+        "completed_at": "2026-08-03T03:09:46.300722Z"
+      }
+    },
+    {
+      "name": "opportunity_found",
+      "ok": true,
+      "status": 200,
+      "detail": {
+        "id": "15090dc8-c90e-41cd-a86a-77903a5b4a0a",
+        "status": "interested"
+      }
+    },
+    {
+      "name": "mostrar_interes",
+      "ok": false,
+      "status": 409,
+      "detail": {
+        "status": "{\"detail\":\"No se puede «Marcar interés» desde la etapa «Interesadas».\"}"
+      }
+    },
+    {
+      "name": "refresh_portal_docs",
+      "ok": true,
+      "status": 200,
+      "detail": {
+        "opportunity_id": "15090dc8-c90e-41cd-a86a-77903a5b4a0a",
+        "discovered": 1,
+        "downloaded": 1,
+        "items": [
+          {
+            "id": "fc5d4daa-5803-4c2c-9b7c-a252683a5d95",
+            "title": "Muestras físicas solicitadas en pliego — qa_test_doc.pdf",
+            "doc_role": "checklist_evidence",
+            "priority": "alta",
+            "format": "pdf",
+            "source_type": "process_file",
+            "source_url": null,
+            "source_label": "DGCP Portal",
+            "ingestion_status": "registered",
+            "display_status": "Sin texto extraído",
+            "text_extraction_status": "Sin texto extraído",
+            "has_text": false,
+            "is_portal_link": null,
+            "is_downloadable": true,
+            "document_id": null,
+            "storage_uri": "DGCP/PROCURADURIA-DAF-CM-2026-0117/muestra_0_qa_test_doc.pdf",
+            "file_size_bytes": null,
+            "portal_document_id": null,
+            "published_at": "2026-08-03T03:00:42.074120+00:00",
+            "original_filename": null
+          },
+          {
+            "id": "c7f0a88b-2e65-4b70-8f80-bdafdbc3f05b",
+            "title": "SOLICITUD_0117_signed",
+            "doc_role": "general",
+            "priority": "media",
+            "format": "pdf",
+            "source_type": "process_file",
+            "source_url": "https://comunidad.comprasdominicana.gob.do/Public/Archive/RetrieveFile/Index?DocumentId=13313114&InCommunity=False&InPaymentGateway=False&DocUniqueIdentifier=",
+            "source_label": "DGCP Portal",
+            "ingestion_status": "analyzed",
+            "display_status": "Texto extraído",
+            "text_extraction_status": "Texto extraído",
+            "has_text": true,
+            "is_portal_link": null,
+            "is_downloadable": true,
+            "document_id": null,
+            "storage_uri": "DGCP/PROCURADURIA-DAF-CM-2026-0117/general_solicitud_0117_signed.pdf",
+            "file_size_bytes": 263918,
+            "portal_document_id": "13313114",
+            "published_at": "2026-08-03T03:09:50.562436+00:00",
+            "original_filename": "SOLICITUD_0117_signed.pdf"
+          }
+        ],
+        "total": 2,
+        "portal": {
+          "id": "65e0b2ae-38e5-46a5-ab67-47e81bc1b234",
+          "title": "Portal DGCP — PROCURADURIA-DAF-CM-2026-0117",
+          "doc_role": "portal",
+          "priority": "baja",
+          "format": "link",
+          "source_type": "portal",
+          "source_url": "https://comunidad.comprasdominicana.gob.do/Public/Tendering/OpportunityDetail/Index?noticeUID=DO1.NTC.1750345",
+          "source_label": "Portal DGCP",
+          "ingestion_status": "registered",
+          "display_status": "Enlace externo",
+          "text_extraction_status": "Enlace externo",
+          "has_text": false,
+          "is_portal_link": true,
+          "is_downloadable": false,
+          "document_id": null,
+          "storage_uri": null,
+          "file_size_bytes": null,
+          "portal_document_id": null,
+          "published_at": "2026-08-03T02:58:32.653806+00:00",
+          "original_filename": null
+        },
+        "message": "Se descargaron 1 documento(s) del portal DGCP."
+      }
+    },
+    {
+      "name": "list_process_documents",
+      "ok": true,
+      "status": 200,
+      "detail": {
+        "count": 2
+      }
+    },
+    {
+      "name": "analyze_requirements",
+      "ok": false,
+      "status": 500,
+      "detail": "Internal Server Error"
+    },
+    {
+      "name": "analysis_status",
+      "ok": false,
+      "status": 500,
+      "detail": null
+    },
+    {
+      "name": "checklist",
+      "ok": true,
+      "status": 200,
+      "detail": null
+    },
+    {
+      "name": "bid_package_status",
+      "ok": true,
+      "status": 200,
+      "detail": null
+    },
+    {
+      "name": "executive_dashboard_after",
+      "ok": true,
+      "status": 200,
+      "detail": null
+    },
+    {
+      "name": "upload_test_doc",
+      "ok": true,
+      "status": 200,
+      "detail": {
+        "opportunity_id": "15090dc8-c90e-41cd-a86a-77903a5b4a0a",
+        "process_document": {
+          "id": "c31d95b3-0dfd-4b1a-a215-b7d926da58ab",
+          "title": "e2e anexo prueba",
+          "doc_role": "anexo",
+          "priority": "media",
+          "format": "pdf",
+          "source_type": "process_file",
+          "source_url": null,
+          "source_label": "Upload manual",
+          "ingestion_status": "error",
+          "display_status": "Error de lectura",
+          "text_extraction_status": "Error de lectura",
+          "has_text": false,
+          "is_portal_link": null,
+          "is_downloadable": true,
+          "document_id": null,
+          "storage_uri": "DGCP/PROCURADURIA-DAF-CM-2026-0117/anexo_e2e_anexo_prueba.pdf",
+          "file_size_bytes": 68,
+          "portal_document_id": null,
+          "published_at": "2026-08-03T03:09:54.054614+00:00",
+          "original_filename": "e2e_anexo_prueba.pdf"
+        },
+        "text_extracted": false,
+        "text_length": 0,
+        "message": "Archivo guardado pero no se extrajo texto. Verifique que el PDF tenga texto seleccionable."
+      }
+    },
+    {
+      "name": "document_validation",
+      "ok": false,
+      "status": 500,
+      "detail": null
+    },
+    {
+      "name": "historical_similar",
+      "ok": false,
+      "status": 500,
+      "detail": null
+    },
+    {
+      "name": "bid_copilot",
+      "ok": false,
+      "status": 500,
+      "detail": null
+    },
+    {
+      "name": "expediente_validate",
+      "ok": true,
+      "status": 200,
+      "detail": null
+    },
+    {
+      "name": "prepare_bid_package",
+      "ok": false,
+      "status": 500,
+      "detail": "Internal Server Error"
+    },
+    {
+      "name": "export_zip",
+      "ok": false,
+      "status": 404,
+      "detail": {}
+    },
+    {
+      "name": "real_expediente_download",
+      "ok": false,
+      "status": 500,
+      "detail": null
+    }
+  ],
+  "http_500": 7,
+  "pass_criteria": {},
+  "opportunity_id": "15090dc8-c90e-41cd-a86a-77903a5b4a0a",
+  "opportunity_status": "interested",
+  "elapsed_s": 17.8,
+  "finished_at": "2026-08-03T03:09:56.188551+00:00",
+  "failed_steps": [
+    "mostrar_interes",
+    "analyze_requirements",
+    "analysis_status",
+    "document_validation",
+    "historical_similar",
+    "bid_copilot",
+    "prepare_bid_package",
+    "export_zip",
+    "real_expediente_download"
+  ],
+  "verdict": "FAIL"
+}

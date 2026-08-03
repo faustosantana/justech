@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+date: Mon, 03 Aug 2026 03:41:31 GMT
+server: uvicorn
+content-disposition: attachment; filename="expediente_PROCURADURIA-DAF-CM-2026-0117.zip"; filename*=UTF-8''expediente_PROCURADURIA-DAF-CM-2026-0117.zip
+content-length: 1523919
+content-type: application/zip
+x-request-id: 0a06ba52-ca1c-42fc-934c-dab5733e5a31
+x-response-time-ms: 675.37
+

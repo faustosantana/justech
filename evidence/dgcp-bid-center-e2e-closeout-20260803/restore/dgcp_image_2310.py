@@ -341,36 +341,12 @@ async def apply_opportunity_action(
         user_id=user.id,
         request=request,
     )
-    bid = _bid_svc(db, user)
-
-    # Tras «Mostrar interés»: análisis de TODOS los documentos + expediente vivo + similares reales.
-    if data.action in (
-        OpportunityAction.MARCAR_INTERES,
-        OpportunityAction.MOSTRAR_INTERES,
-    ):
-        try:
-            await bid.analyze(opportunity_id)
-        except Exception:
-            pass
-        try:
-            await bid.activate_expediente_tracking(opportunity_id)
-        except ValueError:
-            pass
-        try:
-            hist = DGCPHistoricalSimilarSearchService(db, ctx.tenant_id)
-            await hist.search_bootstrap(
-                opportunity_id,
-                DGCPHistoricalSimilarSearchRequest(refresh=False, limit=10),
-            )
-        except Exception:
-            pass
-
     if data.action in (
         OpportunityAction.LICITAR,
         OpportunityAction.INICIAR_PREPARACION,
     ):
         try:
-            await bid.activate_expediente_tracking(opportunity_id)
+            await _bid_svc(db, user).activate_expediente_tracking(opportunity_id)
         except ValueError:
             pass
     await db.commit()
@@ -1650,7 +1626,7 @@ async def download_bid_package(
     return Response(
         content=content,
         media_type="application/zip",
-        headers={"Content-Disposition": build_content_disposition("attachment", filename)},
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
 
 
@@ -1754,7 +1730,7 @@ async def download_real_expediente_report(
     return Response(
         content=data,
         media_type="application/pdf",
-        headers={"Content-Disposition": build_content_disposition("attachment", "reporte_preparacion.pdf")},
+        headers={"Content-Disposition": build_content_disposition("reporte_preparacion.pdf")},
     )
 
 
@@ -1775,7 +1751,7 @@ async def download_real_expediente_zip(
     return Response(
         content=content,
         media_type="application/zip",
-        headers={"Content-Disposition": build_content_disposition("attachment", filename)},
+        headers={"Content-Disposition": build_content_disposition(filename)},
     )
 
 
@@ -1933,7 +1909,7 @@ async def download_finalization_pdf(
     return Response(
         content=data,
         media_type=mime,
-        headers={"Content-Disposition": build_content_disposition("attachment", filename)},
+        headers={"Content-Disposition": build_content_disposition(filename)},
     )
 
 
@@ -2211,280 +2187,6 @@ async def search_historical_similar(
         request=request,
     )
     return result
-
-
-@router.get(
-    "/opportunities/{opportunity_id}/expediente/dashboard",
-    dependencies=DGCP_VIEW,
-)
-async def get_expediente_dashboard(
-    opportunity_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-):
-    """Dashboard del expediente vivo — KPIs + secciones + requisitos con estado UX."""
-    try:
-        return await _bid_svc(db, user).get_expediente_dashboard(opportunity_id)
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-
-
-def _enterprise_svc(db, user) -> "DGCPExpedienteEnterpriseService":
-    from app.services.dgcp_expediente_enterprise_service import DGCPExpedienteEnterpriseService
-
-    ctx = require_tenant_context()
-    return DGCPExpedienteEnterpriseService(db, ctx.tenant_id, user_id=user.id)
-
-
-@router.get(
-    "/opportunities/{opportunity_id}/expediente/compliance-matrix",
-    dependencies=DGCP_VIEW,
-)
-async def get_compliance_matrix(
-    opportunity_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-):
-    try:
-        return await _enterprise_svc(db, user).get_compliance_matrix(opportunity_id)
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-
-
-@router.get(
-    "/opportunities/{opportunity_id}/expediente/compliance-matrix/excel",
-    dependencies=DGCP_VIEW,
-)
-async def export_compliance_matrix_excel(
-    opportunity_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-):
-    try:
-        content, filename = await _enterprise_svc(db, user).export_compliance_matrix_excel(
-            opportunity_id
-        )
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-    return Response(
-        content=content,
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": build_content_disposition("attachment", filename)},
-    )
-
-
-@router.get(
-    "/opportunities/{opportunity_id}/expediente/compliance-matrix/pdf",
-    dependencies=DGCP_VIEW,
-)
-async def export_compliance_matrix_pdf(
-    opportunity_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-):
-    try:
-        content, filename = await _enterprise_svc(db, user).export_compliance_matrix_pdf(
-            opportunity_id
-        )
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-    return Response(
-        content=content,
-        media_type="application/pdf",
-        headers={"Content-Disposition": build_content_disposition("attachment", filename)},
-    )
-
-
-@router.get(
-    "/opportunities/{opportunity_id}/checklist/{item_id}/evidence",
-    dependencies=DGCP_VIEW,
-)
-async def get_requirement_evidence(
-    opportunity_id: uuid.UUID,
-    item_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-):
-    try:
-        return await _enterprise_svc(db, user).get_requirement_evidence(opportunity_id, item_id)
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-
-
-@router.post(
-    "/opportunities/{opportunity_id}/checklist/{item_id}/ask",
-    dependencies=DGCP_VIEW,
-)
-async def ask_requirement_ai(
-    opportunity_id: uuid.UUID,
-    item_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-    question: str = Query(..., min_length=2, max_length=2000),
-):
-    try:
-        return await _enterprise_svc(db, user).ask_requirement_ai(
-            opportunity_id, item_id, question
-        )
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-
-
-@router.get(
-    "/opportunities/{opportunity_id}/expediente/score",
-    dependencies=DGCP_VIEW,
-)
-async def get_expediente_score(
-    opportunity_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-):
-    try:
-        return await _enterprise_svc(db, user).get_expediente_score(opportunity_id)
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-
-
-@router.get(
-    "/opportunities/{opportunity_id}/expediente/preview",
-    dependencies=DGCP_VIEW,
-)
-async def get_expediente_preview(
-    opportunity_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-):
-    try:
-        return await _enterprise_svc(db, user).get_expediente_preview(opportunity_id)
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-
-
-@router.get(
-    "/opportunities/{opportunity_id}/expediente/preview/file",
-    dependencies=DGCP_VIEW,
-)
-async def preview_expediente_file(
-    opportunity_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-    path: Annotated[str, Query(min_length=1)],
-):
-    try:
-        content, mime, filename = await _enterprise_svc(db, user).read_preview_file(
-            opportunity_id, path
-        )
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-    return Response(
-        content=content,
-        media_type=mime,
-        headers={"Content-Disposition": build_content_disposition("inline", filename)},
-    )
-
-
-def _bid_copilot_svc(db, user) -> "DGCPBidCopilotService":
-    from app.services.dgcp_bid_copilot_service import DGCPBidCopilotService
-
-    ctx = require_tenant_context()
-    return DGCPBidCopilotService(db, ctx.tenant_id, user_id=user.id)
-
-
-@router.get(
-    "/opportunities/{opportunity_id}/bid-copilot",
-    dependencies=DGCP_VIEW,
-)
-async def get_bid_copilot(
-    opportunity_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-):
-    """Bid Copilot Enterprise: competitividad, score, plan, riesgos y resumen."""
-    try:
-        return await _bid_copilot_svc(db, user).get_copilot(opportunity_id)
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-
-
-@router.post(
-    "/opportunities/{opportunity_id}/bid-copilot/simulate-committee",
-    dependencies=DGCP_VIEW,
-)
-async def simulate_bid_committee(
-    opportunity_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-):
-    """Simula evaluación del comité con base en el expediente real."""
-    try:
-        return await _bid_copilot_svc(db, user).simulate_committee(opportunity_id)
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
-
-
-@router.get(
-    "/bid-copilot/executive-dashboard",
-    dependencies=DGCP_VIEW,
-)
-async def get_bid_copilot_executive_dashboard(
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-):
-    """Dashboard gerencial multi-expediente (DEV)."""
-    return await _bid_copilot_svc(db, user).get_executive_dashboard()
-
-
-@router.post(
-    "/opportunities/{opportunity_id}/expediente/validate",
-    dependencies=DGCP_MUTATE,
-)
-async def validate_expediente_final(
-    opportunity_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-):
-    """Validación final IA del expediente antes de exportar."""
-    try:
-        return await _bid_svc(db, user).validate_expediente_final(opportunity_id)
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
-
-
-@router.post(
-    "/opportunities/{opportunity_id}/checklist/{item_id}/assign",
-    dependencies=DGCP_MUTATE,
-)
-async def assign_checklist_item(
-    opportunity_id: uuid.UUID,
-    item_id: uuid.UUID,
-    db: DbSession,
-    user: CurrentUser,
-    _: TenantCtx,
-    assignee: str = Query(..., min_length=1),
-    due_date: date | None = None,
-):
-    try:
-        return await _bid_svc(db, user).assign_checklist_item(
-            opportunity_id,
-            item_id,
-            assignee=assignee,
-            due_date=due_date,
-        )
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc)) from exc
 
 
 @router.get(

@@ -109,7 +109,7 @@ async def get_asset_file(
     return Response(
         content=data,
         media_type=mime,
-        headers={"Content-Disposition": build_content_disposition(filename)},
+        headers={"Content-Disposition": build_content_disposition("attachment", filename)},
     )
 
 
@@ -134,5 +134,5 @@ async def get_asset_file_by_name(
     return Response(
         content=data,
         media_type=mime,
-        headers={"Content-Disposition": build_content_disposition(path.name)},
+        headers={"Content-Disposition": build_content_disposition("attachment", path.name)},
     )

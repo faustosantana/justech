@@ -1650,7 +1650,7 @@ async def download_bid_package(
     return Response(
         content=content,
         media_type="application/zip",
-        headers={"Content-Disposition": build_content_disposition("attachment", filename)},
+        headers={"Content-Disposition": f'attachment; filename="{filename}"'},
     )
 
 
@@ -1754,7 +1754,7 @@ async def download_real_expediente_report(
     return Response(
         content=data,
         media_type="application/pdf",
-        headers={"Content-Disposition": build_content_disposition("attachment", "reporte_preparacion.pdf")},
+        headers={"Content-Disposition": build_content_disposition("reporte_preparacion.pdf")},
     )
 
 
@@ -1775,7 +1775,7 @@ async def download_real_expediente_zip(
     return Response(
         content=content,
         media_type="application/zip",
-        headers={"Content-Disposition": build_content_disposition("attachment", filename)},
+        headers={"Content-Disposition": build_content_disposition(filename)},
     )
 
 
@@ -1933,7 +1933,7 @@ async def download_finalization_pdf(
     return Response(
         content=data,
         media_type=mime,
-        headers={"Content-Disposition": build_content_disposition("attachment", filename)},
+        headers={"Content-Disposition": build_content_disposition(filename)},
     )
 
 

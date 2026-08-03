@@ -1,0 +1,120 @@
+{
+  "items": [
+    {
+      "id": "579cba4d-8aa7-45c9-a972-23a6e3ef686a",
+      "tenant_id": "a1787712-9913-4797-8255-6cdc5b65dc10",
+      "code": "INAIPI-DAF-CM-2026-0024",
+      "ocid": "ocds-6550wx-INAIPI-DAF-CM-2026-0024",
+      "institution": "Instituto Nacional de Atención Integral a la Primera Infancia",
+      "title": "Contratación de Servicios Profesionales para Automatización de Central Telefónica del INAIPI, Dirigido a Mipymes",
+      "amount": "1210000.00",
+      "currency": "DOP",
+      "probability": 100,
+      "score": 94,
+      "status": "detected",
+      "priority": "critical",
+      "company": "justech",
+      "confidence_score": 88,
+      "classification_reason": "Scoring: Justech SRL (puntuación 44.0, margen 34.0; \\btecnolog[ií]a\\b, \\bautomatiz, \\bautomatiz)",
+      "dgcp_status": "Proceso publicado",
+      "modalidad": "Contratación Menor",
+      "objeto_proceso": "Servicios",
+      "deadline": "2026-08-07",
+      "description": "Contratación de Servicios Profesionales para Automatización de Central Telefónica del INAIPI, Dirigido a Mipymes",
+      "source_url": "https://comunidad.comprasdominicana.gob.do//Public/Tendering/OpportunityDetail/Index?noticeUID=DO1.NTC.1750141",
+      "full_info": {
+        "url": "https://comunidad.comprasdominicana.gob.do//Public/Tendering/OpportunityDetail/Index?noticeUID=DO1.NTC.1750141",
+        "extra": {
+          "es_snip": "No",
+          "codigo_snip": "N/A",
+          "compra_conjunta": "No",
+          "marco_decreto_3122": "No",
+          "adquisicion_planeada": "Si",
+          "decreto_presidencial": "No",
+          "justificacion_no_pacc": "Adquisicion planeada",
+          "resolucion_maxima_autoridad": "No",
+          "organismo_financiero_externo": "No",
+          "numero_proveedores_notificados": "7953"
+        },
+        "divisa": "DOP",
+        "titulo": "Contratación de Servicios Profesionales para Automatización de Central Telefónica del INAIPI, Dirigido a Mipymes",
+        "modalidad": "Contratación Menor",
+        "descripcion": "Contratación de Servicios Profesionales para Automatización de Central Telefónica del INAIPI, Dirigido a Mipymes",
+        "compra_verde": "No",
+        "unidad_compra": "Instituto Nacional de Atención Integral a la Primera Infancia",
+        "codigo_proceso": "INAIPI-DAF-CM-2026-0024",
+        "estado_proceso": "Proceso publicado",
+        "fecha_enmienda": "2026-08-06T09:45:00Z",
+        "monto_estimado": 1210000.0,
+        "objeto_proceso": "Servicios",
+        "tipo_excepcion": "Proceso ordinario",
+        "area_requiriente": "Direccion de Tecnologia",
+        "dirigido_mipymes": "Si",
+        "duracion_contrato": "6dias",
+        "fecha_publicacion": "2026-07-31T16:03:01.860000Z",
+        "fecha_suscripcion": "2026-08-25T17:00:00Z",
+        "subobjeto_proceso": "Servicios comunes y estandarizados",
+        "proceso_lotificado": "No",
+        "codigo_unidad_compra": 946,
+        "fecha_apertura_ofertas": "2026-08-07T13:00:00Z",
+        "dirigido_mipymes_mujeres": "No",
+        "fecha_estimada_adjudicacion": "2026-08-17T17:00:00Z",
+        "fecha_fin_recepcion_ofertas": "2026-08-07T11:00:00Z",
+        "fecha_habilitacion_oferente": "2026-08-18T20:00:00Z"
+      },
+      "similar_history": [],
+      "risks": [],
+      "ai_recommendations": [
+        "Modalidad accesible — evaluar participación directa",
+        "Proceso dirigido a MIPYMES — ventaja competitiva potencial"
+      ],
+      "suggested_action": "licitar",
+      "jaios_intelligence": {},
+      "justech_potential_amount": "423500.00",
+      "needs_review": false,
+      "funnel_stage": "nuevas",
+      "funnel_stage_label": "Nuevas",
+      "status_label": "Nueva",
+      "next_recommended_action": "Revise el proceso y marque interés si desea participar.",
+      "primary_action": "marcar_interes",
+      "available_actions": [
+        "descartar",
+        "marcar_interes"
+      ],
+      "responsible_name": null,
+      "synced_at": "2026-08-03T02:54:36.734709Z",
+      "created_at": "2026-08-03T02:54:33.234768Z",
+      "updated_at": "2026-08-03T02:54:33.234768Z"
+    }
+  ],
+  "summary": {
+    "total_opportunities": 3,
+    "total_potential_amount": "1929962.00",
+    "by_status": {
+      "detected": 3
+    },
+    "by_company": {
+      "justech": 3
+    },
+    "by_priority": {
+      "critical": 1,
+      "high": 2
+    },
+    "amount_by_company": {
+      "justech": "1929962.00"
+    },
+    "to_bid": 0,
+    "to_review": 0,
+    "discarded": 0,
+    "won": 0,
+    "lost": 0,
+    "presentation": {
+      "sin_generar": 0,
+      "expediente_generado": 0,
+      "paquete_preparado": 0,
+      "listo_para_subir": 0,
+      "requiere_actualizacion": 0
+    }
+  },
+  "total": 3
+}

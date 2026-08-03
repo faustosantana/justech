@@ -1,0 +1,28 @@
+{
+  "opportunity_id": "15090dc8-c90e-41cd-a86a-77903a5b4a0a",
+  "process_document": {
+    "id": "c31d95b3-0dfd-4b1a-a215-b7d926da58ab",
+    "title": "e2e anexo prueba",
+    "doc_role": "anexo",
+    "priority": "media",
+    "format": "pdf",
+    "source_type": "process_file",
+    "source_url": null,
+    "source_label": "Upload manual",
+    "ingestion_status": "error",
+    "display_status": "Error de lectura",
+    "text_extraction_status": "Error de lectura",
+    "has_text": false,
+    "is_portal_link": null,
+    "is_downloadable": true,
+    "document_id": null,
+    "storage_uri": "DGCP/PROCURADURIA-DAF-CM-2026-0117/anexo_e2e_anexo_prueba.pdf",
+    "file_size_bytes": 68,
+    "portal_document_id": null,
+    "published_at": "2026-08-03T03:09:54.054614+00:00",
+    "original_filename": "e2e_anexo_prueba.pdf"
+  },
+  "text_extracted": false,
+  "text_length": 0,
+  "message": "Archivo guardado pero no se extrajo texto. Verifique que el PDF tenga texto seleccionable."
+}

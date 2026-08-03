@@ -2,17 +2,22 @@
 
 from __future__ import annotations
 
+import json
 import uuid
+import zipfile
 from datetime import date
 from decimal import Decimal
+from io import BytesIO
 
 from tests.dgcp_test_helpers import analyze_with_interest
 
 import pytest
 from httpx import ASGITransport, AsyncClient
 
+from app.config import settings
 from app.main import app
 from app.models.dgcp_opportunity import DGCPOpportunity
+from app.services.dgcp_expediente_service import DGCPExpedienteService, EXPEDIENTE_FOLDERS
 from app.services.dgcp_requirements_extractor import DGCPRequirementsExtractor
 
 
@@ -127,13 +132,16 @@ async def test_dgcp_expediente_api_flow():
         assert licitar.status_code == 200, licitar.text
 
         prepare = await client.post(
-            f"/api/v1/dgcp/opportunities/{opp_id}/bid-package/prepare",
+            f"/api/v1/dgcp/opportunities/{opp_id}/bid-package/prepare?company_key=just_office",
             headers=headers,
         )
         assert prepare.status_code == 200, prepare.text
         manifest = prepare.json()["manifest"]
         assert manifest.get("opportunity_code")
         assert manifest.get("preparation_pct") is not None
+        assert manifest.get("company_key") == "just_office"
+        assert "00_Informacion_General" in (manifest.get("sections") or [])
+        assert "12_Revision" in (manifest.get("sections") or [])
 
         status = await client.get(
             f"/api/v1/dgcp/opportunities/{opp_id}/bid-package/status",
@@ -148,6 +156,7 @@ async def test_dgcp_expediente_api_flow():
         )
         assert download.status_code == 200
         assert download.headers.get("content-type", "").startswith("application/zip")
+        assert "filename*=UTF-8''" in download.headers.get("content-disposition", "")
 
         user_input = await client.post(
             f"/api/v1/dgcp/opportunities/{opp_id}/bid-package/user-input",
@@ -155,6 +164,79 @@ async def test_dgcp_expediente_api_flow():
             json={"fabricante": "Dell", "monto": "RD$250,000"},
         )
         assert user_input.status_code == 200
+
+
+@pytest.mark.asyncio
+async def test_prepare_writes_expected_expediente_artifacts(tmp_path, monkeypatch):
+    monkeypatch.setattr(settings, "expediente_storage_path", str(tmp_path))
+
+    service = DGCPExpedienteService(db=None, tenant_id=uuid.uuid4())
+
+    class _NoopSource:
+        @staticmethod
+        def is_available() -> bool:
+            return False
+
+    service.source = _NoopSource()
+    opp = _sample_opportunity()
+    opp.code = "PROC-EXP-001"
+    opp.company = "just_office"
+    checklist = [
+        {
+            "id": str(uuid.uuid4()),
+            "requirement_key": "rpe",
+            "requirement": "RPE vigente",
+            "tipo": "legal",
+            "mandatory": True,
+            "status": "cumple",
+            "document_title": "rpe_e2e.pdf",
+            "ai_validation": {"cumple": True, "observaciones": "Documento alineado."},
+        },
+        {
+            "id": str(uuid.uuid4()),
+            "requirement_key": "sncc_f033",
+            "requirement": "SNCC F.033",
+            "tipo": "administrativo",
+            "mandatory": True,
+            "status": "requiere_completado",
+            "document_title": "sncc_f033_e2e.pdf",
+        },
+    ]
+    result = await service.prepare(
+        opp,
+        checklist=checklist,
+        matches=[],
+        bid_package={"preparation_pct": 5.9, "found_documents": 1, "pending_documents": 0, "expired_documents": 0},
+        user_input={"_final_validation": {"estado": "No listo"}},
+        generated_forms=[],
+        company_key="just_office",
+    )
+
+    base = tmp_path / str(service.tenant_id) / opp.code
+    assert result.manifest["company_key"] == "just_office"
+    assert result.manifest["sections"] == list(EXPEDIENTE_FOLDERS)
+    for folder in EXPEDIENTE_FOLDERS:
+        assert (base / folder).is_dir()
+    assert (base / "00_Informacion_General" / "indice_expediente.json").is_file()
+    assert (base / "00_Informacion_General" / "indice_expediente.md").is_file()
+    assert (base / "12_Revision" / "validaciones_ia.json").is_file()
+    assert (
+        (base / "12_Revision" / "reporte_estado_expediente.pdf").is_file()
+        or (base / "12_Revision" / "reporte_estado_expediente.txt").is_file()
+    )
+
+    manifest = json.loads((base / "manifest.json").read_text(encoding="utf-8"))
+    assert manifest["company_key"] == "just_office"
+    assert manifest["index"]["total"] == 2
+
+    archive_bytes, filename = service.build_download_archive(str(base))
+    assert filename == "expediente_PROC-EXP-001.zip"
+    with zipfile.ZipFile(BytesIO(archive_bytes)) as zf:
+        names = set(zf.namelist())
+    assert "manifest.json" in names
+    assert "00_Informacion_General/indice_expediente.json" in names
+    assert "00_Informacion_General/indice_expediente.md" in names
+    assert "12_Revision/validaciones_ia.json" in names
 
 
 @pytest.mark.asyncio

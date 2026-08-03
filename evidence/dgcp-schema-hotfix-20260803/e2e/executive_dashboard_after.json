@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-08-03T03:09:54.023489+00:00",
+  "expedientes_activos": 1,
+  "expedientes_listos": 0,
+  "riesgos_criticos": 0,
+  "licitaciones_por_vencer": 1,
+  "valor_economico_total": "883400.00",
+  "probabilidad_promedio_adjudicacion": 100.0,
+  "costos_estimados_restantes": "883400.00",
+  "estado_por_responsable": [
+    {
+      "responsable": "Sin asignar",
+      "pendientes": 0,
+      "completados": 1,
+      "total": 1
+    }
+  ],
+  "notas": [
+    "Costos estimados = valor del proceso × % documental pendiente (proxy operativo, no cotización).",
+    "Probabilidad promedio = media de scores de calidad/expediente de procesos activos."
+  ]
+}

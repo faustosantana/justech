@@ -1,0 +1,29 @@
+{
+  "listo_para_presentar": false,
+  "estado": "No listo",
+  "preparation_pct": 0.0,
+  "faltantes": [],
+  "rechazados": [],
+  "en_revision": [],
+  "gaps": [
+    {
+      "tipo": "progreso",
+      "items": [
+        "Preparación actual 0% (mínimo recomendado 90%)"
+      ]
+    }
+  ],
+  "explicacion": "No listo. progreso: Preparación actual 0% (mínimo recomendado 90%)",
+  "validaciones_ia": [
+    {
+      "requirement_key": "muestra_0",
+      "nombre": "Muestras físicas solicitadas en pliego",
+      "resultado": true,
+      "observaciones": "Documento alineado con el requisito según nombre y categoría.",
+      "riesgo": "bajo — Documento alineado con el requisito según nombre y categoría.",
+      "estado": "Aprobado"
+    }
+  ],
+  "validated_at": "2026-08-03T03:09:54.479018+00:00",
+  "opportunity_code": "PROCURADURIA-DAF-CM-2026-0117"
+}

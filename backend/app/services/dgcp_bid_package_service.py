@@ -3010,6 +3010,40 @@ class DGCPBidPackageService:
             merged_manifest["validation_observaciones"] = validation
             merged_manifest["status_note"] = "generado_con_observaciones"
         pkg.manifest = merged_manifest
+        # Keep bid_package metrics aligned with the export that was just built.
+        bid = dict(pkg.bid_package or {})
+        metrics = merged_manifest.get("metrics") or {}
+        bid["preparation_pct"] = float(
+            metrics.get("preparation_pct", result.preparation_pct) or result.preparation_pct
+        )
+        bid["found_documents"] = int(
+            merged_manifest.get("checklist_summary", {}).get("found")
+            or bid.get("found_documents")
+            or 0
+        )
+        bid["pending_documents"] = int(
+            metrics.get("pending_requirements")
+            or merged_manifest.get("pending_requirements")
+            or bid.get("pending_documents")
+            or 0
+        )
+        bid["total_requirements"] = int(
+            metrics.get("total_requirements")
+            or merged_manifest.get("total_requirements")
+            or bid.get("total_requirements")
+            or 0
+        )
+        bid["compliant_count"] = int(
+            metrics.get("completed_requirements")
+            or merged_manifest.get("completed_requirements")
+            or bid.get("compliant_count")
+            or 0
+        )
+        bid["copied_documents"] = int(result.copied_documents)
+        bid["total_documents"] = int(
+            metrics.get("total_documents") or merged_manifest.get("total_documents") or 0
+        )
+        pkg.bid_package = bid
         from app.services.dgcp_expediente_event_service import DGCPExpedienteEventService
 
         await DGCPExpedienteEventService.publish(

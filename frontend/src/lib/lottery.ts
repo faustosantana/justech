@@ -154,26 +154,6 @@ export interface LotteryChatSendResponse {
     numbers?: Array<string | number> | null;
     analyzing?: string | null;
     relation?: string | null;
-    investigation_id?: string | null;
-    investigation_status?: string | null;
-    investigation_topic?: string | null;
-    tables?: string[] | null;
-    tables_label?: string | null;
-    expires_at?: string | null;
-    started_at?: string | null;
-    analyzing_seconds?: number | null;
-    origin?: string | null;
-    explorer?: Record<string, unknown> | null;
-    breadcrumbs?: Array<{
-      id: string;
-      label: string;
-      number?: string | null;
-      view?: string;
-    }> | null;
-    compare?: string[] | null;
-    favorites?: string[] | null;
-    recent_numbers?: string[] | null;
-    catalog_snapshot?: Record<string, unknown> | null;
     position_scope?: string | null;
     preferred_position?: number | null;
     filters_label?: string | null;

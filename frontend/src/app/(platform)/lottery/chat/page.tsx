@@ -4,6 +4,7 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -16,9 +17,6 @@ import {
 } from "@/components/lottery/ux/analysis-response";
 import { EmptyState } from "@/components/lottery/ux/empty-state";
 import { LoadingAnalysis } from "@/components/lottery/ux/loading-analysis";
-import { ExplorerSidePanel } from "@/components/lottery/explorer/side-panel";
-import { InvestigationBanner } from "@/components/lottery/explorer/investigation-banner";
-import { ExplorerBreadcrumbs } from "@/components/lottery/explorer/breadcrumbs";
 import { AppShell } from "@/components/layout/app-shell";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,16 +29,6 @@ import {
   rememberUxQuery,
   type SavedUxQuery,
 } from "@/lib/lottery-ux-history";
-import {
-  getCachedCard,
-  setCachedCard,
-  setCachedTable,
-  type CompareBoard,
-  type ExplorerAction,
-  type ExplorerNav,
-  type NumberCard,
-  type TableExplorerPayload,
-} from "@/lib/lottery-explorer";
 import {
   canAccessLotteryModule,
   DISCLAIMER,
@@ -102,11 +90,6 @@ export default function LotteryChatPage() {
     "sesiones",
   );
   const [uxHistory, setUxHistory] = useState<SavedUxQuery[]>([]);
-  const [explorerNav, setExplorerNav] = useState<ExplorerNav | null>(null);
-  const [explorerCard, setExplorerCard] = useState<NumberCard | null>(null);
-  const [explorerTable, setExplorerTable] = useState<TableExplorerPayload | null>(null);
-  const [explorerCompare, setExplorerCompare] = useState<CompareBoard | null>(null);
-  const [showExplorer, setShowExplorer] = useState(true);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -171,50 +154,16 @@ export default function LotteryChatPage() {
     setSessionContext(ctx);
     const v4 = (ctx.conversation_v4 as Record<string, unknown>) || {};
     const la = (v4.last_analysis as Record<string, unknown>) || {};
-    const inv = (v4.active_investigation as Record<string, unknown>) || {};
-    const invStatus = String(inv.status || "");
-    const invActive = invStatus === "active";
-    const nums =
-      (invActive ? (inv.subjects as string[]) : null) ||
-      (v4.active_numbers as string[]) ||
-      (ctx.last_numbers as string[]) ||
-      [];
-    const tables = invActive
-      ? (((inv.time_window as Record<string, unknown>) || {}).tables as string[]) || []
-      : [];
+    const nums = (v4.active_numbers as string[]) || (ctx.last_numbers as string[]) || [];
     setActiveContext({
-      number: (nums[0] as string | number) ?? (la.observed as string | number) ?? null,
-      numbers: nums,
-      analyzing: invActive
-        ? String(inv.topic || (nums.length ? `número ${nums[0]}` : ""))
-        : undefined,
-      relation: invActive ? (inv.relation as string) || (v4.active_relation as string) : undefined,
-      investigation_id: invActive ? (inv.investigation_id as string) : undefined,
-      investigation_status: invStatus || undefined,
-      investigation_topic: invActive ? (inv.topic as string) : undefined,
-      tables,
-      tables_label: tables.length ? tables.join(" y ") : undefined,
-      expires_at: invActive ? (inv.expires_at as string) : undefined,
-      started_at: invActive ? (inv.created_at as string) : undefined,
-      origin: ((v4.explorer_nav as Record<string, unknown>) || {}).origin as string | undefined,
-      explorer: (v4.explorer_nav as Record<string, unknown>) || undefined,
-      breadcrumbs: undefined,
-      compare: ((v4.explorer_nav as Record<string, unknown>) || {}).compare as string[] | undefined,
-      favorites: ((v4.explorer_nav as Record<string, unknown>) || {}).favorites as
-        | string[]
-        | undefined,
-      recent_numbers: ((v4.explorer_nav as Record<string, unknown>) || {}).recent_numbers as
-        | string[]
-        | undefined,
+      number: (la.observed as string | number) ?? nums[0] ?? null,
       date: (la.date as string) || (v4.active_date as string) || null,
       lottery: (la.lottery as string) || (ctx.last_lottery as string) || null,
       primary_candidate:
         (la.primary as number) ?? (v4.current_primary_candidate as number) ?? null,
       alternatives: (v4.current_alternatives as number[]) || [],
       summary: (v4.conversation_summary as string) || null,
-    } as ActiveContext);
-    const nav = (v4.explorer_nav as ExplorerNav) || null;
-    if (nav) setExplorerNav(nav);
+    });
   };
 
   const loadMessages = useCallback(async (id: string) => {
@@ -332,26 +281,7 @@ export default function LotteryChatPage() {
       if (textareaRef.current) textareaRef.current.style.height = "auto";
       const res = await apiClient.sendLotteryChatMessage(sid, draft);
       setSuggestions(res.suggestions?.length ? res.suggestions : STARTERS);
-      if (res.active_context) {
-        setActiveContext(res.active_context);
-        const snap = res.active_context.catalog_snapshot as unknown as NumberCard | undefined;
-        if (snap?.number != null) {
-          setCachedCard(snap);
-          setExplorerCard(snap);
-        }
-        if (res.active_context.explorer) {
-          setExplorerNav(res.active_context.explorer as ExplorerNav);
-        }
-        if (res.active_context.compare?.length) {
-          try {
-            const board = await apiClient.compareLotteryExplorer(res.active_context.compare);
-            setExplorerCompare(board as unknown as CompareBoard);
-          } catch {
-            /* ignore */
-          }
-        }
-        setShowExplorer(true);
-      }
+      if (res.active_context) setActiveContext(res.active_context);
       if (res.context) setSessionContext(res.context);
       setMessages((prev) => [
         ...prev,
@@ -422,88 +352,6 @@ export default function LotteryChatPage() {
     await refreshSessions();
   };
 
-  const closeInvestigation = async () => {
-    if (!sessionId) return;
-    try {
-      const res = await apiClient.closeLotteryChatInvestigation(sessionId);
-      if (res.active_context) setActiveContext(res.active_context as ActiveContext);
-      else setActiveContext(null);
-      if (res.context) setSessionContext(res.context);
-      await refreshSessions();
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : "No se pudo cerrar la investigación");
-    }
-  };
-
-  const changeInvestigation = () => {
-    setInput("Ahora analiza el ");
-    textareaRef.current?.focus();
-  };
-
-  const applyExplorerResult = (res: {
-    active_context?: Record<string, unknown>;
-    explorer?: Record<string, unknown>;
-    card?: Record<string, unknown> | null;
-    table?: Record<string, unknown> | null;
-    compare?: Record<string, unknown> | null;
-    context?: Record<string, unknown>;
-  }) => {
-    if (res.active_context) setActiveContext(res.active_context as ActiveContext);
-    if (res.explorer) setExplorerNav(res.explorer as ExplorerNav);
-    if (res.card) {
-      const card = res.card as unknown as NumberCard;
-      setCachedCard(card);
-      setExplorerCard(card);
-    }
-    if (res.table) {
-      const table = res.table as unknown as TableExplorerPayload;
-      setCachedTable(table);
-      setExplorerTable(table);
-    }
-    if (res.compare) setExplorerCompare(res.compare as unknown as CompareBoard);
-    if (res.context) setSessionContext(res.context);
-    setShowExplorer(true);
-  };
-
-  const handleExplorerAction = async (
-    action: ExplorerAction,
-    number?: string,
-    extra?: { crumb_id?: string },
-  ) => {
-    if (!sessionId) {
-      setError("Abre o crea una conversación para explorar.");
-      return;
-    }
-    const n = number != null ? String(number).replace(/\D/g, "") : undefined;
-    const chatFollowUps = new Set([
-      "historico",
-      "coincidencias",
-      "estadisticas",
-      "analizar",
-    ]);
-
-    if (action === "focus" && n) {
-      const cached = getCachedCard(Number(n));
-      if (cached) setExplorerCard(cached);
-    }
-
-    try {
-      const res = await apiClient.navigateLotteryExplorer(sessionId, {
-        action,
-        number: n || null,
-        crumb_id: extra?.crumb_id || null,
-        view: action === "focus" ? "analizar" : action,
-        origin: "click",
-      });
-      applyExplorerResult(res);
-      if (chatFollowUps.has(action) && res.suggested_prompt) {
-        await send(res.suggested_prompt);
-      }
-    } catch (err) {
-      setError(err instanceof ApiError ? err.message : "No se pudo navegar la investigación");
-    }
-  };
-
   const deleteSession = async (id: string) => {
     if (!window.confirm("¿Eliminar esta conversación?")) return;
     await apiClient.deleteLotteryChatSession(id);
@@ -512,10 +360,6 @@ export default function LotteryChatPage() {
       setMessages([]);
       setActiveContext(null);
       setSessionContext(null);
-      setExplorerCard(null);
-      setExplorerNav(null);
-      setExplorerTable(null);
-      setExplorerCompare(null);
     }
     await refreshSessions();
   };
@@ -531,11 +375,32 @@ export default function LotteryChatPage() {
     await refreshSessions();
   };
 
-  const showInvestigation =
-    Boolean(activeContext?.investigation_id) ||
-    Boolean(activeContext?.number) ||
-    Boolean(activeContext?.numbers?.length) ||
-    Boolean(activeContext?.analyzing);
+  const contextLabel = useMemo(() => {
+    if (
+      !activeContext?.number &&
+      !activeContext?.numbers?.length &&
+      !activeContext?.primary_candidate &&
+      !activeContext?.analyzing
+    ) {
+      return null;
+    }
+    const nums = (activeContext.numbers as string[] | undefined) || [];
+    const analyzing =
+      (activeContext.analyzing as string | undefined) ||
+      (nums.length >= 2 ? nums.slice(0, 4).join(" + ") : activeContext.number) ||
+      "—";
+    const dateBit = activeContext.date
+      ? new Date(`${String(activeContext.date).slice(0, 10)}T12:00:00`).toLocaleDateString(
+          "es-DO",
+          { day: "numeric", month: "short", year: "numeric" },
+        )
+      : null;
+    return {
+      analyzing: [analyzing, dateBit].filter(Boolean).join(" · "),
+      filters: (activeContext.filters_label as string | undefined) || null,
+      primary: activeContext.primary_candidate,
+    };
+  }, [activeContext]);
 
   const historyItems =
     historyTab === "favoritas"
@@ -563,7 +428,7 @@ export default function LotteryChatPage() {
         <p className="max-w-xl text-[11px] text-muted-foreground">{DISCLAIMER}</p>
       </div>
 
-      <div className="grid gap-4 pb-6 lg:grid-cols-[240px_minmax(0,1fr)_300px]">
+      <div className="grid gap-4 pb-6 lg:grid-cols-[280px_minmax(0,1fr)]">
         <Card className="h-[min(78vh,820px)] overflow-hidden">
           <CardContent className="flex h-full flex-col gap-2 py-4">
             <Button className="w-full" onClick={() => void startSession()} disabled={loading}>
@@ -699,31 +564,33 @@ export default function LotteryChatPage() {
         </Card>
 
         <div className="flex h-[min(78vh,820px)] flex-col overflow-hidden rounded-2xl border border-border/60 bg-background shadow-sm">
-          {showInvestigation && activeContext && (
-            <InvestigationBanner
-              activeContext={activeContext}
-              onChange={changeInvestigation}
-              onClose={() => void closeInvestigation()}
-              onBack={() => void handleExplorerAction("back")}
-              onAction={(a, n) => void handleExplorerAction(a, n)}
-            />
-          )}
-          {(explorerNav?.breadcrumbs?.length || activeContext?.breadcrumbs?.length) ? (
-            <div className="border-b border-border/40 px-3 py-1.5">
-              <ExplorerBreadcrumbs
-                crumbs={
-                  (activeContext?.breadcrumbs as ExplorerNav["breadcrumbs"]) ||
-                  explorerNav?.breadcrumbs ||
-                  []
-                }
-                canBack={Boolean(explorerNav?.can_back)}
-                canForward={Boolean(explorerNav?.can_forward)}
-                onBack={() => void handleExplorerAction("back")}
-                onForward={() => void handleExplorerAction("forward")}
-                onCrumb={(id) => void handleExplorerAction("breadcrumb", undefined, { crumb_id: id })}
-              />
+          {contextLabel && (
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-muted/15 px-3 py-2 text-[11px]">
+              <div className="space-y-0.5 text-muted-foreground">
+                <p>
+                  <span className="font-medium text-foreground/80">Investigación:</span>{" "}
+                  {contextLabel.analyzing || "—"}
+                </p>
+                {contextLabel.filters && (
+                  <p className="text-[10px] text-muted-foreground/80">{contextLabel.filters}</p>
+                )}
+                {contextLabel.primary != null && (
+                  <p>
+                    <span className="font-medium text-foreground/80">Candidato actual:</span>{" "}
+                    {contextLabel.primary}
+                  </p>
+                )}
+              </div>
+              <Button
+                size="sm"
+                variant="ghost"
+                disabled={!sessionId || loading}
+                onClick={() => void clearContext()}
+              >
+                Limpiar contexto
+              </Button>
             </div>
-          ) : null}
+          )}
 
           {error && (
             <div className="mx-3 mt-2 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800 dark:border-red-900/40 dark:bg-red-950/40 dark:text-red-200">
@@ -739,8 +606,8 @@ export default function LotteryChatPage() {
             >
               {messages.length === 0 && !loading && (
                 <EmptyState
-                  title="Explorador de relaciones numéricas"
-                  body="Analiza un número y navega compañeros, vecinos y tablas con clics. El chat queda como asistente de la investigación."
+                  title="Conversando con un analista de datos"
+                  body="Haz una pregunta en lenguaje natural. Lottery IA interpreta, resume, visualiza y luego te deja explorar."
                   action={
                     <div className="flex flex-wrap justify-center gap-2">
                       {STARTERS.map((s) => (
@@ -773,9 +640,8 @@ export default function LotteryChatPage() {
                         latencyMs={m.latency_ms}
                         sessionContext={sessionContext}
                         response={m.rawResponse}
-                        showSidePanel={false}
+                        showSidePanel
                         onWorkspaceAction={onWorkspaceAction}
-                        onExplorerAction={(a, n) => void handleExplorerAction(a, n)}
                       />
                     </div>
                   )}
@@ -888,39 +754,6 @@ export default function LotteryChatPage() {
             </form>
           </div>
         </div>
-
-        <Card className="hidden h-[min(78vh,820px)] overflow-hidden lg:block">
-          <CardContent className="h-full p-0">
-            <div className="flex items-center justify-between border-b border-border/50 px-3 py-2">
-              <p className="text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
-                Explorador
-              </p>
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                className="h-7 text-[11px]"
-                onClick={() => setShowExplorer((v) => !v)}
-              >
-                {showExplorer ? "Ocultar" : "Mostrar"}
-              </Button>
-            </div>
-            {showExplorer ? (
-              <ExplorerSidePanel
-                activeContext={activeContext}
-                nav={explorerNav}
-                card={explorerCard}
-                table={explorerTable}
-                compare={explorerCompare}
-                onAction={(a, n, extra) => void handleExplorerAction(a, n, extra)}
-              />
-            ) : (
-              <p className="p-3 text-xs text-muted-foreground">
-                Panel oculto. Actívalo para navegar números y tablas.
-              </p>
-            )}
-          </CardContent>
-        </Card>
       </div>
     </AppShell>
   );

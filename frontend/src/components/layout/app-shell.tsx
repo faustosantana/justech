@@ -14,8 +14,9 @@ import { resolveActiveApp } from "@/lib/app-navigation";
 import { useCompanyContext } from "@/lib/company-context";
 import { useAssistantContext } from "@/lib/assistant-context";
 import { assistantContextLabel } from "@/lib/assistant-module-label";
-import { getAccessToken } from "@/lib/auth";
+import { getAccessToken, getUserRole } from "@/lib/auth";
 import { LotteryClientRouteGuard } from "@/components/lottery/lottery-client-route-guard";
+import { canAccessLotteryModule } from "@/lib/lottery";
 import { cn } from "@/lib/utils";
 
 export interface AppShellProps {
@@ -48,7 +49,12 @@ function AppShellInner({
 
   const isLauncher = variant === "launcher" || pathname === "/dashboard";
   const activeApp = isLauncher ? null : resolveActiveApp(pathname, search);
-  const useApplicationChrome = Boolean(activeApp) && !pathname.startsWith("/configuracion");
+  const lotteryDenied =
+    pathname.startsWith("/lottery") &&
+    access != null &&
+    !canAccessLotteryModule(getUserRole());
+  const useApplicationChrome =
+    Boolean(activeApp) && !pathname.startsWith("/configuracion") && !lotteryDenied;
 
   useEffect(() => {
     if (!getAccessToken()) {

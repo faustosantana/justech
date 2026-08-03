@@ -1,7 +1,10 @@
 import type { PlatformAccess } from "@/lib/admin";
-import type { JaiosApp } from "@/lib/app-registry";
+import { APP_BY_ID, type JaiosApp } from "@/lib/app-registry";
 
 export const MUTATE_DENIED_MESSAGE = "No tienes permiso para realizar esta acción.";
+export const MODULE_FORBIDDEN_TITLE = "403 — Acceso denegado";
+export const MODULE_FORBIDDEN_DESCRIPTION =
+  "No tienes acceso a este módulo. Si crees que es un error, contacta al administrador.";
 
 /** Mapa app ID → clave en allowed_modules (cuando difiere del id). */
 export const APP_MODULE_KEY: Record<string, string> = {
@@ -22,9 +25,21 @@ function passesAllowedModules(appId: string, access: PlatformAccess): boolean {
   if (access.allowed_modules == null || access.allowed_modules.length === 0) {
     return true;
   }
+  // Sentinel used by "usuario sin módulos" — deny every app.
+  if (access.allowed_modules.includes("__none__")) {
+    return false;
+  }
   const allowed = new Set(access.allowed_modules);
   const moduleKey = APP_MODULE_KEY[appId] ?? appId;
   return allowed.has(appId) || allowed.has(moduleKey);
+}
+
+/** True when the signed-in user may open the given app (launcher + deep links). */
+export function canAccessApp(appId: string, access: PlatformAccess | null): boolean {
+  if (!access) return false;
+  const app = APP_BY_ID[appId];
+  if (!app) return false;
+  return passesAllowedModules(appId, access) && canViewAppByRole(app, access);
 }
 
 function canViewAppByRole(app: JaiosApp, access: PlatformAccess): boolean {

@@ -162,6 +162,32 @@ export default function LotteryHomePage() {
   const pending = Number(r.pendientes_sincronizar || 0)
   const today = todayIso()
 
+  if (!getAccessToken()) {
+    return (
+      <AppShell variant="launcher" hideHeaderSearch>
+        <p className="p-6 text-sm text-muted-foreground">Verificando sesión…</p>
+      </AppShell>
+    )
+  }
+
+  if (!canAccessLotteryModule(getUserRole())) {
+    return (
+      <AppShell variant="launcher" hideHeaderSearch>
+        <div className="mx-auto flex max-w-lg flex-col gap-4 p-6">
+          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border/60 bg-muted/20 px-6 py-16 text-center">
+            <p className="text-sm font-medium">403 — Acceso denegado</p>
+            <p className="mt-1 max-w-md text-sm text-muted-foreground">
+              No tienes acceso a este módulo. Si crees que es un error, contacta al administrador.
+            </p>
+          </div>
+          <Link href="/dashboard" className="text-center text-sm text-primary hover:underline">
+            Volver al dashboard
+          </Link>
+        </div>
+      </AppShell>
+    )
+  }
+
   return (
     <AppShell>
       <div className="mx-auto max-w-6xl space-y-6 p-6">

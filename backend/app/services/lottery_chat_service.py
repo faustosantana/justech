@@ -136,9 +136,75 @@ class LotteryChatService:
         return session
 
     async def delete_session(self, session_id: uuid.UUID) -> None:
-        session = await self.get_session(session_id)
+        session = await self.db.get(LotteryChatSession, session_id)
+        if not session:
+            raise not_found("Sesión no encontrada")
+        if session.tenant_id != self.tenant_id or session.user_id != self.user_id:
+            raise forbidden("No autorizado para eliminar esta conversación")
         await self.db.delete(session)
         await self.db.flush()
+
+    async def bulk_delete_sessions(
+        self, session_ids: list[uuid.UUID]
+    ) -> dict[str, Any]:
+        """Delete owned sessions only. Partial failures reported via failed_ids."""
+        deleted = 0
+        failed: list[str] = []
+        # Deduplicate while preserving order
+        seen: set[uuid.UUID] = set()
+        ordered: list[uuid.UUID] = []
+        for sid in session_ids:
+            if sid in seen:
+                continue
+            seen.add(sid)
+            ordered.append(sid)
+
+        for sid in ordered:
+            session = await self.db.get(LotteryChatSession, sid)
+            if not session:
+                failed.append(str(sid))
+                continue
+            if session.tenant_id != self.tenant_id or session.user_id != self.user_id:
+                failed.append(str(sid))
+                continue
+            await self.db.delete(session)
+            deleted += 1
+
+        await self.db.flush()
+        return {
+            "deleted_count": deleted,
+            "failed_ids": failed,
+            "success": len(failed) == 0 and deleted > 0,
+        }
+
+    async def delete_all_sessions(self) -> dict[str, Any]:
+        """Delete all chat sessions (and cascaded messages) for current user+tenant."""
+        q = await self.db.execute(
+            select(LotteryChatSession).where(
+                LotteryChatSession.tenant_id == self.tenant_id,
+                LotteryChatSession.user_id == self.user_id,
+            )
+        )
+        sessions = list(q.scalars().all())
+        for session in sessions:
+            await self.db.delete(session)
+        await self.db.flush()
+        return {
+            "deleted_count": len(sessions),
+            "failed_ids": [],
+            "success": True,
+        }
+
+    async def count_sessions(self) -> int:
+        q = await self.db.execute(
+            select(func.count())
+            .select_from(LotteryChatSession)
+            .where(
+                LotteryChatSession.tenant_id == self.tenant_id,
+                LotteryChatSession.user_id == self.user_id,
+            )
+        )
+        return int(q.scalar_one() or 0)
 
     async def rename_session(self, session_id: uuid.UUID, title: str) -> LotteryChatSession:
         session = await self.get_session(session_id)

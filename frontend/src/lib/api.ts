@@ -2061,6 +2061,20 @@ export const apiClient = {
   deleteLotteryChatSession: (sessionId: string) =>
     request<{ ok: boolean }>(`/lottery/chat/sessions/${sessionId}`, { method: "DELETE" }, true),
 
+  bulkDeleteLotteryChatSessions: (sessionIds: string[]) =>
+    request<{ deleted_count: number; failed_ids: string[]; success: boolean }>(
+      "/lottery/chat/sessions/bulk-delete",
+      { method: "POST", body: JSON.stringify({ session_ids: sessionIds }) },
+      true,
+    ),
+
+  deleteAllLotteryChatSessions: () =>
+    request<{ deleted_count: number; failed_ids: string[]; success: boolean }>(
+      "/lottery/chat/sessions/delete-all",
+      { method: "POST" },
+      true,
+    ),
+
   renameLotteryChatSession: (sessionId: string, title: string) =>
     request<LotteryChatSession>(`/lottery/chat/sessions/${sessionId}`, {
       method: "PATCH",

@@ -36,6 +36,7 @@ import {
   type LotteryChatSendResponse,
   type LotteryChatSession,
 } from "@/lib/lottery";
+import { cn } from "@/lib/utils";
 
 type UiMessage = {
   id: string;
@@ -82,6 +83,7 @@ export default function LotteryChatPage() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [showJump, setShowJump] = useState(false);
   const [stickToBottom, setStickToBottom] = useState(true);
   const [renamingId, setRenamingId] = useState<string | null>(null);
@@ -90,12 +92,31 @@ export default function LotteryChatPage() {
     "sesiones",
   );
   const [uxHistory, setUxHistory] = useState<SavedUxQuery[]>([]);
+  const [historyOpen, setHistoryOpen] = useState(false);
+  const [selectionMode, setSelectionMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [deleting, setDeleting] = useState(false);
+  const [confirmBulk, setConfirmBulk] = useState(false);
+  const [confirmDeleteAll, setConfirmDeleteAll] = useState(false);
+  const [deleteAllPhrase, setDeleteAllPhrase] = useState("");
+  const [moreOpen, setMoreOpen] = useState(false);
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const pendingScrollRef = useRef(false);
   const lastUserQueryRef = useRef("");
+
+  const flashSuccess = useCallback((msg: string) => {
+    setSuccess(msg);
+    window.setTimeout(() => setSuccess(null), 3200);
+  }, []);
+
+  const clearSelection = useCallback(() => {
+    setSelectedIds(new Set());
+    setSelectionMode(false);
+    setConfirmBulk(false);
+  }, []);
 
   const refreshUxHistory = useCallback(() => {
     setUxHistory(listUxHistory());
@@ -144,6 +165,14 @@ export default function LotteryChatPage() {
     return res.items;
   }, []);
 
+  const resetOpenConversation = useCallback(() => {
+    setSessionId(null);
+    setMessages([]);
+    setActiveContext(null);
+    setSessionContext(null);
+    setSuggestions(STARTERS);
+  }, []);
+
   const applyContextFromSession = (s: LotteryChatSession | undefined) => {
     if (!s) {
       setActiveContext(null);
@@ -176,7 +205,6 @@ export default function LotteryChatPage() {
       tool_trace: (m.tool_payload?.tool_trace as UiMessage["tool_trace"]) || [],
       latency_ms: (m.tool_payload?.latency_ms as number | undefined) ?? null,
     }));
-    // attach preceding user query to assistant messages for meta panel
     let lastQ = "";
     setMessages(
       items.map((m) => {
@@ -204,6 +232,7 @@ export default function LotteryChatPage() {
       setSessionContext(null);
       await refreshSessions();
       pendingScrollRef.current = true;
+      setHistoryOpen(false);
     } catch (err) {
       setError(err instanceof ApiError ? err.message : "No se pudo crear la sesión");
     } finally {
@@ -331,10 +360,20 @@ export default function LotteryChatPage() {
   };
 
   const onSelectSession = async (id: string) => {
+    if (selectionMode) {
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        return next;
+      });
+      return;
+    }
     setSessionId(id);
     setError(null);
     setStickToBottom(true);
     pendingScrollRef.current = true;
+    setHistoryOpen(false);
     try {
       const s = sessions.find((x) => x.id === id) || (await apiClient.getLotteryChatSession(id));
       applyContextFromSession(s);
@@ -354,14 +393,82 @@ export default function LotteryChatPage() {
 
   const deleteSession = async (id: string) => {
     if (!window.confirm("¿Eliminar esta conversación?")) return;
-    await apiClient.deleteLotteryChatSession(id);
-    if (sessionId === id) {
-      setSessionId(null);
-      setMessages([]);
-      setActiveContext(null);
-      setSessionContext(null);
+    setDeleting(true);
+    setError(null);
+    try {
+      await apiClient.deleteLotteryChatSession(id);
+      if (sessionId === id) resetOpenConversation();
+      await refreshSessions();
+      flashSuccess("Conversación eliminada");
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "No se pudo eliminar");
+    } finally {
+      setDeleting(false);
     }
-    await refreshSessions();
+  };
+
+  const toggleSelectAllVisible = () => {
+    const visibleIds = sessions.map((s) => s.id);
+    const allSelected =
+      visibleIds.length > 0 && visibleIds.every((id) => selectedIds.has(id));
+    if (allSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(visibleIds));
+      setSelectionMode(true);
+    }
+  };
+
+  const confirmBulkDelete = async () => {
+    const ids = Array.from(selectedIds);
+    if (!ids.length) return;
+    setDeleting(true);
+    setError(null);
+    try {
+      const res = await apiClient.bulkDeleteLotteryChatSessions(ids);
+      if (sessionId && ids.includes(sessionId)) resetOpenConversation();
+      await refreshSessions();
+      clearSelection();
+      if (res.failed_ids.length) {
+        setError(
+          `Eliminadas ${res.deleted_count}. Fallaron ${res.failed_ids.length}: ${res.failed_ids.slice(0, 3).join(", ")}${res.failed_ids.length > 3 ? "…" : ""}`,
+        );
+      } else {
+        flashSuccess(
+          res.deleted_count === 1
+            ? "1 conversación eliminada"
+            : `${res.deleted_count} conversaciones eliminadas`,
+        );
+      }
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Error al eliminar seleccionadas");
+    } finally {
+      setDeleting(false);
+      setConfirmBulk(false);
+    }
+  };
+
+  const confirmDeleteAllSessions = async () => {
+    if (deleteAllPhrase.trim().toUpperCase() !== "ELIMINAR") return;
+    setDeleting(true);
+    setError(null);
+    try {
+      const res = await apiClient.deleteAllLotteryChatSessions();
+      resetOpenConversation();
+      await refreshSessions();
+      clearSelection();
+      setConfirmDeleteAll(false);
+      setDeleteAllPhrase("");
+      flashSuccess(
+        res.deleted_count === 0
+          ? "No había conversaciones"
+          : `Se eliminaron ${res.deleted_count} conversaciones`,
+      );
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : "Error al eliminar todas");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const saveRename = async (id: string) => {
@@ -411,96 +518,190 @@ export default function LotteryChatPage() {
           ? uxHistory
           : null;
 
-  return (
-    <AppShell title="Lottery IA" description="Plataforma de análisis inteligente">
-      <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-sm">
-        <div className="flex flex-wrap gap-2">
-          <Link className="text-primary underline-offset-2 hover:underline" href="/lottery">
-            Inicio
-          </Link>
-          <Link className="text-primary underline-offset-2 hover:underline" href="/lottery/search">
-            Consulta
-          </Link>
-          <Link className="text-primary underline-offset-2 hover:underline" href="/lottery/analyze">
-            Analizar
-          </Link>
+  const selectedCount = selectedIds.size;
+  const allVisibleSelected =
+    sessions.length > 0 && sessions.every((s) => selectedIds.has(s.id));
+
+  const historyPanel = (
+    <Card className="flex h-full min-h-0 flex-col overflow-hidden border-border/60">
+      <CardContent className="flex h-full min-h-0 flex-col gap-2 py-4">
+        <div className="flex items-center gap-2">
+          <Button className="min-w-0 flex-1" onClick={() => void startSession()} disabled={loading || deleting}>
+            Nueva conversación
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            className="lg:hidden"
+            onClick={() => setHistoryOpen(false)}
+            aria-label="Cerrar conversaciones"
+          >
+            Cerrar
+          </Button>
         </div>
-        <p className="max-w-xl text-[11px] text-muted-foreground">{DISCLAIMER}</p>
-      </div>
 
-      <div className="grid gap-4 pb-6 lg:grid-cols-[280px_minmax(0,1fr)]">
-        <Card className="h-[min(78vh,820px)] overflow-hidden">
-          <CardContent className="flex h-full flex-col gap-2 py-4">
-            <Button className="w-full" onClick={() => void startSession()} disabled={loading}>
-              Nueva conversación
-            </Button>
+        <div className="flex flex-wrap gap-1">
+          {(
+            [
+              ["sesiones", "Sesiones"],
+              ["recientes", "Recientes"],
+              ["favoritas", "Favoritas"],
+              ["compartidas", "Compartidas"],
+            ] as const
+          ).map(([id, label]) => (
+            <button
+              key={id}
+              type="button"
+              className={cn(
+                "rounded-full px-2.5 py-1 text-[11px]",
+                historyTab === id
+                  ? "bg-primary/15 font-medium text-primary"
+                  : "text-muted-foreground hover:bg-muted",
+              )}
+              onClick={() => {
+                setHistoryTab(id);
+                refreshUxHistory();
+                if (id !== "sesiones") clearSelection();
+              }}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
 
-            <div className="flex flex-wrap gap-1">
-              {(
-                [
-                  ["sesiones", "Sesiones"],
-                  ["recientes", "Recientes"],
-                  ["favoritas", "Favoritas"],
-                  ["compartidas", "Compartidas"],
-                ] as const
-              ).map(([id, label]) => (
-                <button
-                  key={id}
+        {historyTab === "sesiones" && (
+          <div className="space-y-2 rounded-xl border border-border/50 bg-muted/20 p-2">
+            {!selectionMode ? (
+              <div className="flex flex-wrap gap-2">
+                <Button
                   type="button"
-                  className={`rounded-full px-2.5 py-1 text-[11px] ${
-                    historyTab === id
-                      ? "bg-primary/15 font-medium text-primary"
-                      : "text-muted-foreground hover:bg-muted"
-                  }`}
+                  size="sm"
+                  variant="outline"
+                  className="h-8 text-[11px]"
+                  disabled={!sessions.length || deleting}
+                  onClick={() => setSelectionMode(true)}
+                >
+                  Seleccionar
+                </Button>
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  className="h-8 text-[11px] text-destructive"
+                  disabled={!sessions.length || deleting}
                   onClick={() => {
-                    setHistoryTab(id);
-                    refreshUxHistory();
+                    setConfirmDeleteAll(true);
+                    setDeleteAllPhrase("");
                   }}
                 >
-                  {label}
-                </button>
-              ))}
-            </div>
-
-            <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pt-1">
-              {historyTab === "sesiones" &&
-                sessions.map((s) => (
-                  <div
-                    key={s.id}
-                    className={`rounded-xl px-2 py-1.5 text-left text-xs hover:bg-muted ${
-                      sessionId === s.id ? "bg-muted font-medium" : ""
-                    }`}
+                  Eliminar todas
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-2" data-testid="selection-bar">
+                <label className="flex items-center gap-2 text-[11px]">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 accent-primary"
+                    checked={allVisibleSelected}
+                    onChange={toggleSelectAllVisible}
+                    aria-label="Seleccionar todas las visibles"
+                  />
+                  <span>Seleccionar todas (solo visibles)</span>
+                </label>
+                <p className="text-[11px] text-muted-foreground">
+                  {selectedCount} seleccionada{selectedCount === 1 ? "" : "s"}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    className="h-8 text-[11px]"
+                    disabled={deleting}
+                    onClick={clearSelection}
                   >
-                    {renamingId === s.id ? (
-                      <form
-                        className="flex gap-1"
-                        onSubmit={(e) => {
-                          e.preventDefault();
-                          void saveRename(s.id);
+                    Cancelar
+                  </Button>
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="destructive"
+                    className="h-8 text-[11px]"
+                    disabled={!selectedCount || deleting}
+                    onClick={() => setConfirmBulk(true)}
+                  >
+                    Eliminar seleccionadas
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pt-1">
+          {historyTab === "sesiones" && sessions.length === 0 && (
+            <p className="px-1 py-4 text-xs text-muted-foreground">Sin conversaciones.</p>
+          )}
+          {historyTab === "sesiones" &&
+            sessions.map((s) => (
+              <div
+                key={s.id}
+                className={cn(
+                  "rounded-xl px-2 py-1.5 text-left text-xs hover:bg-muted",
+                  sessionId === s.id && !selectionMode ? "bg-muted font-medium" : "",
+                  selectedIds.has(s.id) ? "ring-1 ring-primary/40 bg-primary/5" : "",
+                )}
+              >
+                {renamingId === s.id ? (
+                  <form
+                    className="flex gap-1"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      void saveRename(s.id);
+                    }}
+                  >
+                    <input
+                      className="min-w-0 flex-1 rounded border bg-background px-1 py-0.5"
+                      value={renameValue}
+                      onChange={(e) => setRenameValue(e.target.value)}
+                      autoFocus
+                    />
+                    <button type="submit" className="text-[10px] text-primary">
+                      OK
+                    </button>
+                  </form>
+                ) : (
+                  <div className="flex items-start gap-2">
+                    {selectionMode && (
+                      <input
+                        type="checkbox"
+                        className="mt-0.5 h-4 w-4 shrink-0 accent-primary"
+                        checked={selectedIds.has(s.id)}
+                        onChange={() => {
+                          setSelectedIds((prev) => {
+                            const next = new Set(prev);
+                            if (next.has(s.id)) next.delete(s.id);
+                            else next.add(s.id);
+                            return next;
+                          });
                         }}
+                        aria-label={`Seleccionar ${s.title || "conversación"}`}
+                        onClick={(e) => e.stopPropagation()}
+                      />
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <button
+                        type="button"
+                        className="block w-full truncate text-left"
+                        onClick={() => void onSelectSession(s.id)}
                       >
-                        <input
-                          className="min-w-0 flex-1 rounded border bg-background px-1 py-0.5"
-                          value={renameValue}
-                          onChange={(e) => setRenameValue(e.target.value)}
-                          autoFocus
-                        />
-                        <button type="submit" className="text-[10px] text-primary">
-                          OK
-                        </button>
-                      </form>
-                    ) : (
-                      <>
-                        <button
-                          type="button"
-                          className="block w-full truncate text-left"
-                          onClick={() => void onSelectSession(s.id)}
-                        >
-                          {s.title || "Sin título"}
-                        </button>
-                        <p className="truncate text-[10px] text-muted-foreground">
-                          {formatSessionMeta(s)}
-                        </p>
+                        {s.title || "Sin título"}
+                      </button>
+                      <p className="truncate text-[10px] text-muted-foreground">
+                        {formatSessionMeta(s)}
+                      </p>
+                      {!selectionMode && (
                         <div className="mt-0.5 flex gap-2 text-[10px]">
                           <button
                             type="button"
@@ -520,59 +721,152 @@ export default function LotteryChatPage() {
                             Eliminar
                           </button>
                         </div>
-                      </>
-                    )}
-                  </div>
-                ))}
-
-              {historyItems &&
-                (historyItems.length === 0 ? (
-                  <p className="px-1 py-4 text-xs text-muted-foreground">Sin consultas aún.</p>
-                ) : (
-                  historyItems.map((h) => (
-                    <div key={h.id} className="rounded-xl px-2 py-1.5 text-xs hover:bg-muted">
-                      <button
-                        type="button"
-                        className="block w-full truncate text-left font-medium"
-                        onClick={() => void send(h.text)}
-                        title="Repetir consulta"
-                      >
-                        {h.text}
-                      </button>
-                      <p className="text-[10px] text-muted-foreground">
-                        {new Date(h.lastRunAt).toLocaleString("es-DO", {
-                          day: "2-digit",
-                          month: "short",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                        {h.favorite ? " · ★" : ""}
-                        {h.shared ? " · compartida" : ""}
-                      </p>
-                      <button
-                        type="button"
-                        className="mt-0.5 text-[10px] text-primary"
-                        onClick={() => void send(h.text)}
-                      >
-                        Repetir consulta
-                      </button>
+                      )}
                     </div>
-                  ))
-                ))}
-            </div>
-          </CardContent>
-        </Card>
+                  </div>
+                )}
+              </div>
+            ))}
 
-        <div className="flex h-[min(78vh,820px)] flex-col overflow-hidden rounded-2xl border border-border/60 bg-background shadow-sm">
+          {historyItems &&
+            (historyItems.length === 0 ? (
+              <p className="px-1 py-4 text-xs text-muted-foreground">Sin consultas aún.</p>
+            ) : (
+              historyItems.map((h) => (
+                <div key={h.id} className="rounded-xl px-2 py-1.5 text-xs hover:bg-muted">
+                  <button
+                    type="button"
+                    className="block w-full truncate text-left font-medium"
+                    onClick={() => void send(h.text)}
+                    title="Repetir consulta"
+                  >
+                    {h.text}
+                  </button>
+                  <p className="text-[10px] text-muted-foreground">
+                    {new Date(h.lastRunAt).toLocaleString("es-DO", {
+                      day: "2-digit",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                    {h.favorite ? " · ★" : ""}
+                    {h.shared ? " · compartida" : ""}
+                  </p>
+                  <button
+                    type="button"
+                    className="mt-0.5 text-[10px] text-primary"
+                    onClick={() => void send(h.text)}
+                  >
+                    Repetir consulta
+                  </button>
+                </div>
+              ))
+            ))}
+        </div>
+      </CardContent>
+    </Card>
+  );
+
+  return (
+    <AppShell title="Lottery IA" description="Plataforma de análisis inteligente">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-sm">
+        <div className="flex min-w-0 flex-wrap items-center gap-2">
+          <Link className="shrink-0 text-primary underline-offset-2 hover:underline" href="/lottery">
+            Inicio
+          </Link>
+          <span className="hidden text-muted-foreground sm:inline">/</span>
+          <span className="truncate font-medium">Chat inteligente</span>
+        </div>
+        <p className="hidden max-w-xl text-[11px] text-muted-foreground md:block">{DISCLAIMER}</p>
+      </div>
+
+      <div className="relative flex min-h-0 flex-col gap-3 overflow-x-hidden pb-[max(1.5rem,env(safe-area-inset-bottom))] lg:grid lg:grid-cols-[minmax(240px,280px)_minmax(0,1fr)] lg:gap-4">
+        {/* Desktop / laptop sidebar */}
+        <div className="hidden h-[min(78vh,820px)] lg:block">{historyPanel}</div>
+
+        {/* Mobile / tablet drawer */}
+        {historyOpen && (
+          <div className="fixed inset-0 z-40 lg:hidden" role="dialog" aria-modal="true">
+            <button
+              type="button"
+              className="absolute inset-0 bg-black/40"
+              aria-label="Cerrar panel"
+              onClick={() => setHistoryOpen(false)}
+            />
+            <div className="absolute inset-y-0 left-0 flex w-[min(100%,22rem)] max-w-full flex-col bg-background p-3 shadow-xl">
+              <div className="min-h-0 flex-1">{historyPanel}</div>
+            </div>
+          </div>
+        )}
+
+        <div className="flex min-h-[min(78vh,820px)] flex-col overflow-hidden rounded-2xl border border-border/60 bg-background shadow-sm">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 px-3 py-2">
+            <div className="flex min-w-0 items-center gap-2">
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                className="lg:hidden"
+                onClick={() => setHistoryOpen(true)}
+              >
+                Conversaciones
+                {sessions.length ? ` (${sessions.length})` : ""}
+              </Button>
+              <p className="truncate text-xs text-muted-foreground">
+                {sessionId
+                  ? sessions.find((s) => s.id === sessionId)?.title || "Conversación"
+                  : "Nueva consulta"}
+              </p>
+            </div>
+            <div className="relative">
+              <Button
+                type="button"
+                size="sm"
+                variant="ghost"
+                className="sm:hidden"
+                onClick={() => setMoreOpen((v) => !v)}
+              >
+                Más
+              </Button>
+              {moreOpen && (
+                <div className="absolute right-0 z-20 mt-1 w-44 rounded-xl border bg-background p-1 shadow-lg sm:hidden">
+                  <button
+                    type="button"
+                    className="block w-full rounded-lg px-3 py-2 text-left text-xs hover:bg-muted"
+                    onClick={() => {
+                      setMoreOpen(false);
+                      void startSession();
+                    }}
+                  >
+                    Nueva conversación
+                  </button>
+                  <button
+                    type="button"
+                    className="block w-full rounded-lg px-3 py-2 text-left text-xs hover:bg-muted"
+                    disabled={!sessionId}
+                    onClick={() => {
+                      setMoreOpen(false);
+                      void clearContext();
+                    }}
+                  >
+                    Limpiar contexto
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+
           {contextLabel && (
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border/60 bg-muted/15 px-3 py-2 text-[11px]">
-              <div className="space-y-0.5 text-muted-foreground">
-                <p>
+              <div className="min-w-0 space-y-0.5 text-muted-foreground">
+                <p className="truncate">
                   <span className="font-medium text-foreground/80">Investigación:</span>{" "}
                   {contextLabel.analyzing || "—"}
                 </p>
                 {contextLabel.filters && (
-                  <p className="text-[10px] text-muted-foreground/80">{contextLabel.filters}</p>
+                  <p className="truncate text-[10px] text-muted-foreground/80">
+                    {contextLabel.filters}
+                  </p>
                 )}
                 {contextLabel.primary != null && (
                   <p>
@@ -584,6 +878,7 @@ export default function LotteryChatPage() {
               <Button
                 size="sm"
                 variant="ghost"
+                className="hidden sm:inline-flex"
                 disabled={!sessionId || loading}
                 onClick={() => void clearContext()}
               >
@@ -597,12 +892,22 @@ export default function LotteryChatPage() {
               {error}
             </div>
           )}
+          {success && (
+            <div className="mx-3 mt-2 rounded-xl border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-900 dark:border-emerald-900/40 dark:bg-emerald-950/40 dark:text-emerald-100">
+              {success}
+            </div>
+          )}
+          {deleting && (
+            <div className="mx-3 mt-2 rounded-xl border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
+              Eliminando…
+            </div>
+          )}
 
           <div className="relative min-h-0 flex-1">
             <div
               ref={scrollRef}
               onScroll={onScrollPane}
-              className="absolute inset-0 overflow-y-auto px-3 py-3 sm:px-4"
+              className="absolute inset-0 overflow-x-hidden overflow-y-auto px-3 py-3 sm:px-4"
             >
               {messages.length === 0 && !loading && (
                 <EmptyState
@@ -623,14 +928,17 @@ export default function LotteryChatPage() {
               {messages.map((m) => (
                 <div
                   key={m.id}
-                  className={`mb-4 flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
+                  className={cn(
+                    "mb-4 flex",
+                    m.role === "user" ? "justify-end" : "justify-start",
+                  )}
                 >
                   {m.role === "user" ? (
                     <div className="max-w-[min(100%,420px)] rounded-2xl bg-primary px-3.5 py-2.5 text-sm text-primary-foreground shadow-sm">
                       <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
                     </div>
                   ) : (
-                    <div className="w-full min-w-0 max-w-full">
+                    <div className="w-full min-w-0 max-w-full overflow-x-hidden">
                       <AnalysisResponse
                         content={m.content}
                         structured={m.structured}
@@ -663,13 +971,14 @@ export default function LotteryChatPage() {
             )}
           </div>
 
-          <div className="shrink-0 space-y-2 border-t bg-background/95 px-3 py-2 backdrop-blur">
-            <div className="flex flex-wrap gap-2">
+          <div className="shrink-0 space-y-2 border-t bg-background/95 px-3 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] backdrop-blur">
+            <div className="flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {suggestions.map((s) => (
                 <Button
                   key={s}
                   size="sm"
                   variant="outline"
+                  className="shrink-0"
                   disabled={loading}
                   onClick={() => void send(s)}
                 >
@@ -688,14 +997,14 @@ export default function LotteryChatPage() {
                 ref={textareaRef}
                 value={input}
                 rows={1}
-                disabled={loading}
+                disabled={loading || deleting}
                 placeholder="Pregunta a Lottery IA…"
-                className="max-h-32 min-h-[44px] flex-1 resize-none rounded-xl border bg-background px-3 py-2.5 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                className="max-h-40 min-h-[44px] flex-1 resize-none rounded-xl border bg-background px-3 py-2.5 text-sm outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 onChange={(e) => {
                   setInput(e.target.value);
                   const el = e.target;
                   el.style.height = "auto";
-                  el.style.height = `${Math.min(el.scrollHeight, 128)}px`;
+                  el.style.height = `${Math.min(el.scrollHeight, 160)}px`;
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
@@ -704,13 +1013,14 @@ export default function LotteryChatPage() {
                   }
                 }}
               />
-              <Button type="submit" disabled={loading || !input.trim()}>
+              <Button type="submit" className="shrink-0" disabled={loading || deleting || !input.trim()}>
                 Analizar
               </Button>
               {sessionId && error && (
                 <Button
                   type="button"
                   variant="secondary"
+                  className="hidden shrink-0 sm:inline-flex"
                   disabled={loading}
                   onClick={async () => {
                     setLoading(true);
@@ -755,6 +1065,73 @@ export default function LotteryChatPage() {
           </div>
         </div>
       </div>
+
+      {confirmBulk && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center">
+          <div className="w-full max-w-md rounded-2xl border bg-background p-4 shadow-xl">
+            <h3 className="text-base font-semibold">Eliminar seleccionadas</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Vas a eliminar {selectedCount} conversación{selectedCount === 1 ? "" : "es"}. Esta
+              acción no se puede deshacer.
+            </p>
+            <div className="mt-4 flex flex-wrap justify-end gap-2">
+              <Button type="button" variant="outline" disabled={deleting} onClick={() => setConfirmBulk(false)}>
+                Cancelar
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                disabled={deleting}
+                onClick={() => void confirmBulkDelete()}
+              >
+                Eliminar definitivamente
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {confirmDeleteAll && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center">
+          <div className="w-full max-w-md rounded-2xl border bg-background p-4 shadow-xl">
+            <h3 className="text-base font-semibold">Eliminar todas las conversaciones</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Vas a eliminar {sessions.length} conversación{sessions.length === 1 ? "" : "es"} de tu
+              cuenta. No se borran configuraciones, investigaciones del motor ni datos históricos.
+              Escribe <span className="font-semibold text-foreground">ELIMINAR</span> para
+              confirmar.
+            </p>
+            <input
+              className="mt-3 w-full rounded-xl border bg-background px-3 py-2 text-sm"
+              value={deleteAllPhrase}
+              onChange={(e) => setDeleteAllPhrase(e.target.value)}
+              placeholder="ELIMINAR"
+              autoFocus
+            />
+            <div className="mt-4 flex flex-wrap justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                disabled={deleting}
+                onClick={() => {
+                  setConfirmDeleteAll(false);
+                  setDeleteAllPhrase("");
+                }}
+              >
+                Cancelar
+              </Button>
+              <Button
+                type="button"
+                variant="destructive"
+                disabled={deleting || deleteAllPhrase.trim().toUpperCase() !== "ELIMINAR"}
+                onClick={() => void confirmDeleteAllSessions()}
+              >
+                Eliminar todas
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </AppShell>
   );
 }

@@ -31,6 +31,16 @@ class ChatSessionListResponse(BaseModel):
     total: int
 
 
+class ChatSessionBulkDeleteRequest(BaseModel):
+    session_ids: list[UUID] = Field(min_length=1, max_length=200)
+
+
+class ChatSessionDeleteResult(BaseModel):
+    deleted_count: int = 0
+    failed_ids: list[str] = Field(default_factory=list)
+    success: bool = True
+
+
 class ChatMessageCreate(BaseModel):
     content: str = Field(min_length=1, max_length=4000)
 

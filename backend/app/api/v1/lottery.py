@@ -37,7 +37,9 @@ from app.schemas.lottery_chat import (
     ChatMessageListResponse,
     ChatMessageResponse,
     ChatSendResponse,
+    ChatSessionBulkDeleteRequest,
     ChatSessionCreate,
+    ChatSessionDeleteResult,
     ChatSessionListResponse,
     ChatSessionRename,
     ChatSessionResponse,
@@ -494,6 +496,33 @@ async def list_chat_sessions(
     svc = _make_chat(db, user)
     items = await svc.list_sessions(limit=limit)
     return ChatSessionListResponse(items=[_session_resp(s) for s in items], total=len(items))
+
+
+@router.post("/chat/sessions/bulk-delete", response_model=ChatSessionDeleteResult)
+async def bulk_delete_chat_sessions(
+    body: ChatSessionBulkDeleteRequest,
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.chat")],
+) -> ChatSessionDeleteResult:
+    """Delete owned sessions only. Selects only the provided IDs (visible selection)."""
+    svc = _make_chat(db, user)
+    result = await svc.bulk_delete_sessions(list(body.session_ids))
+    await db.commit()
+    return ChatSessionDeleteResult(**result)
+
+
+@router.post("/chat/sessions/delete-all", response_model=ChatSessionDeleteResult)
+async def delete_all_chat_sessions(
+    db: DbSession,
+    user: CurrentUser,
+    _: Annotated[None, require_lottery_permission("lottery.chat")],
+) -> ChatSessionDeleteResult:
+    """Delete all conversations for the current user in the current tenant."""
+    svc = _make_chat(db, user)
+    result = await svc.delete_all_sessions()
+    await db.commit()
+    return ChatSessionDeleteResult(**result)
 
 
 @router.get("/chat/sessions/{session_id}", response_model=ChatSessionResponse)

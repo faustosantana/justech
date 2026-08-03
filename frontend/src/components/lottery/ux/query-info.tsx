@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 
 function Row({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="grid grid-cols-[1fr_1.2fr] gap-2 border-b border-border/40 py-2 text-xs last:border-0">
+    <div className="grid grid-cols-1 gap-x-2 gap-y-1 border-b border-border/40 py-2 text-xs last:border-0 sm:grid-cols-[1fr_1.2fr]">
       <dt className="text-muted-foreground">{label}</dt>
       <dd className="break-words font-medium text-foreground">{value || "—"}</dd>
     </div>

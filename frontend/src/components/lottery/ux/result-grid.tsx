@@ -211,7 +211,7 @@ export function ResultGrid({
           onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}
         >
           <table
-            className="w-full min-w-[640px] border-collapse text-sm"
+            className="w-full min-w-[36rem] border-collapse text-sm md:min-w-[640px]"
             data-testid="workspace-result-table"
           >
             <thead className="sticky top-0 z-[1] bg-muted/95 backdrop-blur">

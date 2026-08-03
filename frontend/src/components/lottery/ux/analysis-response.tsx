@@ -211,7 +211,7 @@ export function AnalysisResponse({
   return (
     <div
       className={cn(
-        "w-full max-w-none space-y-4 rounded-2xl border border-border/50 bg-gradient-to-b from-card via-card to-muted/20 p-3 sm:p-4",
+        "w-full max-w-none space-y-4 overflow-x-hidden rounded-2xl border border-border/50 bg-gradient-to-b from-card via-card to-muted/20 p-3 sm:p-4",
         className,
       )}
       data-testid="analysis-response"
@@ -402,7 +402,7 @@ export function AnalysisResponse({
         </div>
 
         {showSidePanel ? (
-          <div className="space-y-3 xl:sticky xl:top-2 xl:self-start">
+          <div className="hidden space-y-3 xl:block xl:sticky xl:top-2 xl:self-start">
             <QueryInfo meta={presentation.meta} />
             {presentation.pagination ? (
               <p className="text-[11px] text-muted-foreground">

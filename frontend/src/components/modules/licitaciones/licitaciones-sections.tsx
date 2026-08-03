@@ -96,22 +96,43 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
     setLoadError(null);
     try {
       const q = searchQuery.trim();
+      const company =
+        effectiveCompany &&
+        (["justech", "just_office", "mf_plug_safe", "omni_solutions", "unclassified"] as const).includes(
+          effectiveCompany,
+        )
+          ? effectiveCompany
+          : undefined;
       const filters = {
         status: statusFilter || undefined,
         funnel_stage: funnelFilter || undefined,
-        company: effectiveCompany || undefined,
+        company,
         search: q.length >= 2 ? q : undefined,
         include_expired: q.length >= 2 ? true : undefined,
         limit: q.length >= 2 ? 50 : 150,
       };
-      const [list, dash, updatesDash] = await Promise.all([
-        apiClient.getDGCPOpportunities(filters),
-        apiClient.getDGCPDashboard(),
-        dgcpProcessUpdatesEnabled()
-          ? apiClient.getDGCPProcessUpdatesDashboard().catch(() => null)
-          : Promise.resolve(null),
-      ]);
-      let rows = list.items;
+
+      const listResult = await apiClient.getDGCPOpportunities(filters).then(
+        (list) => ({ ok: true as const, list }),
+        (err) => ({ ok: false as const, err }),
+      );
+      const dashResult = await apiClient.getDGCPDashboard().then(
+        (dash) => ({ ok: true as const, dash }),
+        (err) => ({ ok: false as const, err }),
+      );
+      const updatesDash = dgcpProcessUpdatesEnabled()
+        ? await apiClient.getDGCPProcessUpdatesDashboard().catch(() => null)
+        : null;
+
+      if (!listResult.ok) {
+        setItems([]);
+        setSummary(dashResult.ok ? dashResult.dash : EMPTY);
+        setProcessUpdatesDash(updatesDash);
+        setLoadError("No se pudieron cargar los procesos DGCP. Intente actualizar.");
+        return;
+      }
+
+      let rows = Array.isArray(listResult.list.items) ? listResult.list.items : [];
       if (mode === "won") {
         rows = rows.filter((o) => {
           const stage = getOpportunityFunnelStage(o.status);
@@ -119,9 +140,16 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
         });
       }
       setItems(rows);
-      setSummary(dash);
+      if (dashResult.ok) {
+        setSummary(dashResult.dash);
+      } else {
+        setSummary(EMPTY);
+        setLoadError("Los procesos cargaron, pero el resumen DGCP no está disponible.");
+      }
       setProcessUpdatesDash(updatesDash);
     } catch {
+      setItems([]);
+      setSummary(EMPTY);
       setLoadError("No se pudieron cargar los procesos DGCP. Intente actualizar.");
     } finally {
       setLoading(false);
@@ -191,7 +219,19 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
         <CreateLicitationDialog access={access} onCreated={() => void load()} />
       </div>
 
-      <KPIGrid summary={summary} variant="compact" />
+      {loadError ? (
+        <div className="rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm">
+          <p className="font-medium text-destructive">{loadError}</p>
+          <p className="mt-1 text-muted-foreground">
+            Los indicadores pueden aparecer en cero porque la carga falló; no representan un vacío real.
+          </p>
+          <Button variant="outline" size="sm" className="mt-2" onClick={() => void load()} disabled={loading}>
+            Reintentar
+          </Button>
+        </div>
+      ) : (
+        <KPIGrid summary={summary} variant="compact" />
+      )}
 
       {dgcpProcessUpdatesEnabled() && processUpdatesDash?.enabled && processUpdatesDash.total_pending > 0 && (
         <div className="rounded-xl border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm">

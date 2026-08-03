@@ -55,7 +55,8 @@ export function resolveCompanyFromRpe(
   const needle = rpe.trim().toLowerCase();
   if (!needle) return "";
   const match = profiles.find((p) => (p.rpe ?? "").toLowerCase() === needle);
-  return (match?.company_key as OpportunityCompany) ?? "";
+  const key = (match?.company_key || "") as OpportunityCompany;
+  return CANONICAL_COMPANIES.includes(key) ? key : "";
 }
 
 function profileForCompany(

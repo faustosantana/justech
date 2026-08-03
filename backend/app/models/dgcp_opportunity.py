@@ -2,7 +2,7 @@ import uuid
 from datetime import date, datetime
 from decimal import Decimal
 
-from sqlalchemy import Date, DateTime, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
+from sqlalchemy import Boolean, Date, DateTime, ForeignKey, Integer, Numeric, String, Text, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
@@ -26,6 +26,7 @@ class DGCPOpportunity(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     probability: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     score: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
     status: Mapped[str] = mapped_column(String(32), nullable=False, default="detected", index=True)
+    needs_review: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
     priority: Mapped[str] = mapped_column(String(16), nullable=False, default="medium", index=True)
     company: Mapped[str] = mapped_column(String(32), nullable=False, default="unclassified", index=True)
     confidence_score: Mapped[int] = mapped_column(Integer, nullable=False, default=0)
@@ -41,6 +42,7 @@ class DGCPOpportunity(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     risks: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
     ai_recommendations: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
     suggested_action: Mapped[str | None] = mapped_column(String(64))
+    jaios_intelligence: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
     justech_potential_amount: Mapped[Decimal] = mapped_column(
         Numeric(18, 2), nullable=False, default=0
     )

@@ -54,6 +54,11 @@ const BLOCKS = [
         desc: 'Proveedor conversacional (Huawei / OpenAI), modelo, temperature y prueba de conexión.',
       },
       {
+        href: '/lottery/admin/ai/consumo',
+        label: 'Consumo de IA',
+        desc: 'Tokens reales, costos por modelo/proveedor e histórico de uso.',
+      },
+      {
         href: '/lottery/admin/ai',
         label: 'Configuración del Chat inteligente',
         desc: 'Herramientas, agente y estado del chat.',

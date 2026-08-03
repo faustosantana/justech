@@ -1094,6 +1094,7 @@ class LotteryChatService:
         model_name: str | None = None
         provider_used: str | None = None
         reasoning_telemetry: dict[str, Any] | None = None
+        llm_usage_parts: list[dict[str, Any]] = []
         # Live chat provider comes from Lottery AI Settings (single source of truth).
         try:
             from app.lottery.ai.conversational_orchestrator.conversation_provider_factory import (
@@ -1977,6 +1978,14 @@ class LotteryChatService:
                                 fallback_used = True
                                 fallback_reason = rr.rejection_reason or "reasoning_fallback"
                             reasoning_telemetry = rr.to_telemetry()
+                            llm_usage_parts.append(
+                                {
+                                    "prompt_tokens": rr.input_tokens or 0,
+                                    "completion_tokens": rr.output_tokens or 0,
+                                    "input_tokens": rr.input_tokens or 0,
+                                    "output_tokens": rr.output_tokens or 0,
+                                }
+                            )
                             if isinstance(research_meta, dict):
                                 research_meta["analyst_reasoning_preserve"] = True
                                 research_meta["relation"] = (
@@ -2006,15 +2015,19 @@ class LotteryChatService:
                         }
 
                 if not used_reasoning_path:
-                    final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(
-                        question=content,
-                        template=template,
-                        facts=structured,
-                        context={**ctx.to_store(), "conversation_v4": state.to_store()},
-                        recent_messages=recent_msgs,
-                        mode="tool",
-                        max_tokens=analyst_cfg.max_tokens,
+                    final_text, synthesis_fallback, model_name, provider_used, syn_usage = (
+                        await self._synthesize(
+                            question=content,
+                            template=template,
+                            facts=structured,
+                            context={**ctx.to_store(), "conversation_v4": state.to_store()},
+                            recent_messages=recent_msgs,
+                            mode="tool",
+                            max_tokens=analyst_cfg.max_tokens,
+                        )
                     )
+                    if syn_usage:
+                        llm_usage_parts.append(syn_usage)
                     if synthesis_fallback:
                         fallback_used = True
                         fallback_reason = "synthesis_unavailable_or_failed"
@@ -2278,22 +2291,26 @@ class LotteryChatService:
                     else "clarify_number_slot_locked"
                 )
             else:
-                final_text, synthesis_fallback, model_name, provider_used = await self._synthesize(
-                    question=content,
-                    template=template,
-                    facts={
-                        "type": "lottery_ambiguity",
-                        "clarify": template,
-                        "missing_slots": understanding.missing_slots,
-                        "known_numbers": state.active_numbers or understanding.numbers,
-                        "known_lotteries": state.active_lotteries or understanding.lotteries,
-                        "primary_candidate": state.current_primary_candidate,
-                    },
-                    context={**ctx.to_store(), "conversation_v4": state.to_store()},
-                    recent_messages=recent_msgs,
-                    mode="clarify",
-                    max_tokens=min(analyst_cfg.max_tokens, 600),
+                final_text, synthesis_fallback, model_name, provider_used, syn_usage = (
+                    await self._synthesize(
+                        question=content,
+                        template=template,
+                        facts={
+                            "type": "lottery_ambiguity",
+                            "clarify": template,
+                            "missing_slots": understanding.missing_slots,
+                            "known_numbers": state.active_numbers or understanding.numbers,
+                            "known_lotteries": state.active_lotteries or understanding.lotteries,
+                            "primary_candidate": state.current_primary_candidate,
+                        },
+                        context={**ctx.to_store(), "conversation_v4": state.to_store()},
+                        recent_messages=recent_msgs,
+                        mode="clarify",
+                        max_tokens=min(analyst_cfg.max_tokens, 600),
+                    )
                 )
+                if syn_usage:
+                    llm_usage_parts.append(syn_usage)
                 if synthesis_fallback:
                     fallback_used = True
                     fallback_reason = "clarify_local_template"
@@ -2380,20 +2397,49 @@ class LotteryChatService:
         except Exception:  # noqa: BLE001
             pass
         try:
-            from app.lottery.ai.usage import estimate_cost_usd, record_ai_usage
+            from app.lottery.ai.usage import (
+                estimate_cost_usd,
+                merge_usage,
+                record_ai_usage,
+            )
 
             tools_used = [t.get("tool") for t in tool_trace if isinstance(t, dict) and t.get("tool")]
+            usage_merged = merge_usage(*llm_usage_parts)
+            prompt_tokens = int(usage_merged.get("prompt_tokens") or 0)
+            completion_tokens = int(usage_merged.get("completion_tokens") or 0)
+            total_tokens = int(usage_merged.get("total_tokens") or 0)
+            lottery_key = None
+            try:
+                lottery_key = (
+                    (state.active_lotteries[0] if state.active_lotteries else None)
+                    or ctx.last_lottery
+                    or None
+                )
+                if lottery_key is not None:
+                    lottery_key = str(lottery_key)[:64]
+            except Exception:  # noqa: BLE001
+                lottery_key = None
+            prov_label = str(provider_used or model_name or "local")
             await record_ai_usage(
                 self.db,
                 tenant_id=self.tenant_id,
                 user_id=self.user_id,
                 session_id=session.id,
-                provider=str(provider_used or model_name or "local"),
+                provider=prov_label,
                 model=model_name,
+                prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens,
+                total_tokens=total_tokens,
                 latency_ms=latency_ms,
-                estimated_cost_usd=estimate_cost_usd(prompt_tokens=0, completion_tokens=0),
+                estimated_cost_usd=estimate_cost_usd(
+                    prompt_tokens=prompt_tokens,
+                    completion_tokens=completion_tokens,
+                    model=model_name,
+                    provider=prov_label,
+                ),
                 tool_names=[str(x) for x in tools_used if x],
                 ok=not synthesis_fallback or bool(final_text),
+                lottery_key=lottery_key,
             )
         except Exception:  # noqa: BLE001 — metrics must not break chat
             pass
@@ -3859,10 +3905,18 @@ class LotteryChatService:
         recent_messages: list[dict[str, str]] | None = None,
         mode: str = "tool",
         max_tokens: int = 1200,
-    ) -> tuple[str, bool, str | None, str | None]:
-        """Síntesis: LLMRouter → Hermes/ModelArts → plantilla natural (sin mensajes internos)."""
+    ) -> tuple[str, bool, str | None, str | None, dict[str, Any]]:
+        """Síntesis: LLMRouter → Hermes/ModelArts → plantilla natural (sin mensajes internos).
+
+        Returns: (text, fallback, model, provider, usage_dict).
+        """
+        empty_usage: dict[str, Any] = {
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_tokens": 0,
+        }
         if not settings.assistant_synthesis_enabled:
-            return template, True, None, "local_template"
+            return template, True, None, "local_template", empty_usage
 
         token_budget = max(200, min(int(max_tokens or 1200), 4000))
 
@@ -3913,29 +3967,36 @@ class LotteryChatService:
             configured_provider_name,
             runtime_provider_label,
         )
+        from app.lottery.ai.usage import normalize_usage_tokens
 
         allow_fb = configured_provider_name() != "openai"
         msg_dicts = [{"role": m.role, "content": m.content} for m in messages]
         try:
-            text0, model0, _usage0, pmeta0 = await asyncio.to_thread(
+            text0, model0, usage0, pmeta0 = await asyncio.to_thread(
                 complete_with_lottery_provider,
                 msg_dicts,
                 max_tokens=token_budget,
                 temperature=0.2,
                 allow_fallback=allow_fb,
             )
+            p, c, t = normalize_usage_tokens(usage0 if isinstance(usage0, dict) else None)
+            usage_out = {
+                "prompt_tokens": p,
+                "completion_tokens": c,
+                "total_tokens": t,
+            }
             text0s = self._sanitize_user_facing((text0 or "").strip())
             if text0s and len(text0s) >= 20 and not self._looks_internal(text0s):
                 used_s = runtime_provider_label(
                     str(pmeta0.get("provider_used") or pmeta0.get("provider") or "huawei")
                 )
-                return text0s, False, model0, used_s
+                return text0s, False, model0, used_s, usage_out
             if configured_provider_name() == "openai" and (pmeta0 or {}).get("provider_unavailable"):
                 # Do not silently fall through to Hermes when OpenAI is the active setting.
-                return template, True, model0, "openai"
+                return template, True, model0, "openai", usage_out
         except Exception as exc:  # noqa: BLE001
             if configured_provider_name() == "openai":
-                return template, True, None, "openai"
+                return template, True, None, "openai", empty_usage
             last_err: Exception | None = exc
         else:
             last_err = None
@@ -3969,7 +4030,21 @@ class LotteryChatService:
                             if hasattr(used, "value")
                             else (str(used) if used else provider_name)
                         )
-                        return text, False, getattr(response, "model", None), used_s
+                        resp_usage = getattr(response, "usage", None) or {}
+                        p, c, t = normalize_usage_tokens(
+                            resp_usage if isinstance(resp_usage, dict) else None
+                        )
+                        return (
+                            text,
+                            False,
+                            getattr(response, "model", None),
+                            used_s,
+                            {
+                                "prompt_tokens": p,
+                                "completion_tokens": c,
+                                "total_tokens": t,
+                            },
+                        )
                 except Exception as exc:  # noqa: BLE001 — fallback controlado
                     last_err = exc
                     await asyncio.sleep(0.35 * (attempt + 1))
@@ -3979,11 +4054,11 @@ class LotteryChatService:
                 messages, max_tokens=token_budget
             )
             if hermes_text:
-                return hermes_text, False, hermes_model, "huawei_modelarts"
+                return hermes_text, False, hermes_model, "huawei_modelarts", empty_usage
 
         # 4) Fallback natural: plantilla local (nunca mensajes internos)
         _ = last_err
-        return template, True, None, "local_template"
+        return template, True, None, "local_template", empty_usage
 
     async def _synthesize_via_hermes(
         self, messages: list[LLMMessage], *, max_tokens: int = 1200

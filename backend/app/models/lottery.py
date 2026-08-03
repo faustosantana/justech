@@ -610,6 +610,11 @@ class LotterySourceConflict(UUIDPrimaryKeyMixin, Base):
 
 class LotteryAiUsage(UUIDPrimaryKeyMixin, Base):
     __tablename__ = "lottery_ai_usage"
+    __table_args__ = (
+        Index("ix_lottery_ai_usage_created_at", "created_at"),
+        Index("ix_lottery_ai_usage_tenant_created", "tenant_id", "created_at"),
+        Index("ix_lottery_ai_usage_lottery_key", "lottery_key"),
+    )
 
     tenant_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
     user_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True))
@@ -623,6 +628,7 @@ class LotteryAiUsage(UUIDPrimaryKeyMixin, Base):
     estimated_cost_usd: Mapped[float | None] = mapped_column(Numeric(12, 6))
     tool_names: Mapped[dict | list | None] = mapped_column(JSONB)
     ok: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    lottery_key: Mapped[str | None] = mapped_column(String(64))
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), nullable=False
     )

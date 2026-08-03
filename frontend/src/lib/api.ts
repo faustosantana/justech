@@ -3026,6 +3026,27 @@ export const apiClient = {
   getLotteryAIAdminDashboard: () =>
     request<Record<string, unknown>>("/lottery/admin/ai/dashboard", {}, true),
 
+  getLotteryAIConsumo: (params?: {
+    period?: string;
+    date_from?: string;
+    date_to?: string;
+    user_id?: string;
+    lottery_key?: string;
+  }) => {
+    const q = new URLSearchParams();
+    if (params?.period) q.set("period", params.period);
+    if (params?.date_from) q.set("date_from", params.date_from);
+    if (params?.date_to) q.set("date_to", params.date_to);
+    if (params?.user_id) q.set("user_id", params.user_id);
+    if (params?.lottery_key) q.set("lottery_key", params.lottery_key);
+    const qs = q.toString();
+    return request<Record<string, unknown>>(
+      `/lottery/admin/ai/consumo${qs ? `?${qs}` : ""}`,
+      {},
+      true,
+    );
+  },
+
   getLotteryAIAlerts: (params?: { status?: string; severity?: string; code?: string; limit?: number }) => {
     const q = new URLSearchParams();
     if (params?.status) q.set("status", params.status);

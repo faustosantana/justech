@@ -69,6 +69,33 @@ async def ai_dashboard(
     return data
 
 
+@router.get("/consumo")
+async def ai_consumo_dashboard(
+    db: DbSession,
+    user: CurrentUser,
+    tenant: TenantCtx,
+    _: Annotated[None, require_ai_admin(*_AI_ADMIN_PERMS)],
+    period: str = Query("month", description="today|week|month|range"),
+    date_from: str | None = Query(None),
+    date_to: str | None = Query(None),
+    user_id: UUID | None = Query(None),
+    lottery_key: str | None = Query(None, description="Lotería / licitación activa en el turno"),
+) -> dict:
+    """Dashboard de consumo de tokens y costos estimados (histórico en BD)."""
+    from app.services.lottery_ai_consumption_service import LotteryAiConsumptionService
+
+    ctx = require_tenant_context()
+    svc = LotteryAiConsumptionService(db, tenant_id=ctx.tenant_id)
+    data = await svc.dashboard(
+        period=period,
+        date_from=date_from,
+        date_to=date_to,
+        user_id=user_id,
+        lottery_key=lottery_key,
+    )
+    return data
+
+
 @router.get("/alerts")
 async def ai_alerts(
     db: DbSession,

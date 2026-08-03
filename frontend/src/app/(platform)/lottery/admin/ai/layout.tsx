@@ -21,6 +21,7 @@ const NAV_GROUPS = [
     label: "Resumen",
     items: [
       { label: "Dashboard", href: "/lottery/admin/ai" },
+      { label: "Consumo IA", href: "/lottery/admin/ai/consumo" },
       { label: "Alertas", href: "/lottery/admin/ai#alerts" },
     ],
   },

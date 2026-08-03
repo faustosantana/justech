@@ -40,6 +40,7 @@ SUGGESTED_MODELS: dict[str, list[str]] = {
         "gpt-5-mini",
         "gpt-4.1",
         "gpt-4o",
+        "gpt-4o-mini",
     ],
 }
 
@@ -72,16 +73,25 @@ def _public_dict(row: LotteryAiSettings) -> dict[str, Any]:
             mask = _mask_openai_key(decrypt_secret(str(row.openai_api_key_encrypted)))
         except Exception:  # noqa: BLE001
             mask = "sk-••••••••****"
+    provider = (row.conversation_provider or "huawei").strip().lower()
+    if provider == "openai":
+        cred_source = "database" if configured else "none"
+    else:
+        cred_source = "n/a"
     return {
         "id": str(row.id),
-        "conversation_provider": row.conversation_provider,
+        "conversation_provider": provider,
         "conversation_model": row.conversation_model,
+        "active_provider": provider,
+        "active_model": row.conversation_model,
         "temperature": float(row.temperature or 0),
         "max_tokens": int(row.max_tokens or 700),
         "timeout_seconds": int(row.timeout_seconds or 45),
         "is_active": bool(row.is_active),
         "openai_key_configured": configured,
+        "key_configured": configured,
         "openai_key_mask": mask,
+        "credential_source": cred_source,
         "openai_base_url": row.openai_base_url or DEFAULTS["openai_base_url"],
         "openai_organization": row.openai_organization,
         "openai_project": row.openai_project,
@@ -103,6 +113,10 @@ def _public_dict(row: LotteryAiSettings) -> dict[str, Any]:
         "updated_at": row.updated_at.isoformat() if row.updated_at else None,
         "suggested_models": SUGGESTED_MODELS,
         "catalog": SUGGESTED_MODELS,
+        "models_for_provider": {
+            "huawei": list(SUGGESTED_MODELS["huawei"]),
+            "openai": list(SUGGESTED_MODELS["openai"]),
+        },
     }
 
 
@@ -200,9 +214,10 @@ class LotteryAiConversationSettingsService:
         return _public_dict(row)
 
     def _build_for_test(self, cfg: dict[str, Any], row: LotteryAiSettings | None):
+        """Build provider strictly from form cfg; DB key only if form omits openai_api_key."""
         key = cfg.get("openai_api_key")
         if cfg["conversation_provider"] == "openai" and not key and row is not None:
-            # use stored encrypted via cache
+            # Hydrate encrypted blob into cache so build_provider can resolve "database"
             set_runtime_settings_cache(_cache_from_row(row))
         return build_provider(
             cfg["conversation_provider"],
@@ -215,16 +230,39 @@ class LotteryAiConversationSettingsService:
         )
 
     async def test_connection(self, body: dict[str, Any] | None = None) -> dict[str, Any]:
-        """Real provider call with 'Hola'. Does not persist provider activation."""
+        """Real provider call with form draft. Does not activate provider."""
         row = await self._active_row()
         if row is None:
             await self.get_or_create_active()
             row = await self._active_row()
-        active_pub = _public_dict(row) if row else {}
-        cfg = _validate_payload({**active_pub, **(body or {})})
-        # Ensure cache has encrypted key for fallback when form omits key
+
+        # Form wins — never silently test the active provider when form differs.
+        body = dict(body or {})
+        form_provider = body.get("conversation_provider")
+        form_model = body.get("conversation_model")
+        cfg_source: dict[str, Any] = {}
         if row is not None:
-            set_runtime_settings_cache(_cache_from_row(row))
+            cfg_source = {
+                "conversation_provider": row.conversation_provider,
+                "conversation_model": row.conversation_model,
+                "temperature": float(row.temperature or 0),
+                "max_tokens": int(row.max_tokens or 700),
+                "timeout_seconds": int(row.timeout_seconds or 45),
+                "openai_base_url": row.openai_base_url or DEFAULTS["openai_base_url"],
+                "openai_organization": row.openai_organization,
+                "openai_project": row.openai_project,
+            }
+        cfg_source.update({k: v for k, v in body.items() if v is not None})
+        if form_provider is not None:
+            cfg_source["conversation_provider"] = form_provider
+        if form_model is not None and str(form_model).strip():
+            cfg_source["conversation_model"] = form_model
+        cfg = _validate_payload(cfg_source)
+
+        # Keep active runtime cache intact for live chat; only hydrate for DB key lookup.
+        active_cache = _cache_from_row(row) if row is not None else None
+        if active_cache is not None:
+            set_runtime_settings_cache(active_cache)
 
         if cfg["conversation_provider"] == "openai":
             has_form = bool(cfg.get("openai_api_key"))
@@ -243,13 +281,23 @@ class LotteryAiConversationSettingsService:
                         "message_received": None,
                         "schema_valid": False,
                         "credential_source": "none",
-                        "errors": ["Falta API Key de OpenAI (ingrésala en el formulario)"],
+                        "tested_from": "form",
+                        "active_provider": (row.conversation_provider if row else None),
+                        "active_model": (row.conversation_model if row else None),
+                        "errors": [
+                            "Falta la API Key de OpenAI. Introdúcela en el formulario "
+                            "(no se reutiliza la configuración activa de Huawei)."
+                        ],
                     }
 
         provider = self._build_for_test(cfg, row)
         cred_source = getattr(provider, "credential_source", "n/a")
         t0 = time.perf_counter()
         if not provider.available():
+            # Restore active cache before returning
+            if active_cache is not None:
+                set_runtime_settings_cache(active_cache)
+                invalidate_provider_cache()
             return {
                 "ok": False,
                 "provider": cfg["conversation_provider"],
@@ -260,7 +308,13 @@ class LotteryAiConversationSettingsService:
                 "message_received": None,
                 "schema_valid": False,
                 "credential_source": cred_source,
-                "errors": ["Credenciales del proveedor no disponibles"],
+                "tested_from": "form",
+                "active_provider": (row.conversation_provider if row else None),
+                "active_model": (row.conversation_model if row else None),
+                "errors": [
+                    "Credenciales del proveedor no disponibles. "
+                    "Revisa la API Key (OpenAI) o la conectividad de Huawei."
+                ],
             }
         system = (
             "Eres un orquestador. Responde SOLO JSON con este schema:\n"
@@ -302,17 +356,21 @@ class LotteryAiConversationSettingsService:
 
         ok = bool(schema_valid and not errors and not result.provider_unavailable)
         if row is not None:
+            # Persist last probe metadata only — never change active provider here.
             row.last_test_at = datetime.now(timezone.utc)
             row.last_test_ok = ok
             row.last_test_latency_ms = result.latency_ms or total_ms
             row.last_test_model = result.model or cfg["conversation_model"]
             row.last_test_error = "; ".join(errors) if errors else None
-            # Never store raw provider responses that might echo secrets
             row.last_test_message = (result.content or "")[:2000]
             row.updated_at = datetime.now(timezone.utc)
             await self.db.flush()
             await self.db.refresh(row)
-            set_runtime_settings_cache(_cache_from_row(row))
+
+        # Always restore active runtime so a draft OpenAI test never hijacks live chat.
+        if active_cache is not None:
+            set_runtime_settings_cache(active_cache)
+            invalidate_provider_cache()
 
         return {
             "ok": ok,
@@ -327,6 +385,9 @@ class LotteryAiConversationSettingsService:
             "errors": errors,
             "usage": result.usage,
             "credential_source": cred_source,
+            "tested_from": "form",
+            "active_provider": (row.conversation_provider if row else None),
+            "active_model": (row.conversation_model if row else None),
         }
 
     async def save(self, body: dict[str, Any], *, require_test_ok: bool = True) -> dict[str, Any]:
@@ -417,7 +478,7 @@ class LotteryAiConversationSettingsService:
         return _public_dict(row)
 
     async def list_openai_models(self, body: dict[str, Any] | None = None) -> dict[str, Any]:
-        """Optional: list models from OpenAI using form or stored credential."""
+        """List models from OpenAI using form or stored credential (never Huawei)."""
         row = await self._active_row()
         if row is not None:
             set_runtime_settings_cache(_cache_from_row(row))
@@ -437,7 +498,9 @@ class LotteryAiConversationSettingsService:
             project=body.get("openai_project") or (row.openai_project if row else None),
         )
         if not provider.available():
-            raise ValueError("Credencial OpenAI no disponible")
+            raise ValueError(
+                "No hay credencial OpenAI disponible. Introduce la API Key o guárdala antes."
+            )
         key = getattr(provider, "_api_key", None)
         url = base if base.endswith("/v1") else base.rstrip("/") + "/v1"
         if not url.endswith("/models"):
@@ -456,8 +519,31 @@ class LotteryAiConversationSettingsService:
                 if isinstance(it, dict) and it.get("id")
             }
         )
+        # Prefer chat-capable ids for the UI; keep full list under all_models.
+        chat_like = [
+            m
+            for m in ids
+            if m.startswith("gpt-")
+            or m.startswith("o1")
+            or m.startswith("o3")
+            or m.startswith("chatgpt")
+        ]
+        preferred = chat_like or ids
+        # Suggested first, then remote (deduped)
+        ordered: list[str] = []
+        for m in SUGGESTED_MODELS["openai"] + preferred:
+            if m not in ordered and (m in preferred or m in SUGGESTED_MODELS["openai"]):
+                # include suggested even if not yet returned by API
+                if m in preferred or m in SUGGESTED_MODELS["openai"]:
+                    ordered.append(m)
+        # Ensure all remote chat models appear
+        for m in preferred:
+            if m not in ordered:
+                ordered.append(m)
         return {
-            "models": ids,
-            "suggested": SUGGESTED_MODELS["openai"],
+            "provider": "openai",
+            "models": ordered,
+            "all_models": ids,
+            "suggested": list(SUGGESTED_MODELS["openai"]),
             "credential_source": getattr(provider, "credential_source", "none"),
         }

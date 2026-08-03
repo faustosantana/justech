@@ -74,9 +74,20 @@ MIN_SCORE_OTHER_INSTITUTION = 55
 MIN_SCORE_PROCESS_FAMILY = 35
 DEFAULT_LIMIT = 10
 DGCP_HTTP_TIMEOUT_SECONDS = 8.0
-DGCP_LIVE_SEARCH_TIMEOUT_SECONDS = 18.0
+DGCP_LIVE_SEARCH_TIMEOUT_SECONDS = float(
+    getattr(settings, "dgcp_historical_live_timeout_seconds", 8.0) or 8.0
+)
+DGCP_LIVE_MAX_RETRIES = int(getattr(settings, "dgcp_historical_live_max_retries", 1) or 1)
+DGCP_CIRCUIT_COOLDOWN_SECONDS = float(
+    getattr(settings, "dgcp_historical_circuit_cooldown_seconds", 60.0) or 60.0
+)
+LOCAL_SUFFICIENT_RATIO = 1.0  # respond immediately when local has >= limit
 
 logger = logging.getLogger(__name__)
+
+# Process-local circuit breaker (per worker).
+_CIRCUIT_OPEN_UNTIL: datetime | None = None
+_CIRCUIT_FAILURES = 0
 
 
 @dataclass(frozen=True)
@@ -296,6 +307,11 @@ class DGCPHistoricalSimilarSearchService:
         opportunity_id: uuid.UUID,
         request: DGCPHistoricalSimilarSearchRequest | None = None,
     ) -> DGCPHistoricalSimilarResponse:
+        """Local-first similar search — never block on slow DGCP when local data exists."""
+        import time
+
+        global _CIRCUIT_OPEN_UNTIL, _CIRCUIT_FAILURES
+
         request = request or DGCPHistoricalSimilarSearchRequest()
         opp = await self._get_opportunity(opportunity_id)
         self._ensure_eligible(opp)
@@ -304,12 +320,22 @@ class DGCPHistoricalSimilarSearchService:
         index_meta = DGCPHistoricalIndexMeta()
         institution_code = self._institution_code(opp_snapshot)
         institution_name = opp_snapshot.institution or ""
+        local_latency_ms = 0.0
+        remote_latency_ms: float | None = None
+        remote_status: str | None = None
+        degraded = False
+        now = datetime.now(UTC)
 
         try:
             if not request.refresh:
                 cache = await self._get_cache(opportunity_id)
-                if cache and cache.expires_at > datetime.now(UTC) and cache.status != "error":
-                    return self._response_from_cache(opp, cache, cached=True)
+                if cache and cache.expires_at > now and cache.status not in ("error", "timeout"):
+                    resp = self._response_from_cache(opp, cache, cached=True)
+                    resp.source = resp.source or "local"
+                    resp.degraded = False
+                    resp.remote_status = "skipped_cache"
+                    resp.last_updated_at = cache.searched_at.isoformat() if cache.searched_at else None
+                    return resp
 
             keywords_list, query_tokens, core_tokens = await self._extract_keywords(
                 opp, extra_query=request.extra_query
@@ -317,81 +343,113 @@ class DGCPHistoricalSimilarSearchService:
             limit = request.limit or DEFAULT_LIMIT
             index_meta = await self._build_index_meta(institution_name, institution_code)
 
-            external_status: str | None = None
-            external_message: str | None = None
-            error_message: str | None = None
-
-            if request.refresh or index_meta.institution_indexed == 0:
-                try:
-                    async with asyncio.timeout(DGCP_LIVE_SEARCH_TIMEOUT_SECONDS):
-                        await self._ensure_institution_indexed(
-                            institution_name,
-                            institution_code,
-                            refresh=request.refresh,
-                            process_code=opp_snapshot.code,
-                        )
-                    await self.db.refresh(opp)
-                    opp_snapshot = self._snapshot_opportunity(opp)
-                    index_meta = await self._build_index_meta(institution_name, institution_code)
-                except Exception as exc:
-                    await self._safe_rollback()
-                    index_meta = await self._build_index_meta(institution_name, institution_code)
-                    external_status, external_message, error_message = self._external_failure_details(exc)
-
-            matches = await self._search_local_index(
+            # 1) Local index first — never wait for DGCP to answer this.
+            t0 = time.perf_counter()
+            local_matches = await self._search_local_index(
                 opp_snapshot,
                 institution_code=institution_code,
                 query_tokens=query_tokens,
                 core_tokens=core_tokens,
                 limit=limit,
             )
-            pages_scanned = 0
-            candidates_scanned = len(matches)
-            source = "local_index"
-
-            if len(matches) < limit and institution_code:
-                try:
-                    async with asyncio.timeout(DGCP_LIVE_SEARCH_TIMEOUT_SECONDS):
-                        live_matches, live_pages, live_candidates = await self._search_live_institution(
-                            opp_snapshot,
-                            institution_code=institution_code,
-                            query_tokens=query_tokens,
-                            core_tokens=core_tokens,
-                            limit=limit,
-                        )
-                    pages_scanned = live_pages
-                    candidates_scanned += live_candidates
-                    if live_matches:
-                        source = "local_index+dgcp_api:unidad_compra"
-                        seen = {f"{m.process_code}:{m.item_description}" for m in matches}
-                        for m in live_matches:
-                            key = f"{m.process_code}:{m.item_description}"
-                            if key in seen:
-                                continue
-                            seen.add(key)
-                            matches.append(m)
-                            if len(matches) >= limit:
-                                break
-                except Exception as exc:
-                    await self._safe_rollback()
-                    ext_status, ext_message, ext_error = self._external_failure_details(exc)
-                    external_status = external_status or ext_status
-                    external_message = external_message or ext_message
-                    error_message = self._merge_error_messages(error_message, ext_error)
-                    source = "local_index+dgcp_api_unavailable"
-
-            matches.sort(key=lambda m: (m.similarity_score, m.award_date or ""), reverse=True)
-            unique_matches = matches[:limit]
-
-            query_unspsc = self._extract_unspsc(opp_snapshot)
             other_matches = await self._search_other_institutions_local(
                 opp_snapshot,
                 institution_code=institution_code,
                 query_tokens=query_tokens,
                 core_tokens=core_tokens,
                 limit=min(5, limit),
-                query_unspsc=query_unspsc,
+                query_unspsc=self._extract_unspsc(opp_snapshot),
             )
+            local_latency_ms = round((time.perf_counter() - t0) * 1000, 1)
+
+            matches = list(local_matches)
+            pages_scanned = 0
+            candidates_scanned = len(matches)
+            source = "local"
+            error_message: str | None = None
+
+            local_sufficient = len(matches) >= max(1, int(limit * LOCAL_SUFFICIENT_RATIO))
+            circuit_open = bool(_CIRCUIT_OPEN_UNTIL and now < _CIRCUIT_OPEN_UNTIL)
+
+            # 2) If local is sufficient and no forced refresh, return immediately.
+            skip_remote = local_sufficient and not request.refresh
+            if circuit_open and not request.refresh:
+                skip_remote = True
+                remote_status = "circuit_open"
+                degraded = True
+
+            # 3) Complementary / fallback remote DGCP with short timeout + limited retries.
+            if not skip_remote and institution_code:
+                remote_status = "ok"
+                live_matches: list = []
+                attempts = max(1, DGCP_LIVE_MAX_RETRIES)
+                for attempt in range(attempts):
+                    try:
+                        t_remote = time.perf_counter()
+                        async with asyncio.timeout(DGCP_LIVE_SEARCH_TIMEOUT_SECONDS):
+                            if request.refresh or index_meta.institution_indexed == 0:
+                                await self._ensure_institution_indexed(
+                                    institution_name,
+                                    institution_code,
+                                    refresh=request.refresh,
+                                    process_code=opp_snapshot.code,
+                                )
+                                index_meta = await self._build_index_meta(
+                                    institution_name, institution_code
+                                )
+                            live_matches, live_pages, live_candidates = await self._search_live_institution(
+                                opp_snapshot,
+                                institution_code=institution_code,
+                                query_tokens=query_tokens,
+                                core_tokens=core_tokens,
+                                limit=limit,
+                            )
+                        remote_latency_ms = round((time.perf_counter() - t_remote) * 1000, 1)
+                        pages_scanned = live_pages
+                        candidates_scanned += live_candidates
+                        _CIRCUIT_FAILURES = 0
+                        _CIRCUIT_OPEN_UNTIL = None
+                        remote_status = "ok"
+                        break
+                    except Exception as exc:
+                        await self._safe_rollback()
+                        remote_latency_ms = round((time.perf_counter() - t_remote) * 1000, 1)
+                        ext_status, ext_message, ext_error = self._external_failure_details(exc)
+                        remote_status = ext_status or "error"
+                        error_message = self._merge_error_messages(error_message, ext_error or ext_message)
+                        _CIRCUIT_FAILURES += 1
+                        if _CIRCUIT_FAILURES >= 2:
+                            _CIRCUIT_OPEN_UNTIL = datetime.now(UTC) + timedelta(
+                                seconds=DGCP_CIRCUIT_COOLDOWN_SECONDS
+                            )
+                        if attempt + 1 >= attempts:
+                            degraded = True
+                        else:
+                            await asyncio.sleep(0.15)
+
+                if live_matches:
+                    source = "combined"
+                    seen = {f"{m.process_code}:{m.item_description}" for m in matches}
+                    for m in live_matches:
+                        key = f"{m.process_code}:{m.item_description}"
+                        if key in seen:
+                            continue
+                        seen.add(key)
+                        matches.append(m)
+                        if len(matches) >= limit:
+                            break
+                elif matches:
+                    source = "local"
+                    degraded = degraded or remote_status in {"timeout", "error", "circuit_open"}
+                else:
+                    source = "dgcp" if remote_status == "ok" else "local"
+                    degraded = remote_status in {"timeout", "error", "circuit_open"}
+            elif local_sufficient:
+                remote_status = remote_status or "skipped_local_sufficient"
+                source = "local"
+
+            matches.sort(key=lambda m: (m.similarity_score, m.award_date or ""), reverse=True)
+            unique_matches = matches[:limit]
 
             indicators = self._build_indicators(unique_matches)
             price_rec = await self._price_recommendation(unique_matches, opp_snapshot)
@@ -399,26 +457,37 @@ class DGCPHistoricalSimilarSearchService:
                 unique_matches, indicators, price_rec, opp_snapshot.institution, keywords_list
             )
 
-            if not unique_matches and external_status:
-                status = external_status
-                message = external_message or "DGCP no estuvo disponible y no hay resultados locales."
-            elif not unique_matches:
-                status = "empty"
-                if index_meta.institution_indexed == 0:
-                    message = "No hay adjudicaciones indexadas para esta institución y la búsqueda devolvió un resultado vacío."
-                else:
-                    kw_sample = ", ".join(keywords_list[:6]) if keywords_list else "las palabras del proceso"
-                    message = (
-                        f"No encontramos compras relacionadas en {opp_snapshot.institution} con términos como {kw_sample}. "
-                        f"Hay {index_meta.institution_indexed} adjudicación(es) indexada(s) de esta entidad."
-                    )
-            else:
+            if unique_matches:
                 status = "searched"
                 message = (
                     f"Se encontraron {len(unique_matches)} compra(s) relacionada(s) "
-                    f"para {opp_snapshot.institution}."
+                    f"para {opp_snapshot.institution} (fuente={source})."
+                )
+                if degraded and remote_status == "timeout":
+                    message += " DGCP remoto excedió el timeout; se sirven resultados locales."
+            elif remote_status == "timeout":
+                status = "timeout"
+                degraded = True
+                message = (
+                    f"DGCP no respondió en {int(DGCP_LIVE_SEARCH_TIMEOUT_SECONDS)}s y no hay "
+                    f"adjudicaciones locales suficientes para {opp_snapshot.institution}."
+                )
+            elif index_meta.institution_indexed == 0:
+                status = "empty"
+                message = (
+                    "No hay adjudicaciones indexadas para esta institución y la búsqueda "
+                    "devolvió un resultado vacío."
+                )
+            else:
+                status = "empty"
+                kw_sample = ", ".join(keywords_list[:6]) if keywords_list else "las palabras del proceso"
+                message = (
+                    f"No encontramos compras relacionadas en {opp_snapshot.institution} "
+                    f"con términos como {kw_sample}. Hay {index_meta.institution_indexed} "
+                    "adjudicación(es) indexada(s) de esta entidad."
                 )
 
+            searched_at = datetime.now(UTC)
             response = DGCPHistoricalSimilarResponse(
                 opportunity_id=str(opp_snapshot.id),
                 process_code=opp_snapshot.code,
@@ -426,8 +495,8 @@ class DGCPHistoricalSimilarSearchService:
                 buyer_institution=opp_snapshot.institution,
                 keywords_used=keywords_list,
                 cached=False,
-                searched_at=datetime.now(UTC).isoformat(),
-                expires_at=(datetime.now(UTC) + timedelta(hours=CACHE_HOURS)).isoformat(),
+                searched_at=searched_at.isoformat(),
+                expires_at=(searched_at + timedelta(hours=CACHE_HOURS)).isoformat(),
                 source=source,
                 pages_scanned=pages_scanned,
                 candidates_scanned=candidates_scanned,
@@ -441,6 +510,11 @@ class DGCPHistoricalSimilarSearchService:
                 price_recommendation=price_rec,
                 ai_insights=insights,
                 index_meta=index_meta,
+                remote_status=remote_status,
+                degraded=degraded,
+                last_updated_at=searched_at.isoformat(),
+                local_latency_ms=local_latency_ms,
+                remote_latency_ms=remote_latency_ms,
             )
 
             cache_error = await self._persist_cache_safely(
@@ -456,22 +530,49 @@ class DGCPHistoricalSimilarSearchService:
             return response
         except Exception as exc:
             await self._safe_rollback()
+            # Last-resort: try pure local before returning empty.
+            try:
+                keywords_list = keywords_list or []
+                if not keywords_list:
+                    keywords_list, query_tokens, core_tokens = await self._extract_keywords(opp)
+                else:
+                    _, query_tokens, core_tokens = await self._extract_keywords(
+                        opp, extra_query=request.extra_query if request else None
+                    )
+                local_matches = await self._search_local_index(
+                    opp_snapshot,
+                    institution_code=institution_code,
+                    query_tokens=query_tokens,
+                    core_tokens=core_tokens,
+                    limit=request.limit if request else DEFAULT_LIMIT,
+                )
+            except Exception:
+                local_matches = []
             response = self._build_resilient_response(
                 opp_snapshot,
                 keywords_list=keywords_list,
-                source="local_index+fallback",
-                status="error",
-                message="No fue posible completar la búsqueda histórica; se devuelve un resultado vacío seguro.",
+                source="local",
+                status="error" if not local_matches else "searched",
+                message=(
+                    "Búsqueda degradada: se devuelven resultados locales."
+                    if local_matches
+                    else "No fue posible completar la búsqueda histórica; se devuelve un resultado vacío seguro."
+                ),
                 error_message=f"{exc.__class__.__name__}: {exc}",
                 index_meta=index_meta,
+                matches=local_matches,
             )
+            response.degraded = True
+            response.remote_status = "error"
+            response.last_updated_at = datetime.now(UTC).isoformat()
+            response.local_latency_ms = local_latency_ms
             await self._persist_cache_safely(
                 opp=opp_snapshot,
                 keywords=keywords_list,
                 response=response,
                 pages_scanned=0,
-                candidates_scanned=0,
-                refresh=request.refresh,
+                candidates_scanned=len(local_matches),
+                refresh=bool(request.refresh) if request else False,
             )
             return response
 
@@ -762,7 +863,37 @@ class DGCPHistoricalSimilarSearchService:
                 break
 
         matches.sort(key=lambda m: m.similarity_score, reverse=True)
-        return matches[: limit * 2]
+        if matches:
+            return matches[: limit * 2]
+
+        # Fallback: same-institution awards already indexed, even without strong lexical overlap.
+        # Prevents empty responses when the local index has real data but keywords diverge.
+        fallback: list[SimilarityMatch] = []
+        seen_codes: set[str] = set()
+        for row in rows:
+            if row.process_code == opp.code or row.process_code in seen_codes:
+                continue
+            if not institution_matches_strict(
+                opp.institution,
+                row.buyer_institution,
+                query_institution_code=institution_code,
+                candidate_institution_code=row.buyer_institution_code,
+            ):
+                continue
+            seen_codes.add(row.process_code)
+            fallback.append(
+                self._row_to_match(
+                    row,
+                    score=max(MIN_SCORE, 20),
+                    reasons=[
+                        f"Misma institución ({opp.institution}) — resultado local indexado "
+                        "sin solapamiento lexical fuerte"
+                    ],
+                )
+            )
+            if len(fallback) >= limit:
+                break
+        return fallback
 
     async def _search_other_institutions_local(
         self,
@@ -1082,7 +1213,7 @@ class DGCPHistoricalSimilarSearchService:
 
     def _build_resilient_response(
         self,
-        opp: DGCPOpportunity,
+        opp: DGCPOpportunity | OpportunitySnapshot,
         *,
         keywords_list: list[str],
         source: str,
@@ -1090,7 +1221,9 @@ class DGCPHistoricalSimilarSearchService:
         message: str,
         error_message: str | None,
         index_meta: DGCPHistoricalIndexMeta | None = None,
+        matches: list | None = None,
     ) -> DGCPHistoricalSimilarResponse:
+        match_items = [self._match_to_item(m) for m in (matches or [])]
         return DGCPHistoricalSimilarResponse(
             opportunity_id=str(opp.id),
             process_code=opp.code,
@@ -1102,17 +1235,20 @@ class DGCPHistoricalSimilarSearchService:
             expires_at=(datetime.now(UTC) + timedelta(hours=CACHE_HOURS)).isoformat(),
             source=source,
             pages_scanned=0,
-            candidates_scanned=0,
+            candidates_scanned=len(match_items),
             status=status,
             message=message,
             error_message=error_message,
-            matches=[],
+            matches=match_items,
             other_institution_matches=[],
-            total_matches=0,
-            indicators=DGCPHistoricalIndicators(),
+            total_matches=len(match_items),
+            indicators=self._build_indicators(matches or []) if matches else DGCPHistoricalIndicators(),
             price_recommendation=None,
             ai_insights=[message],
             index_meta=index_meta or DGCPHistoricalIndexMeta(),
+            degraded=True,
+            remote_status="error",
+            last_updated_at=datetime.now(UTC).isoformat(),
         )
 
     def _response_from_cache(

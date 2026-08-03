@@ -37,9 +37,16 @@ export function CompanyPersonSelect({
 
   const load = useCallback(() => {
     setLoading(true);
-    apiClient
-      .getCompanyRepresentatives(companyId)
-      .then((res) => setPeople(res.representatives))
+    setError(null);
+    const fn = apiClient.getCompanyRepresentatives;
+    if (typeof fn !== "function") {
+      setPeople([]);
+      setError("La función de representantes no está disponible en este build.");
+      setLoading(false);
+      return;
+    }
+    fn(companyId)
+      .then((res) => setPeople(Array.isArray(res?.representatives) ? res.representatives : []))
       .catch((err) => setError(err instanceof ApiError ? err.message : "Error al cargar personas"))
       .finally(() => setLoading(false));
   }, [companyId]);

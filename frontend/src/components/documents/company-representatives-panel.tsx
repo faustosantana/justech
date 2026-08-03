@@ -49,9 +49,15 @@ export function CompanyRepresentativesPanel({
     setLoading(true);
     setError(null);
     try {
+      if (typeof apiClient.getCompanyRepresentatives !== "function") {
+        setReps([]);
+        setError("La función de representantes no está disponible en este build.");
+        return;
+      }
       const res = await apiClient.getCompanyRepresentatives(companyId);
-      setReps(res.representatives);
+      setReps(Array.isArray(res?.representatives) ? res.representatives : []);
     } catch (err) {
+      setReps([]);
       setError(err instanceof ApiError ? err.message : "No se pudieron cargar los representantes.");
     } finally {
       setLoading(false);

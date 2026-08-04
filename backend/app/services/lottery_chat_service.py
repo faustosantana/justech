@@ -458,10 +458,22 @@ class LotteryChatService:
         from datetime import datetime, timezone
 
         from app.lottery.ai.active_investigation.session import ActiveInvestigationSession
-        from app.lottery.ai.explorer.catalog_cards import build_number_card
-        from app.lottery.ai.explorer.nav_state import ExplorerNavState
         from app.lottery.ai.same_day_coincidence import analyzing_label
         from app.lottery.ai.turn_policy import filters_label_es, position_label_es
+
+        try:
+            from app.lottery.ai.explorer.catalog_cards import build_number_card
+            from app.lottery.ai.explorer.nav_state import ExplorerNavState
+        except ModuleNotFoundError:
+            # Explorer UX optional — never fail a completed chat turn.
+            return {
+                "active_numbers": list(getattr(state, "active_numbers", None) or []),
+                "active_pair": list(getattr(state, "active_pair", None) or []),
+                "active_relation": getattr(state, "active_relation", None),
+                "active_lotteries": list(getattr(state, "active_lotteries", None) or []),
+                "preferred_position": getattr(state, "preferred_position", None),
+                "active_investigation": bool(getattr(state, "active_investigation", None)),
+            }
 
         inv = ActiveInvestigationSession.from_store(
             getattr(state, "active_investigation", None)
@@ -1955,6 +1967,34 @@ class LotteryChatService:
             elif not phase_a_handled:
                 tool_enum = self._tool_enum(understanding.tool)
                 exec_params = self._normalize_tool_params(understanding.tool, params, state)
+                # Hard subject integrity: explicit resolved pair must match tool params.
+                try:
+                    from app.lottery.ai.conversational_integrity import (
+                        SubjectMismatchError,
+                        assert_subjects_aligned,
+                        normalize_subjects,
+                    )
+                    from app.lottery.ai.turn_policy import extract_subject_numbers
+
+                    resolved = normalize_subjects(
+                        list(getattr(hermes_decision, "inherited_subjects", None) or [])
+                        or extract_subject_numbers(content)
+                    )
+                    observed: list[Any] = []
+                    if isinstance(exec_params.get("numbers"), list):
+                        observed = list(exec_params.get("numbers") or [])
+                    elif exec_params.get("number") is not None:
+                        observed = [exec_params.get("number")]
+                    if len(resolved) >= 2 and observed:
+                        assert_subjects_aligned(
+                            resolved=resolved,
+                            observed=observed,
+                            stage="exec_params",
+                        )
+                except SubjectMismatchError:
+                    raise
+                except Exception:  # noqa: BLE001 — never block turns on guard plumbing
+                    pass
                 result = await executor.execute(
                     tool_enum,
                     exec_params,
@@ -2306,28 +2346,20 @@ class LotteryChatService:
                             )
                             if text:
                                 return text, model, usage or {}, pmeta or {}
-                            # Compatibility fallback only when settings are Huawei/default
-                            if allow_fb:
-                                llm_msgs = [
-                                    LLMMessage(role=m["role"], content=m["content"])
-                                    for m in messages
-                                ]
-                                text2, model2 = await self._synthesize_via_hermes(
-                                    llm_msgs, max_tokens=max_tokens
-                                )
-                                return (
-                                    text2,
-                                    model2,
-                                    {},
-                                    {
-                                        **(pmeta or {}),
-                                        "provider_used": "huawei_modelarts",
-                                        "fallback_used": True,
-                                        "fallback_reason": (pmeta or {}).get("fallback_reason")
-                                        or "settings_provider_empty",
-                                    },
-                                )
-                            return None, model, usage or {}, pmeta or {}
+                            # No silent hermes_default_model (DeepSeek-V3.2) bypass.
+                            # Lottery IA must stay on conversation_settings provider/model.
+                            return (
+                                None,
+                                model,
+                                usage or {},
+                                {
+                                    **(pmeta or {}),
+                                    "fallback_used": False,
+                                    "fallback_reason": (pmeta or {}).get("fallback_reason")
+                                    or "settings_provider_empty",
+                                    "error_code": "lottery_provider_empty",
+                                },
+                            )
 
                         if should_invoke_reasoning(mode):
                             studio_row: dict[str, Any] | None = None
@@ -2718,6 +2750,66 @@ class LotteryChatService:
             pass
 
         latency_ms = int((time.perf_counter() - t0) * 1000)
+        # Separated latencies (do not reuse wall total as llm_latency_ms)
+        sql_latency_ms = int(
+            sum(int(t.get("duration_ms") or 0) for t in tool_trace if isinstance(t, dict))
+        )
+        reasoning_latency_ms = None
+        llm_call_latency_ms = None
+        if isinstance(reasoning_telemetry, dict):
+            if reasoning_telemetry.get("latency_ms") is not None:
+                try:
+                    reasoning_latency_ms = int(float(reasoning_telemetry.get("latency_ms")))
+                    llm_call_latency_ms = reasoning_latency_ms
+                except (TypeError, ValueError):
+                    pass
+        research_ms = int(getattr(research_trace, "duration_ms", 0) or 0)
+        if llm_call_latency_ms is None and research_ms and latency_ms >= research_ms:
+            # Approximate: research includes SQL+orchestration; LLM ≈ wall - research when
+            # reasoning telemetry missing (should be rare after conversation_id fix).
+            approx = latency_ms - research_ms
+            if approx > 0:
+                llm_call_latency_ms = approx
+        formatting_latency_ms = max(
+            0,
+            latency_ms
+            - (sql_latency_ms or 0)
+            - (llm_call_latency_ms or 0),
+        )
+
+        # Prompt hash: prefer reasoning runtime; else deterministic hash of system V6 body
+        prompt_hash: str | None = None
+        prompt_id: str | None = None
+        prompt_runtime_label: str | None = None
+        prompt_source: str | None = None
+        if isinstance(reasoning_telemetry, dict):
+            pr = reasoning_telemetry.get("prompt_runtime")
+            if isinstance(pr, dict):
+                prompt_hash = (
+                    pr.get("compiled_prompt_hash")
+                    or pr.get("prompt_hash")
+                    or None
+                )
+                prompt_id = pr.get("prompt_version_id") or pr.get("prompt_id")
+                prompt_runtime_label = pr.get("source") or pr.get("prompt_source")
+                prompt_source = pr.get("prompt_source") or pr.get("source")
+            if not prompt_hash and reasoning_telemetry.get("prompt_hash"):
+                prompt_hash = str(reasoning_telemetry.get("prompt_hash"))
+        if not prompt_hash:
+            try:
+                from app.lottery.ai.prompts.lottery_analyst_system_v6 import (
+                    content_hash as v6_content_hash,
+                    get_analyst_prompt,
+                )
+
+                ap = get_analyst_prompt()
+                prompt_hash = ap.content_hash or v6_content_hash(ap.body)
+                prompt_id = prompt_id or ap.name
+                prompt_runtime_label = prompt_runtime_label or "system_v6"
+                prompt_source = prompt_source or "system_v6"
+            except Exception:  # noqa: BLE001
+                prompt_source = prompt_source or "unknown"
+
         agent_trace = ConversationTraceLogger.build(
             decision=hermes_decision,
             provider_used=provider_used or ("local_template" if synthesis_fallback or intent_kind != "tool" else None),
@@ -2730,14 +2822,34 @@ class LotteryChatService:
             tools_used=[t.get("tool") for t in tool_trace if isinstance(t, dict)],
             reasoning_telemetry=reasoning_telemetry,
         )
+        usage_merged_preview = {}
+        try:
+            from app.lottery.ai.usage import merge_usage as _merge_usage_preview
+
+            usage_merged_preview = _merge_usage_preview(*llm_usage_parts)
+        except Exception:  # noqa: BLE001
+            usage_merged_preview = {}
         runtime_trace = {
             "provider_requested": provider_requested,
-            "provider_used": provider_used or ("local_template" if synthesis_fallback or intent_kind != "tool" else None),
+            "provider_selected": provider_settings_meta.get("selected_provider")
+            or provider_requested,
+            "provider_used": provider_used
+            or ("local_template" if synthesis_fallback or intent_kind != "tool" else None),
             "model_requested": model_requested,
+            "model_selected": provider_settings_meta.get("selected_model") or model_requested,
             "model_used": model_name,
             "fallback_used": fallback_used,
             "fallback_reason": fallback_reason,
-            "llm_latency_ms": latency_ms,
+            "error_code": (
+                (reasoning_telemetry or {}).get("rejection_reason")
+                if isinstance(reasoning_telemetry, dict)
+                else None
+            ),
+            "sql_latency_ms": sql_latency_ms,
+            "reasoning_latency_ms": reasoning_latency_ms,
+            "llm_latency_ms": llm_call_latency_ms,
+            "formatting_latency_ms": formatting_latency_ms,
+            "total_latency_ms": latency_ms,
             "tools_executed": [t.get("tool") for t in tool_trace],
             "synthesis_status": (
                 "skipped"
@@ -2745,7 +2857,19 @@ class LotteryChatService:
                 else ("fallback" if synthesis_fallback else "ok")
             ),
             "intent": understanding.intent,
+            "prompt_runtime": prompt_runtime_label,
             "prompt_version": get_active_prompt().version,
+            "prompt_id": prompt_id or get_active_prompt().name,
+            "prompt_hash": prompt_hash,
+            "compiled_prompt_hash": prompt_hash,
+            "prompt_source": prompt_source,
+            "usage": {
+                "prompt_tokens": int(usage_merged_preview.get("prompt_tokens") or 0),
+                "completion_tokens": int(usage_merged_preview.get("completion_tokens") or 0),
+                "total_tokens": int(usage_merged_preview.get("total_tokens") or 0),
+                "input_tokens": int(usage_merged_preview.get("prompt_tokens") or 0),
+                "output_tokens": int(usage_merged_preview.get("completion_tokens") or 0),
+            },
             "research_trace": research_trace.to_dict() if self._expose_diagnostics() else {
                 "trace_id": research_trace.trace_id,
                 "investigating": research_trace.investigating,
@@ -2792,6 +2916,23 @@ class LotteryChatService:
             prompt_tokens = int(usage_merged.get("prompt_tokens") or 0)
             completion_tokens = int(usage_merged.get("completion_tokens") or 0)
             total_tokens = int(usage_merged.get("total_tokens") or 0)
+            cost_usd = estimate_cost_usd(
+                prompt_tokens=prompt_tokens,
+                completion_tokens=completion_tokens,
+                model=model_name,
+                provider=str(provider_used or model_name or "local"),
+            )
+            runtime_trace["usage"] = {
+                **(runtime_trace.get("usage") or {}),
+                "prompt_tokens": prompt_tokens,
+                "completion_tokens": completion_tokens,
+                "total_tokens": total_tokens,
+                "input_tokens": prompt_tokens,
+                "output_tokens": completion_tokens,
+                "estimated_cost_usd": cost_usd,
+                "usage_source": "provider" if total_tokens > 0 else "none",
+            }
+            runtime_trace["estimated_cost_usd"] = cost_usd
             lottery_key = None
             try:
                 lottery_key = (
@@ -2814,13 +2955,8 @@ class LotteryChatService:
                 prompt_tokens=prompt_tokens,
                 completion_tokens=completion_tokens,
                 total_tokens=total_tokens,
-                latency_ms=latency_ms,
-                estimated_cost_usd=estimate_cost_usd(
-                    prompt_tokens=prompt_tokens,
-                    completion_tokens=completion_tokens,
-                    model=model_name,
-                    provider=prov_label,
-                ),
+                latency_ms=int(llm_call_latency_ms or latency_ms),
+                estimated_cost_usd=cost_usd,
                 tool_names=[str(x) for x in tools_used if x],
                 ok=not synthesis_fallback or bool(final_text),
                 lottery_key=lottery_key,
@@ -4364,79 +4500,85 @@ class LotteryChatService:
         else:
             last_err = None
 
-        # 2) LLMRouter con reintentos (compat ENV) — only when settings are not OpenAI
-        provider = None
-        provider_name: str | None = None
-        if allow_fb and settings.assistant_synthesis_provider:
+        # 2) One authorized retry via Lottery AI Settings provider (no ENV/LLMRouter,
+        # no hermes_default_model DeepSeek-V3.2 silent bypass).
+        if allow_fb or configured_provider_name() == "openai":
             try:
-                provider = LLMProvider(settings.assistant_synthesis_provider)
-                provider_name = provider.value
-            except ValueError:
-                provider = None
-        if allow_fb:
-            for attempt in range(2):
-                try:
-                    response = await self.llm.complete(
-                        LLMCompletionRequest(
-                            messages=messages,
-                            provider=provider,
-                            temperature=0.2,
-                            max_tokens=token_budget,
-                        ),
-                        tenant_id=self.tenant_id,
+                text1, model1, usage1, pmeta1 = await asyncio.to_thread(
+                    complete_with_lottery_provider,
+                    msg_dicts,
+                    max_tokens=token_budget,
+                    temperature=0.2,
+                    allow_fallback=False,
+                )
+                p, c, t = normalize_usage_tokens(usage1 if isinstance(usage1, dict) else None)
+                text1s = self._sanitize_user_facing((text1 or "").strip())
+                if text1s and len(text1s) >= 20 and not self._looks_internal(text1s):
+                    used_s = runtime_provider_label(
+                        str(pmeta1.get("provider_used") or pmeta1.get("provider") or "huawei")
                     )
-                    text = self._sanitize_user_facing((response.content or "").strip())
-                    if len(text) >= 20 and not self._looks_internal(text):
-                        used = getattr(response, "provider", None)
-                        used_s = (
-                            used.value
-                            if hasattr(used, "value")
-                            else (str(used) if used else provider_name)
-                        )
-                        resp_usage = getattr(response, "usage", None) or {}
-                        p, c, t = normalize_usage_tokens(
-                            resp_usage if isinstance(resp_usage, dict) else None
-                        )
-                        return (
-                            text,
-                            False,
-                            getattr(response, "model", None),
-                            used_s,
-                            {
-                                "prompt_tokens": p,
-                                "completion_tokens": c,
-                                "total_tokens": t,
-                            },
-                        )
-                except Exception as exc:  # noqa: BLE001 — fallback controlado
-                    last_err = exc
-                    await asyncio.sleep(0.35 * (attempt + 1))
+                    return (
+                        text1s,
+                        False,
+                        model1,
+                        used_s,
+                        {
+                            "prompt_tokens": p,
+                            "completion_tokens": c,
+                            "total_tokens": t,
+                            "usage_source": "provider",
+                        },
+                    )
+            except Exception as exc:  # noqa: BLE001
+                last_err = exc
 
-            # 3) Hermes / ModelArts compatibility path
-            hermes_text, hermes_model = await self._synthesize_via_hermes(
-                messages, max_tokens=token_budget
-            )
-            if hermes_text:
-                return hermes_text, False, hermes_model, "huawei_modelarts", empty_usage
-
-        # 4) Fallback natural: plantilla local (nunca mensajes internos)
+        # 3) Controlled local fallback — never silently switch model via Hermes ENV default
         _ = last_err
-        return template, True, None, "local_template", empty_usage
+        return (
+            template,
+            True,
+            None,
+            "local_template",
+            {
+                **empty_usage,
+                "usage_source": "none",
+                "error_code": "lottery_provider_unavailable",
+                "fallback_reason": "settings_provider_failed_or_empty",
+            },
+        )
 
     async def _synthesize_via_hermes(
         self, messages: list[LLMMessage], *, max_tokens: int = 1200
     ) -> tuple[str | None, str | None]:
+        """Legacy transport helper.
+
+        Must use Lottery AI Settings model — never ``hermes_default_model`` for
+        Lottery IA chat. Prefer ``complete_with_lottery_provider``; this path is
+        retained only for forensic/compat callers.
+        """
         from app.lottery.ai.forensics import ForensicTraceService, get_correlation_id
+        from app.lottery.ai.conversational_orchestrator.conversation_provider_factory import (
+            get_lottery_conversation_provider,
+        )
 
         url = (getattr(settings, "hermes_model_api_url", None) or "").strip()
         key = (getattr(settings, "hermes_model_api_key", None) or "").strip()
         if not url or not key or not getattr(settings, "hermes_enabled", True):
             return None, None
-        model = (
-            getattr(settings, "hermes_default_model", None)
-            or getattr(settings, "hermes_model", None)
-            or "DeepSeek-V3.2"
-        )
+        # Canonical model from conversation_settings (DB), not ENV hermes_default_model
+        try:
+            _prov, _meta = get_lottery_conversation_provider(allow_fallback=False)
+            model = str(
+                _meta.get("selected_model")
+                or _meta.get("model")
+                or getattr(_prov, "model", None)
+                or ""
+            ).strip()
+        except Exception:  # noqa: BLE001
+            model = ""
+        if not model:
+            # Refuse silent DeepSeek-V3.2 — caller must use settings provider
+            return None, None
         token_budget = max(200, min(int(max_tokens or 1200), 4000))
         msg_payload = [m.model_dump() for m in messages]
         request_json = {
@@ -4466,6 +4608,7 @@ class LotteryChatService:
                         "Live chat uses V6 / reasoning_prompt builders — "
                         "NOT Prompt Studio compile_prompt_from_blocks"
                     ),
+                    "model_from_conversation_settings": model,
                 },
             )
             if forensic.include_prompts:
@@ -4583,7 +4726,8 @@ class LotteryChatService:
                             as_text=True,
                         )
                     if len(content) >= 20 and not self._looks_internal(content):
-                        return content, str(data.get("model") or model)
+                        # Report the model we requested from conversation_settings
+                        return content, model
                     break
         except Exception:
             return None, None

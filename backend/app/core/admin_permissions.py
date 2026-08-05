@@ -73,6 +73,9 @@ PERMISSIONS = frozenset({
     "view_odoo",
     "view_dgcp",
     "view_m365",
+    # Restored: FE ModuleAccessGuard for empresas-grupo/documentos requires this key.
+    # Dropped accidentally in lottery admin merge (dd19094). Scope: view_documents only.
+    "view_documents",
     "admin_users",
     "admin_settings",
 }) | LOTTERY_PERMISSIONS
@@ -83,17 +86,37 @@ ROLE_PERMISSIONS: dict[str, frozenset[str]] = {
     "admin": PERMISSIONS,
     "gerencia": frozenset({
         "view_modules", "create_tasks", "reassign_tasks",
-        "view_odoo", "view_dgcp", "view_m365",
+        "view_odoo", "view_dgcp", "view_m365", "view_documents",
     }) | LOTTERY_CLIENT_PERMISSIONS,
-    "ventas": frozenset({"view_modules", "create_tasks", "view_odoo", "view_dgcp", "view_m365"}),
-    "facturacion": frozenset({"view_modules", "create_tasks", "view_odoo", "view_m365"}),
-    "finanzas": frozenset({"view_modules", "create_tasks", "view_odoo", "view_m365"}),
-    "compras": frozenset({"view_modules", "create_tasks", "view_odoo"}),
-    "soporte": frozenset({"view_modules", "create_tasks", "reassign_tasks", "view_odoo", "view_m365"}),
-    "operaciones": frozenset({"view_modules", "create_tasks", "reassign_tasks", "view_odoo", "view_dgcp", "view_m365"}),
-    "licitaciones": frozenset({"view_modules", "create_tasks", "view_dgcp", "view_m365"}),
-    "usuario": frozenset({"view_modules", "create_tasks", "view_odoo", "view_dgcp", "view_m365"}),
-    "member": frozenset({"view_modules", "create_tasks", "view_odoo", "view_dgcp", "view_m365"}),
+    "ventas": frozenset({
+        "view_modules", "create_tasks", "view_odoo", "view_dgcp", "view_m365", "view_documents",
+    }),
+    "facturacion": frozenset({
+        "view_modules", "create_tasks", "view_odoo", "view_m365", "view_documents",
+    }),
+    "finanzas": frozenset({
+        "view_modules", "create_tasks", "view_odoo", "view_m365", "view_documents",
+    }),
+    "compras": frozenset({
+        "view_modules", "create_tasks", "view_odoo", "view_documents",
+    }),
+    "soporte": frozenset({
+        "view_modules", "create_tasks", "reassign_tasks", "view_odoo", "view_m365", "view_documents",
+    }),
+    "operaciones": frozenset({
+        "view_modules", "create_tasks", "reassign_tasks",
+        "view_odoo", "view_dgcp", "view_m365", "view_documents",
+    }),
+    "licitaciones": frozenset({
+        "view_modules", "create_tasks", "view_dgcp", "view_m365", "view_documents",
+    }),
+    "usuario": frozenset({
+        "view_modules", "create_tasks", "view_odoo", "view_dgcp", "view_m365", "view_documents",
+    }),
+    "member": frozenset({
+        "view_modules", "create_tasks", "view_odoo", "view_dgcp", "view_m365", "view_documents",
+    }),
+    # Lottery-only: must not gain empresas-grupo / documentos.
     "lottery_client": LOTTERY_CLIENT_PERMISSIONS,
 }
 

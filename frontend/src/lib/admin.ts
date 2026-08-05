@@ -7,6 +7,19 @@ export interface AdminAccess {
   permissions: string[];
 }
 
+/** Acceso efectivo del usuario al shell / launcher de aplicaciones. */
+export interface PlatformAccess {
+  role: string;
+  permissions: string[];
+  allowed_modules?: string[] | null;
+  modules: Record<string, boolean>;
+  can_view_prices: boolean;
+  can_view_suppliers: boolean;
+  can_manage_supplier_integrations: boolean;
+  can_mutate_admin: boolean;
+  can_view_admin: boolean;
+}
+
 export interface AdminUser {
   id: string;
   email: string;

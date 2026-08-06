@@ -31,6 +31,7 @@ import {
 import { DGCPHistoricalAwardsPanel } from "@/components/dgcp/dgcp-historical-awards-panel";
 import { DGCPIntelligencePanel } from "@/components/dgcp/dgcp-intelligence-panel";
 import { OpportunityBidSection } from "@/components/dgcp/opportunity-bid-section";
+import { PliegoDeepAnalysisPanel } from "@/components/dgcp/pliego-deep-analysis-panel";
 import { DgcpFunnelHeader } from "@/components/dgcp/dgcp-funnel-header";
 import { CreateTaskButton } from "@/components/work/create-task-button";
 import { Badge } from "@/components/ui/badge";
@@ -554,6 +555,11 @@ function ResumenTab({
   return (
     <>
       <IntelligenceSummaryCards opportunity={opportunity} />
+
+      <PliegoDeepAnalysisPanel
+        opportunityId={opportunity.id}
+        interested={isDGCPOperationalInterest(opportunity.status)}
+      />
 
       {execBid && execChecklist && (
         <Card className={notReady ? "border-warning/30 bg-warning/10" : "border-success/30 bg-success/10"}>

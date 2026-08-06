@@ -543,7 +543,42 @@ export const apiClient = {
       alerts?: import("@/lib/dgcp").DGCPBidAlert[];
       analysis_warnings?: string[];
       expediente_status?: string;
+      pliego_analysis?: Record<string, unknown> | null;
     }>(`/dgcp/opportunities/${id}/requirements/analyze`, { method: "POST", body: "{}" }, true),
+
+  getDGCPPliegoAnalysis: (id: string) =>
+    request<{
+      opportunity_id: string;
+      current: Record<string, unknown> | null;
+      versions: Array<Record<string, unknown>>;
+    }>(`/dgcp/opportunities/${id}/pliego-analysis`, {}, true),
+
+  runDGCPPliegoAnalysis: (id: string, force = true) =>
+    request<{
+      opportunity_id: string;
+      current: Record<string, unknown> | null;
+      versions: Array<Record<string, unknown>>;
+    }>(
+      `/dgcp/opportunities/${id}/pliego-analysis/run${force ? "?force=true" : "?force=false"}`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  reviewDGCPPliegoField: (
+    id: string,
+    fieldKey: string,
+    data: {
+      reviewed?: boolean;
+      comment?: string | null;
+      corrected_value?: unknown;
+      corrected_items?: unknown[];
+    },
+  ) =>
+    request<Record<string, unknown>>(
+      `/dgcp/opportunities/${id}/pliego-analysis/fields/${encodeURIComponent(fieldKey)}/review`,
+      { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
 
   getDGCPChecklist: (id: string) =>
     request<import("@/lib/dgcp").DGCPChecklist>(`/dgcp/opportunities/${id}/checklist`, {}, true),

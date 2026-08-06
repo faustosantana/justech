@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { DocumentPreviewModal } from "@/components/dgcp/document-preview-modal";
 import { AuthenticatedFileViewer } from "@/components/documents/authenticated-file-viewer";
 import { ExpedienteDashboard } from "@/components/dgcp/expediente-dashboard";
+import { PliegoDeepAnalysisPanel } from "@/components/dgcp/pliego-deep-analysis-panel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -462,29 +463,35 @@ export function OpportunityBidSection({
       ) : (
         <>
           {activeTab === "requisitos" && (
-            analyzed && checklist && matches ? (
-              <ComplianceBoardTab
+            <div className="space-y-4">
+              <PliegoDeepAnalysisPanel
                 opportunityId={opportunity.id}
-                checklist={checklist}
-                matches={matches}
-                warnings={analysisWarnings}
-                onPreview={(itemId) => setPreviewItemId(itemId)}
-                onValidate={(itemId) => {
-                  setValidationItemId(itemId);
-                  setValidationStatus("validado_manual");
-                }}
-                onCreateTask={handleCreateTask}
-                taskBusyId={taskBusyId}
-                onAddNote={(itemId) => {
-                  setNoteItemId(itemId);
-                  setNoteText("");
-                }}
-                onAssociate={setAssociateItemId}
-                onMarkNoAplica={handleMarkNoAplica}
+                interested={interested}
               />
-            ) : (
-              <EmptyAnalysisHint />
-            )
+              {analyzed && checklist && matches ? (
+                <ComplianceBoardTab
+                  opportunityId={opportunity.id}
+                  checklist={checklist}
+                  matches={matches}
+                  warnings={analysisWarnings}
+                  onPreview={(itemId) => setPreviewItemId(itemId)}
+                  onValidate={(itemId) => {
+                    setValidationItemId(itemId);
+                    setValidationStatus("validado_manual");
+                  }}
+                  onCreateTask={handleCreateTask}
+                  taskBusyId={taskBusyId}
+                  onAddNote={(itemId) => {
+                    setNoteItemId(itemId);
+                    setNoteText("");
+                  }}
+                  onAssociate={setAssociateItemId}
+                  onMarkNoAplica={handleMarkNoAplica}
+                />
+              ) : (
+                <EmptyAnalysisHint />
+              )}
+            </div>
           )}
           {activeTab === "documentos-proceso" && (
             analyzed ? (

@@ -14,6 +14,7 @@ from app.models.dgcp_opportunity import DGCPOpportunity
 from app.models.dgcp_process_document import DGCPProcessDocument
 from app.services.dgcp_process_document_classifier import classify_process_document
 from app.services.dgcp_process_storage_service import DGCPProcessStorageService
+from app.services.document_extraction_service import DocumentExtractionService
 
 # Tipos de fuente del repositorio de proceso (nunca documentos corporativos indexados).
 PROCESS_SOURCE_TYPES = frozenset({"portal", "dgcp_api", "portal_text", "process_file", "reference"})
@@ -231,3 +232,141 @@ class DGCPAttachmentIngestionService:
         if doc.source_type in ("portal", "dgcp_api", "reference") and not doc.extracted_text:
             return "Detectado"
         return "Sin contenido relevante"
+
+    def build_documents_response(self, docs: list[DGCPProcessDocument]) -> dict[str, Any]:
+        """Serializa documentos del proceso para la API (nunca lanza por lista vacía)."""
+        items: list[dict[str, Any]] = []
+        portal: dict[str, Any] | None = None
+        for doc in docs:
+            summary = self._summary(doc)
+            if doc.source_type == "portal":
+                summary["is_portal_link"] = True
+                if portal is None:
+                    portal = summary
+            else:
+                summary["is_portal_link"] = False
+            items.append(summary)
+        return {"items": items, "total": len(items), "portal": portal}
+
+    async def refresh_portal_documents(self, opportunity: DGCPOpportunity) -> dict[str, Any]:
+        """Re-descubre referencias del payload sin borrar archivos ya subidos."""
+        existing = await self.load_process_documents(opportunity.id)
+        existing_urls = {(d.source_url or "").rstrip("/") for d in existing if d.source_url}
+        existing_titles = {d.title.lower() for d in existing}
+        discovered = 0
+        for item in self._discover_from_payload(opportunity):
+            title = str(item.get("title") or "").strip()
+            url = (item.get("source_url") or "")
+            url_key = url.rstrip("/")
+            if url_key and url_key in existing_urls:
+                continue
+            if title.lower() in existing_titles and not url_key:
+                continue
+            await self._register_reference(opportunity, item)
+            discovered += 1
+            if url_key:
+                existing_urls.add(url_key)
+            if title:
+                existing_titles.add(title.lower())
+        await self.db.flush()
+        docs = await self.load_process_documents(opportunity.id)
+        return {
+            "discovered": discovered,
+            "downloaded": 0,
+            "items": self.build_documents_response(docs),
+        }
+
+    async def upload_process_document(
+        self,
+        opportunity: DGCPOpportunity,
+        *,
+        filename: str,
+        content: bytes,
+        mime_type: str | None = None,
+        doc_role: str | None = None,
+    ) -> DGCPProcessDocument:
+        if not content:
+            raise ValueError("Archivo vacío")
+        max_bytes = 40 * 1024 * 1024
+        if len(content) > max_bytes:
+            raise ValueError("El archivo supera el límite de 40 MB")
+        clean_name = (filename or "documento").strip() or "documento"
+        lower = clean_name.lower()
+        allowed_ext = (".pdf", ".doc", ".docx", ".zip", ".txt", ".xlsx", ".xls", ".csv", ".png", ".jpg", ".jpeg")
+        if not any(lower.endswith(ext) for ext in allowed_ext):
+            raise ValueError("Formato no soportado. Use PDF, DOC, DOCX, ZIP, imagen o texto.")
+        role = doc_role or classify_process_document(clean_name)[0]
+        if role == "general" and doc_role is None:
+            role, _prio = classify_process_document(clean_name)
+        priority = "alta" if role in ("pliego", "tdr", "ficha_tecnica", "especificaciones", "terminos_referencia") else "media"
+        storage_filename = self.storage.write_bytes(opportunity.code, clean_name, content)
+        extracted = ""
+        try:
+            result = DocumentExtractionService().extract(content, filename=clean_name, mime_type=mime_type)
+            extracted = (result.text or "")[:500_000]
+        except Exception:
+            extracted = ""
+        meta: dict[str, Any] = {
+            "storage_filename": storage_filename,
+            "storage_uri": self.storage.relative_uri(opportunity.code, storage_filename),
+            "original_filename": clean_name,
+            "mime_type": mime_type,
+            "size_bytes": len(content),
+            "source_label": "Carga manual",
+        }
+        if not extracted:
+            meta["read_error"] = "sin_texto_extraible"
+        doc = DGCPProcessDocument(
+            tenant_id=self.tenant_id,
+            opportunity_id=opportunity.id,
+            title=clean_name,
+            source_url=None,
+            source_type="process_file",
+            doc_role=role or "pliego",
+            priority=priority,
+            format=DocumentExtractionService.detect_format(clean_name, mime_type),
+            ingestion_status="analyzed" if extracted else "registered",
+            extracted_text=extracted or None,
+            metadata_=meta,
+            analyzed_at=datetime.now(timezone.utc) if extracted else None,
+        )
+        self.db.add(doc)
+        await self.db.flush()
+        return doc
+
+    async def reingest_process_document(
+        self,
+        opportunity: DGCPOpportunity,
+        process_document: DGCPProcessDocument,
+    ) -> DGCPProcessDocument:
+        content, mime = await self.read_process_file(opportunity, process_document)
+        filename = (process_document.metadata_ or {}).get("storage_filename") or f"{process_document.title}.bin"
+        extracted = ""
+        try:
+            result = DocumentExtractionService().extract(content, filename=str(filename), mime_type=mime)
+            extracted = (result.text or "")[:500_000]
+        except Exception:
+            extracted = ""
+        meta = dict(process_document.metadata_ or {})
+        if extracted:
+            meta.pop("read_error", None)
+        else:
+            meta["read_error"] = "sin_texto_extraible"
+        process_document.extracted_text = extracted or None
+        process_document.ingestion_status = "analyzed" if extracted else "registered"
+        process_document.analyzed_at = datetime.now(timezone.utc) if extracted else None
+        process_document.metadata_ = meta
+        await self.db.flush()
+        return process_document
+
+    async def update_document_role(
+        self,
+        process_document: DGCPProcessDocument,
+        doc_role: str,
+    ) -> DGCPProcessDocument:
+        role = (doc_role or "").strip() or "general"
+        process_document.doc_role = role
+        if role in ("pliego", "tdr", "ficha_tecnica", "especificaciones"):
+            process_document.priority = "alta"
+        await self.db.flush()
+        return process_document

@@ -257,6 +257,7 @@ class DGCPProcessDocumentsResponse(BaseModel):
     opportunity_id: UUID
     items: list[dict[str, Any]] = Field(default_factory=list)
     total: int
+    portal: dict[str, Any] | None = None
 
 
 class DGCPFormAutofillPreviewResponse(DGCPFormPreviewResponse):

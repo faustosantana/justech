@@ -447,6 +447,7 @@ class DGCPBidPackageService:
         requirement_evidence: list[dict] | None = None,
         expediente_status: str | None = None,
         hermes_analysis: dict | None = None,
+        pliego_analysis: dict | None = None,
     ) -> DGCPBidPackage:
         existing_pkg = await self._get_package(opportunity_id)
         pkg = existing_pkg or DGCPBidPackage(
@@ -470,6 +471,10 @@ class DGCPBidPackageService:
         if hermes_analysis:
             manifest = dict(pkg.manifest or {})
             manifest["hermes_document_analysis"] = hermes_analysis
+            pkg.manifest = manifest
+        if pliego_analysis:
+            manifest = dict(pkg.manifest or {})
+            manifest["pliego_analysis"] = pliego_analysis
             pkg.manifest = manifest
         from app.services.dgcp_expediente_sync_service import DGCPExpedienteSyncService
 
@@ -507,6 +512,10 @@ class DGCPBidPackageService:
             if hermes_analysis:
                 manifest = dict(winner.manifest or {})
                 manifest["hermes_document_analysis"] = hermes_analysis
+                winner.manifest = manifest
+            if pliego_analysis:
+                manifest = dict(winner.manifest or {})
+                manifest["pliego_analysis"] = pliego_analysis
                 winner.manifest = manifest
             from app.services.dgcp_expediente_sync_service import DGCPExpedienteSyncService
 
@@ -627,6 +636,40 @@ class DGCPBidPackageService:
             opportunity, checklist, bid.preparation_pct, existing_pkg
         )
 
+        await _stage("pliego_deep", "Análisis profundo del pliego (29 campos)")
+        pliego_payload: dict | None = None
+        try:
+            from app.services.dgcp_pliego_deep_analysis_service import DGCPPliegoDeepAnalysisService
+
+            pliego_svc = DGCPPliegoDeepAnalysisService(self.db, self.tenant_id, self.user_id)
+            all_process_docs = await self.ingestion.load_process_documents(opportunity_id)
+            pliego_result = await pliego_svc.run(
+                opportunity,
+                process_documents=all_process_docs or process_docs,
+                process_corpus=process_corpus,
+                extraction=extraction,
+                hermes_meta=hermes_meta,
+                requirement_evidence=evidence_records,
+                checklist=checklist,
+                risks=risks,
+                force=force,
+            )
+            pliego_payload = pliego_result.model_dump(mode="json")
+            if pliego_result.status.value == "partial":
+                analysis_warnings.append(
+                    "Análisis profundo del pliego quedó parcial; revise etapas fallidas."
+                )
+            elif pliego_result.meta.failed_stages:
+                analysis_warnings.append(
+                    "Análisis profundo completó con advertencias en etapas: "
+                    + ", ".join(pliego_result.meta.failed_stages)
+                )
+        except Exception as exc:
+            logger.exception("pliego deep analysis failed opportunity=%s", opportunity_id)
+            analysis_warnings.append(
+                f"Análisis profundo del pliego no disponible: {str(exc)[:180]}"
+            )
+
         await self._persist_analysis(
             opportunity_id,
             requirements=requirements,
@@ -640,6 +683,7 @@ class DGCPBidPackageService:
             requirement_evidence=evidence_records,
             expediente_status=expediente_status,
             hermes_analysis=hermes_meta or None,
+            pliego_analysis=pliego_payload,
         )
 
         await _stage("expediente", "Actualizando fichas, inteligencia y expediente")
@@ -678,7 +722,111 @@ class DGCPBidPackageService:
             alerts=alerts,
             analysis_warnings=analysis_warnings,
             expediente_status=pkg.expediente_status if pkg else expediente_status,
+            pliego_analysis=pliego_payload,
         )
+
+    async def get_pliego_analysis(self, opportunity_id: uuid.UUID) -> dict:
+        from app.schemas.dgcp_pliego_analysis import PliegoAnalysisResponse
+        from app.services.dgcp_pliego_deep_analysis_service import DGCPPliegoDeepAnalysisService
+
+        opportunity = await self._get_opportunity(opportunity_id)
+        if not opportunity:
+            raise ValueError("Licitación no encontrada")
+        svc = DGCPPliegoDeepAnalysisService(self.db, self.tenant_id, self.user_id)
+        current = await svc.get_current(opportunity_id)
+        versions = await svc.list_versions(opportunity_id)
+        return PliegoAnalysisResponse(
+            opportunity_id=opportunity_id,
+            current=current,
+            versions=versions,
+        ).model_dump(mode="json")
+
+    async def run_pliego_analysis(self, opportunity_id: uuid.UUID, *, force: bool = True) -> dict:
+        from app.services.dgcp_pliego_deep_analysis_service import DGCPPliegoDeepAnalysisService
+
+        opportunity = await self._get_opportunity(opportunity_id)
+        if not opportunity:
+            raise ValueError("Licitación no encontrada")
+        self._require_operational_interest(opportunity)
+        process_docs_summary = await self.ingestion.ingest(opportunity)
+        process_corpus, process_docs = await self.ingestion.build_extraction_corpus(opportunity_id)
+        all_process_docs = await self.ingestion.load_process_documents(opportunity_id)
+        related = await self._related_document_text(opportunity)
+        extraction = self.extractor.extract(
+            opportunity,
+            related_text=related,
+            process_corpus=process_corpus,
+            process_documents=process_docs,
+        )
+        hermes_meta: dict = {}
+        try:
+            from app.services.dgcp_hermes_document_analysis_service import DGCPHermesDocumentAnalysisService
+
+            if process_corpus.strip():
+                extraction, hermes_meta = await DGCPHermesDocumentAnalysisService().enrich_extraction(
+                    opportunity,
+                    extraction,
+                    process_corpus=process_corpus,
+                    process_documents=process_docs,
+                )
+        except Exception as exc:
+            logger.warning("hermes enrich skipped for pliego run: %s", exc)
+            hermes_meta = {"status": "failed", "message": str(exc)[:200]}
+
+        pkg = await self._get_package(opportunity_id)
+        svc = DGCPPliegoDeepAnalysisService(self.db, self.tenant_id, self.user_id)
+        result = await svc.run(
+            opportunity,
+            process_documents=all_process_docs or process_docs,
+            process_corpus=process_corpus,
+            extraction=extraction,
+            hermes_meta=hermes_meta,
+            requirement_evidence=(pkg.requirement_evidence if pkg else None) or [],
+            checklist=(pkg.checklist if pkg else None) or [],
+            risks=(pkg.requirement_risks if pkg else None) or [],
+            force=force,
+        )
+        # ensure package has summary
+        if pkg is None:
+            pkg = await self._get_package(opportunity_id)
+        if pkg is not None and process_docs_summary:
+            pkg.process_documents_summary = process_docs_summary
+        await self.db.commit()
+        versions = await svc.list_versions(opportunity_id)
+        from app.schemas.dgcp_pliego_analysis import PliegoAnalysisResponse
+
+        return PliegoAnalysisResponse(
+            opportunity_id=opportunity_id,
+            current=result,
+            versions=versions,
+        ).model_dump(mode="json")
+
+    async def review_pliego_field(
+        self,
+        opportunity_id: uuid.UUID,
+        field_key: str,
+        *,
+        reviewed: bool = True,
+        comment: str | None = None,
+        corrected_value=None,
+        corrected_items=None,
+    ) -> dict:
+        from app.services.dgcp_pliego_deep_analysis_service import DGCPPliegoDeepAnalysisService
+
+        opportunity = await self._get_opportunity(opportunity_id)
+        if not opportunity:
+            raise ValueError("Licitación no encontrada")
+        svc = DGCPPliegoDeepAnalysisService(self.db, self.tenant_id, self.user_id)
+        result = await svc.apply_field_review(
+            opportunity_id,
+            field_key,
+            reviewed=reviewed,
+            comment=comment,
+            corrected_value=corrected_value,
+            corrected_items=corrected_items,
+        )
+        await self.db.commit()
+        return result.model_dump(mode="json")
 
     async def get_requirements(self, opportunity_id: uuid.UUID) -> DGCPRequirementsResponse:
         pkg = await self._get_package(opportunity_id)

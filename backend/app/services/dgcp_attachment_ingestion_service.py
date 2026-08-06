@@ -301,11 +301,19 @@ class DGCPAttachmentIngestionService:
         priority = "alta" if role in ("pliego", "tdr", "ficha_tecnica", "especificaciones", "terminos_referencia") else "media"
         storage_filename = self.storage.write_bytes(opportunity.code, clean_name, content)
         extracted = ""
+        pages_text: list[str] = []
+        ocr_used = False
+        ocr_confidence = None
         try:
             result = DocumentExtractionService().extract(content, filename=clean_name, mime_type=mime_type)
             extracted = (result.text or "")[:500_000]
+            pages_text = list(result.pages or [])[:500]
+            ocr_used = bool(getattr(result, "ocr_used", False))
+            ocr_confidence = getattr(result, "ocr_confidence", None)
         except Exception:
             extracted = ""
+        import hashlib
+
         meta: dict[str, Any] = {
             "storage_filename": storage_filename,
             "storage_uri": self.storage.relative_uri(opportunity.code, storage_filename),
@@ -313,9 +321,21 @@ class DGCPAttachmentIngestionService:
             "mime_type": mime_type,
             "size_bytes": len(content),
             "source_label": "Carga manual",
+            "content_hash": hashlib.sha256(content).hexdigest(),
+            "page_count": len(pages_text) if pages_text else None,
+            "ocr_used": ocr_used,
+            "ocr_confidence": ocr_confidence,
         }
+        # Guardar texto por página solo si es manejable (evidencia real de página)
+        pages_payload_size = sum(len(p) for p in pages_text)
+        if pages_text and pages_payload_size <= 400_000 and len(pages_text) <= 200:
+            meta["pages_text"] = pages_text
+        elif pages_text:
+            meta["pages_text_omitted"] = True
+            meta["pages_text_count"] = len(pages_text)
         if not extracted:
             meta["read_error"] = "sin_texto_extraible"
+            meta["extraction_error"] = "sin_texto_extraible"
         doc = DGCPProcessDocument(
             tenant_id=self.tenant_id,
             opportunity_id=opportunity.id,
@@ -342,16 +362,38 @@ class DGCPAttachmentIngestionService:
         content, mime = await self.read_process_file(opportunity, process_document)
         filename = (process_document.metadata_ or {}).get("storage_filename") or f"{process_document.title}.bin"
         extracted = ""
+        pages_text: list[str] = []
+        ocr_used = False
+        ocr_confidence = None
         try:
             result = DocumentExtractionService().extract(content, filename=str(filename), mime_type=mime)
             extracted = (result.text or "")[:500_000]
+            pages_text = list(result.pages or [])[:500]
+            ocr_used = bool(getattr(result, "ocr_used", False))
+            ocr_confidence = getattr(result, "ocr_confidence", None)
         except Exception:
             extracted = ""
+        import hashlib
+
         meta = dict(process_document.metadata_ or {})
+        meta["content_hash"] = hashlib.sha256(content).hexdigest()
+        meta["page_count"] = len(pages_text) if pages_text else meta.get("page_count")
+        meta["ocr_used"] = ocr_used
+        meta["ocr_confidence"] = ocr_confidence
+        pages_payload_size = sum(len(p) for p in pages_text)
+        if pages_text and pages_payload_size <= 400_000 and len(pages_text) <= 200:
+            meta["pages_text"] = pages_text
+            meta.pop("pages_text_omitted", None)
+        elif pages_text:
+            meta["pages_text"] = None
+            meta["pages_text_omitted"] = True
+            meta["pages_text_count"] = len(pages_text)
         if extracted:
             meta.pop("read_error", None)
+            meta.pop("extraction_error", None)
         else:
             meta["read_error"] = "sin_texto_extraible"
+            meta["extraction_error"] = "sin_texto_extraible"
         process_document.extracted_text = extracted or None
         process_document.ingestion_status = "analyzed" if extracted else "registered"
         process_document.analyzed_at = datetime.now(timezone.utc) if extracted else None

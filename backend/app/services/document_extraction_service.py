@@ -14,6 +14,8 @@ class ExtractionResult:
     text: str
     pages: list[str] = field(default_factory=list)
     format: str = "other"
+    ocr_used: bool = False
+    ocr_confidence: float | None = None
 
 
 class DocumentExtractionService:
@@ -87,9 +89,18 @@ class DocumentExtractionService:
             for image in images:
                 pages.append(pytesseract.image_to_string(image, lang="spa+eng").strip())
             full = "\n\n".join(p for p in pages if p)
-            return ExtractionResult(text=full, pages=pages, format="pdf")
+            # Confianza heurística: proporción de páginas con texto útil
+            nonempty = sum(1 for p in pages if len(p.strip()) > 20)
+            conf = round(nonempty / max(len(pages), 1), 3) if pages else 0.0
+            return ExtractionResult(
+                text=full,
+                pages=pages,
+                format="pdf",
+                ocr_used=True,
+                ocr_confidence=conf,
+            )
         except Exception:
-            return ExtractionResult(text="", pages=[], format="pdf")
+            return ExtractionResult(text="", pages=[], format="pdf", ocr_used=True, ocr_confidence=0.0)
 
     @staticmethod
     def _extract_pdf(content: bytes) -> ExtractionResult:
@@ -102,12 +113,12 @@ class DocumentExtractionService:
                 pages.append((page.extract_text() or "").strip())
             full = "\n\n".join(p for p in pages if p)
             if full.strip():
-                return ExtractionResult(text=full, pages=pages, format="pdf")
+                return ExtractionResult(text=full, pages=pages, format="pdf", ocr_used=False)
             if DocumentExtractionService.ocr_available():
                 ocr_result = DocumentExtractionService._extract_pdf_ocr(content)
                 if ocr_result.text.strip():
                     return ocr_result
-            return ExtractionResult(text=full, pages=pages, format="pdf")
+            return ExtractionResult(text=full, pages=pages, format="pdf", ocr_used=False)
         except Exception:
             if DocumentExtractionService.ocr_available():
                 return DocumentExtractionService._extract_pdf_ocr(content)

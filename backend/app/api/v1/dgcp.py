@@ -112,6 +112,7 @@ from app.schemas.dgcp_bid import (
     DGCPRequirementsResponse,
     DGCPUserInputRequest,
 )
+from app.schemas.dgcp_pliego_analysis import PliegoFieldReviewRequest
 from app.schemas.dgcp_economic_offer import (
     CreateEconomicOfferDraftTaskRequest,
     CreateEconomicOfferTaskResponse,
@@ -497,6 +498,64 @@ async def get_opportunity_analysis_job(
     if not job:
         raise HTTPException(status_code=404, detail="Job de análisis no encontrado")
     return job
+
+
+@router.get(
+    "/opportunities/{opportunity_id}/pliego-analysis",
+    dependencies=DGCP_VIEW,
+)
+async def get_pliego_analysis(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> dict:
+    try:
+        return await _bid_svc(db, user).get_pliego_analysis(opportunity_id)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/pliego-analysis/run",
+    dependencies=DGCP_MUTATE,
+)
+async def run_pliego_analysis(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    force: bool = True,
+) -> dict:
+    try:
+        return await _bid_svc(db, user).run_pliego_analysis(opportunity_id, force=force)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/pliego-analysis/fields/{field_key}/review",
+    dependencies=DGCP_MUTATE,
+)
+async def review_pliego_analysis_field(
+    opportunity_id: uuid.UUID,
+    field_key: str,
+    body: PliegoFieldReviewRequest,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> dict:
+    try:
+        return await _bid_svc(db, user).review_pliego_field(
+            opportunity_id,
+            field_key,
+            reviewed=body.reviewed,
+            comment=body.comment,
+            corrected_value=body.corrected_value,
+            corrected_items=body.corrected_items,
+        )
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
 
 
 @router.get("/opportunities/{opportunity_id}/checklist", response_model=DGCPChecklistResponse, dependencies=DGCP_VIEW)

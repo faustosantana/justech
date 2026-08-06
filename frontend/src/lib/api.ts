@@ -505,7 +505,7 @@ export const apiClient = {
   }) =>
     request<DGCPOpportunityListResponse>(
       `/dgcp/opportunities${buildQuery(filters ?? {})}`,
-      {},
+      { timeoutMs: LONG_REQUEST_TIMEOUT_MS },
       true,
     ),
 

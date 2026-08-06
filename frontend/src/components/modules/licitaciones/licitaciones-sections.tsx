@@ -128,7 +128,15 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
         setItems([]);
         setSummary(dashResult.ok ? dashResult.dash : EMPTY);
         setProcessUpdatesDash(updatesDash);
-        setLoadError("No se pudieron cargar los procesos DGCP. Intente actualizar.");
+        const err = listResult.err as { message?: string; status?: number; name?: string } | undefined;
+        const msg = err?.message || "";
+        if (msg === "UNAUTHORIZED" || err?.status === 401) {
+          setLoadError("Sesión expirada. Vuelva a iniciar sesión e intente actualizar.");
+        } else if (err?.status === 408 || /tardó demasiado|timeout/i.test(msg)) {
+          setLoadError("La carga de procesos tardó demasiado. Intente actualizar de nuevo.");
+        } else {
+          setLoadError("No se pudieron cargar los procesos DGCP. Intente actualizar.");
+        }
         return;
       }
 

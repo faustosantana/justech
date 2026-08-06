@@ -215,8 +215,13 @@ class DGCPService:
             user_id=user_id,
             include_expired=include_expired,
         )
+        # Listado liviano: la inteligencia completa se carga en el detalle.
+        slim_items = [
+            self.to_response(i).model_copy(update={"jaios_intelligence": {}})
+            for i in items
+        ]
         return DGCPOpportunityListResponse(
-            items=[self.to_response(i) for i in items],
+            items=slim_items,
             summary=summary,
             total=total,
         )

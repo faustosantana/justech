@@ -869,6 +869,20 @@ export const apiClient = {
       true,
     ),
 
+  getDGCPProcessUpdatesDashboard: () =>
+    request<import("@/lib/dgcp").DGCPProcessUpdateDashboardResponse>(
+      "/dgcp/process-updates/dashboard",
+      {},
+      true,
+    ),
+
+  getDGCPProcessUpdates: (opportunityId: string) =>
+    request<import("@/lib/dgcp").DGCPProcessUpdatesResponse>(
+      `/dgcp/opportunities/${opportunityId}/process-updates`,
+      {},
+      true,
+    ),
+
   getDGCPHistoricalSimilar: (opportunityId: string) =>
     request<import("./dgcp").DGCPHistoricalSimilarResponse>(
       `/dgcp/processes/${opportunityId}/historical-similar`,

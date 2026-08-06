@@ -121,7 +121,9 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
         (err) => ({ ok: false as const, err }),
       );
       const updatesDash = dgcpProcessUpdatesEnabled()
-        ? await apiClient.getDGCPProcessUpdatesDashboard().catch(() => null)
+        ? await (typeof apiClient.getDGCPProcessUpdatesDashboard === "function"
+            ? apiClient.getDGCPProcessUpdatesDashboard().catch(() => null)
+            : Promise.resolve(null))
         : null;
 
       if (!listResult.ok) {

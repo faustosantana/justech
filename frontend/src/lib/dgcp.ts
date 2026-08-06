@@ -109,7 +109,53 @@ export interface DGCPSummary {
   discarded: number;
   won: number;
   lost: number;
+  presentation?: Record<string, number>;
 }
+
+export interface DGCPProcessUpdateDashboardItem {
+  opportunity_id: string;
+  process_code: string;
+  title: string;
+  pending_count: number;
+  critical_count: number;
+  requires_reanalysis?: boolean;
+  last_change_at?: string | null;
+}
+
+export interface DGCPProcessUpdateDashboardResponse {
+  enabled: boolean;
+  total_pending: number;
+  total_critical: number;
+  items: DGCPProcessUpdateDashboardItem[];
+}
+
+export interface DGCPProcessUpdateItem {
+  id: string;
+  change_type?: string;
+  severity?: string;
+  summary?: string;
+  status?: string;
+  detected_at?: string | null;
+  [key: string]: unknown;
+}
+
+export interface DGCPProcessUpdatesResponse {
+  opportunity_id: string;
+  enabled?: boolean;
+  items?: DGCPProcessUpdateItem[];
+  updates?: DGCPProcessUpdateItem[];
+  total?: number;
+  snapshot?: Record<string, unknown> | null;
+  meta?: {
+    pending_count?: number;
+    critical_count?: number;
+    requires_reanalysis?: boolean;
+    last_checked_at?: string | null;
+    last_change_at?: string | null;
+    notification_hook_ready?: boolean;
+  };
+}
+
 
 export interface DGCPOpportunityListResponse {
   items: DGCPOpportunity[];

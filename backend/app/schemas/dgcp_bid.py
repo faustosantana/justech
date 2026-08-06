@@ -69,9 +69,23 @@ class DGCPChecklistItem(BaseModel):
     knowledge_asset_id: UUID | None = None
     relative_path: str | None = None
     match_source: str | None = None
+    process_document_id: UUID | None = None
+    odoo_quotation_id: int | None = None
+    odoo_quotation_name: str | None = None
+    economic_offer_meta: dict[str, Any] | None = None
     validity_analysis: dict[str, Any] | None = None
     manual_validation: dict[str, Any] | None = None
     note_history: list[dict[str, Any]] = Field(default_factory=list)
+    unified_status: str | None = None
+    category: str | None = None
+    priority: str | None = None
+    source_document: str | None = None
+    source_page: int | None = None
+    source_section: str | None = None
+    evidence_fragment: str | None = None
+    evidence_confidence: str | None = None
+    suggested_document: str | None = None
+    ia_observations: str | None = None
 
 
 class DGCPChecklistNoteRequest(BaseModel):
@@ -111,6 +125,16 @@ class DGCPAssociateDocumentRequest(BaseModel):
     process_document_id: UUID | None = None
 
 
+class DGCPLinkM365DocumentRequest(BaseModel):
+    item_id: str
+    drive_id: str | None = None
+    source_type: str = "onedrive"
+    site_id: str | None = None
+    name: str | None = None
+    web_url: str | None = None
+    path: str | None = None
+
+
 class DGCPAssociateDocumentResponse(BaseModel):
     opportunity_id: UUID
     checklist_item_id: UUID
@@ -139,6 +163,8 @@ class DGCPDocumentPreviewResponse(BaseModel):
     validity_analysis: dict[str, Any] | None = None
     download_url: str | None = None
     preview_url: str | None = None
+    web_url: str | None = None
+    view_mode: str | None = None
     metadata: dict[str, Any] = Field(default_factory=dict)
 
 
@@ -187,6 +213,7 @@ class DGCPBidPackageResponse(BaseModel):
     opportunity_id: UUID
     opportunity_code: str
     preparation_pct: float
+    area_preparation_pct: float | None = None
     total_requirements: int = 0
     mandatory_requirements: int = 0
     compliant_count: int = 0
@@ -207,6 +234,8 @@ class DGCPBidPackageResponse(BaseModel):
 class DGCPFormPreviewRequest(BaseModel):
     form_type: str = "SNCC.F042"
     company: str = "justech"
+    field_overrides: dict[str, str] = Field(default_factory=dict)
+    draft: bool = False
 
 
 class DGCPFormPreviewField(BaseModel):
@@ -215,6 +244,43 @@ class DGCPFormPreviewField(BaseModel):
     status: str
     confidence: float = 0.0
     source: str | None = None
+    key: str | None = None
+
+
+class DGCPAliasMappingField(BaseModel):
+    alias: str
+    alias_normalized: str
+    canonical: str | None = None
+    canonical_label: str | None = None
+    value: str | None = None
+    source: str | None = None
+    confidence: float = 0.0
+    status: str = "pendiente"
+    mapping_source: str = "unresolved"
+    automatic: bool = True
+    suggested_canonical: str | None = None
+    pending_class: str = "no_critico"
+
+
+class DGCPAliasFieldSummary(BaseModel):
+    total: int = 0
+    completed: int = 0
+    critical_pending: int = 0
+    non_critical_pending: int = 0
+    ignored: int = 0
+    not_applicable_stage: int = 0
+
+
+class DGCPAliasMappingSaveRequest(BaseModel):
+    alias_normalized: str
+    alias_original: str | None = None
+    canonical: str | None = None
+    value: str | None = None
+    scope: str = "global"  # global | template | document
+    template_key: str | None = None
+    opportunity_id: UUID | None = None
+    status: str = "mapeado"  # mapeado | ignorado
+    confidence: float = 0.95
 
 
 class DGCPFormPreviewResponse(BaseModel):
@@ -226,7 +292,22 @@ class DGCPFormPreviewResponse(BaseModel):
     warnings: list[str] = Field(default_factory=list)
     overall_confidence: float = 0.0
     note: str = "Vista previa — no se modifica el archivo original."
+    document_preview_available: bool = False
+    template_source: str | None = None
+    template_source_type: str | None = None
+    pdf_engine: str | None = None
+    template_m365: dict | None = None
+    alias_fields: list[DGCPAliasMappingField] = Field(default_factory=list)
+    alias_summary: DGCPAliasFieldSummary | None = None
+    can_pass: bool = False
+    ready_for_signature: bool = False
     generate_enabled: bool = False
+    draft_enabled: bool = True
+    completion_status: str = "PARTIAL"
+    aliases_detected: int = 0
+    aliases_mapped: int = 0
+    critical_pending_aliases: list[str] = Field(default_factory=list)
+    non_critical_pending_aliases: list[str] = Field(default_factory=list)
 
 
 class DGCPAnalyzeResponse(BaseModel):
@@ -239,6 +320,7 @@ class DGCPAnalyzeResponse(BaseModel):
     alerts: list[dict[str, Any]] = Field(default_factory=list)
     analysis_warnings: list[str] = Field(default_factory=list)
     expediente_status: str = "sin_preparar"
+    pliego_analysis: dict[str, Any] | None = None
 
 
 class DGCPProcessDocumentResponse(BaseModel):
@@ -260,6 +342,34 @@ class DGCPProcessDocumentsResponse(BaseModel):
     portal: dict[str, Any] | None = None
 
 
+class DGCPProcessDocumentRoleUpdate(BaseModel):
+    doc_role: str
+
+
+class DGCPProcessDocumentLinkRequest(BaseModel):
+    url: str
+    title: str | None = None
+    doc_role: str = "pliego"
+
+
+class DGCPProcessDocumentsRefreshResponse(BaseModel):
+    opportunity_id: UUID
+    discovered: int = 0
+    downloaded: int = 0
+    items: list[dict[str, Any]] = Field(default_factory=list)
+    total: int = 0
+    portal: dict[str, Any] | None = None
+    message: str | None = None
+
+
+class DGCPProcessDocumentUploadResponse(BaseModel):
+    opportunity_id: UUID
+    process_document: dict[str, Any]
+    text_extracted: bool
+    text_length: int = 0
+    message: str | None = None
+
+
 class DGCPFormAutofillPreviewResponse(DGCPFormPreviewResponse):
     generate_enabled: bool = True
 
@@ -272,6 +382,17 @@ class DGCPFormGenerateResponse(BaseModel):
     fields_completed: int
     fields_pending: int
     overall_confidence: float
+    docx_path: str | None = None
+    pdf_path: str | None = None
+    audit_path: str | None = None
+    template_hash: str | None = None
+    generated_at: str | None = None
+    template_source_type: str | None = None
+    pdf_engine: str | None = None
+    template_m365: dict | None = None
+    ready_for_signature: bool = False
+    completion_status: str = "DRAFT_OK"
+    is_draft: bool = False
 
 
 class DGCPBidAlertResponse(BaseModel):

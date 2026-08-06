@@ -33,16 +33,19 @@ class DGCPAttachmentIngestionService:
         if not settings.dgcp_attachment_ingestion_enabled:
             return []
 
+        # Conservar cargas manuales (process_file). Solo regenerar referencias portal/API.
         await self.db.execute(
             delete(DGCPProcessDocument).where(
                 DGCPProcessDocument.tenant_id == self.tenant_id,
                 DGCPProcessDocument.opportunity_id == opportunity.id,
+                DGCPProcessDocument.source_type.notin_(("process_file",)),
             )
         )
         await self.db.commit()
 
-        discovered: list[dict] = []
-        seen_titles: set[str] = set()
+        existing = await self.load_process_documents(opportunity.id)
+        seen_titles: set[str] = {d.title.lower() for d in existing if d.title}
+        discovered: list[dict] = [self._summary(d) for d in existing]
 
         for item in self._discover_from_payload(opportunity):
             title = item["title"]

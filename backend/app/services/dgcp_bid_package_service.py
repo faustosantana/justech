@@ -748,9 +748,11 @@ class DGCPBidPackageService:
         if not opportunity:
             raise ValueError("Licitación no encontrada")
         self._require_operational_interest(opportunity)
-        process_docs_summary = await self.ingestion.ingest(opportunity)
-        process_corpus, process_docs = await self.ingestion.build_extraction_corpus(opportunity_id)
+        # No llamar ingest destructivo: conservar PDFs cargados (process_file).
+        await self.ingestion.refresh_portal_documents(opportunity)
         all_process_docs = await self.ingestion.load_process_documents(opportunity_id)
+        process_docs_summary = [self.ingestion._summary(d) for d in all_process_docs]
+        process_corpus, process_docs = await self.ingestion.build_extraction_corpus(opportunity_id)
         related = await self._related_document_text(opportunity)
         extraction = self.extractor.extract(
             opportunity,

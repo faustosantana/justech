@@ -23,6 +23,7 @@ import {
   formatDate,
   isDGCPOperationalInterest,
   sanitizeClassificationReason,
+  sanitizeKeywordList,
   type DGCPHistoricalSimilarResponse,
   type DGCPOpportunity,
 } from "@/lib/dgcp";
@@ -197,7 +198,7 @@ export function DGCPHistoricalAwardsPanel({ opportunity }: Props) {
 
           {activeData?.keywords_used && activeData.keywords_used.length > 0 && (
             <p className="text-xs text-muted-foreground">
-              Palabras clave del proceso: {activeData.keywords_used.slice(0, 10).join(", ")}
+              Palabras clave del proceso: {sanitizeKeywordList(activeData.keywords_used).slice(0, 10).join(", ")}
               {activeData.keywords_used.length > 10 ? "…" : ""}
             </p>
           )}
@@ -308,7 +309,7 @@ export function DGCPHistoricalAwardsPanel({ opportunity }: Props) {
               <CardContent className="py-4 text-sm text-muted-foreground">
                 <p className="font-medium text-foreground">Procesos similares — otras instituciones</p>
                 <p className="mt-1 text-xs">
-                  No se encontraron procesos comparables en otras instituciones con el umbral de relevancia
+                  No se encontraron procesos suficientemente similares
                   actual. Solo se muestran coincidencias técnicas claras (misma familia de producto,
                   palabras clave específicas o UNSPSC).
                 </p>

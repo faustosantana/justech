@@ -841,6 +841,98 @@ export const apiClient = {
       true,
     ),
 
+  linkDGCPProcessDocument: (
+    opportunityId: string,
+    data: { url: string; title?: string; doc_role?: string },
+  ) =>
+    request<import("@/lib/dgcp").DGCPProcessDocument>(
+      `/dgcp/opportunities/${opportunityId}/process-documents/link`,
+      { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
+
+  updateDGCPProcessDocumentRole: (opportunityId: string, docId: string, docRole: string) =>
+    request<import("@/lib/dgcp").DGCPProcessDocument>(
+      `/dgcp/opportunities/${opportunityId}/process-documents/${docId}/role`,
+      { method: "PATCH", body: JSON.stringify({ doc_role: docRole }) },
+      true,
+    ),
+
+  reingestDGCPProcessDocument: (opportunityId: string, docId: string) =>
+    request<import("@/lib/dgcp").DGCPProcessDocument>(
+      `/dgcp/opportunities/${opportunityId}/process-documents/${docId}/reingest`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  getDGCPAnalysisStatus: (id: string) =>
+    request<{
+      opportunity_id: string;
+      has_active_job: boolean;
+      job: { id?: string; status: string; stage?: string | null; progress?: number | null; error?: string | null } | null;
+    }>(`/dgcp/opportunities/${id}/analysis-status`, {}, true),
+
+  refreshDGCPProcessDocuments: (id: string) =>
+    request<{
+      opportunity_id: string;
+      discovered: number;
+      downloaded: number;
+      items: import("@/lib/dgcp").DGCPProcessDocument[];
+      total: number;
+      portal?: import("@/lib/dgcp").DGCPProcessDocument | null;
+      message?: string;
+    }>(`/dgcp/opportunities/${id}/process-documents/refresh`, { method: "POST", body: "{}" }, true),
+
+  uploadDGCPProcessDocument: async (id: string, file: File, docRole = "pliego") => {
+    const token = getAccessToken();
+    const tenantId = getTenantId();
+    if (!token) throw new Error("UNAUTHORIZED");
+    const form = new FormData();
+    form.append("file", file);
+    const response = await fetch(
+      `${getApiUrl()}/dgcp/opportunities/${id}/process-documents/upload${buildQuery({ doc_role: docRole })}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          ...(tenantId ? { "X-Tenant-ID": tenantId } : {}),
+        },
+        body: form,
+      },
+    );
+    if (!response.ok) {
+      const body = (await response.json().catch(() => ({}))) as { detail?: string };
+      throw new ApiError(response.status, "UPLOAD_ERROR", body.detail ?? "Error al subir documento");
+    }
+    return response.json() as Promise<{
+      opportunity_id: string;
+      process_document: import("@/lib/dgcp").DGCPProcessDocument;
+      text_extracted: boolean;
+      text_length: number;
+      message?: string;
+    }>;
+  },
+
+  getDGCPProcessDocumentFileUrl: (opportunityId: string, docId: string, disposition: "inline" | "attachment" = "inline") =>
+    `${getApiUrl()}/dgcp/opportunities/${opportunityId}/process-documents/${docId}/file${buildQuery({ disposition })}`,
+
+  analyzeDGCPIntelligence: (id: string) =>
+    request<import("@/lib/dgcp").DGCPIntelligence>(
+      `/dgcp/opportunities/${id}/intelligence/analyze`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  getDGCPIntelligence: (id: string) =>
+    request<import("@/lib/dgcp").DGCPIntelligence>(`/dgcp/opportunities/${id}/intelligence`, {}, true),
+
+  bootstrapDGCPExpedienteContext: (opportunityId: string, opts?: { refresh?: boolean }) =>
+    request<import("@/lib/dgcp-expediente-context").DGCPExpedienteContextResponse>(
+      `/dgcp/opportunities/${opportunityId}/expediente-context/bootstrap`,
+      { method: "POST", body: JSON.stringify({ refresh: Boolean(opts?.refresh) }) },
+      true,
+    ),
+
   searchDGCPHistoricalSimilar: (
     opportunityId: string,
     body?: { refresh?: boolean; limit?: number; extra_query?: string },

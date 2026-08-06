@@ -176,14 +176,27 @@ function DgcpCommercialOdooPanelInner() {
     );
   }
 
-  if (ctx.commercialStatus === "error") {
+  if (ctx.commercialStatus === "error" || ctx.commercialStatus === "skipped") {
     return (
-      <CommercialOdooErrorCard
-        message={ERROR_MESSAGE}
-        detail={ctx.commercialMessage ?? ctx.errorMessage}
-        onRetry={() => void ctx.refresh(true)}
-        retrying={ctx.loading}
-      />
+      <Card>
+        <CardHeader className="py-3">
+          <CardTitle className="text-base flex items-center gap-2">
+            <ShoppingCart className="h-4 w-4" />
+            Comercial Odoo
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3 text-sm text-muted-foreground">
+          <p>{ctx.commercialStatus === "skipped"
+            ? "Integración no disponible para la empresa activa en este momento."
+            : (ctx.commercialMessage || ERROR_MESSAGE)}</p>
+          {ctx.commercialStatus === "error" && (
+            <Button variant="outline" size="sm" disabled={ctx.loading} onClick={() => void ctx.refresh(true)}>
+              {ctx.loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+              <span className="ml-2">Reintentar</span>
+            </Button>
+          )}
+        </CardContent>
+      </Card>
     );
   }
 

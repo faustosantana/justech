@@ -2,9 +2,11 @@
 
 import { Bell, ClipboardCheck, Download, FileStack, Loader2, Package, PenLine, RefreshCw } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { DocumentPreviewModal } from "@/components/dgcp/document-preview-modal";
+import { AuthenticatedFileViewer } from "@/components/documents/authenticated-file-viewer";
+import { ExpedienteDashboard } from "@/components/dgcp/expediente-dashboard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -111,6 +113,7 @@ export function OpportunityBidSection({
   const [loading, setLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [expedienteBusy, setExpedienteBusy] = useState(false);
+  const [dashboardRefreshKey, setDashboardRefreshKey] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [previewItemId, setPreviewItemId] = useState<string | null>(null);
   const [validationItemId, setValidationItemId] = useState<string | null>(null);
@@ -158,7 +161,7 @@ export function OpportunityBidSection({
       const message =
         err instanceof Error && err.message === "UNAUTHORIZED"
           ? "Sesión expirada. Vuelva a iniciar sesión."
-          : "No se pudo cargar el análisis. Ejecute «Analizar requisitos».";
+          : "No se pudo cargar el análisis. Ejecute «Analizar pliego con IA».";
       setError(message);
     } finally {
       setLoading(false);
@@ -177,6 +180,22 @@ export function OpportunityBidSection({
     setError(null);
     try {
       const result = await apiClient.analyzeDGCPRequirements(opportunity.id);
+      try {
+        const intel = await apiClient.analyzeDGCPIntelligence(opportunity.id);
+        onOpportunityUpdated?.({
+          ...opportunity,
+          jaios_intelligence: intel as unknown as DGCPOpportunity["jaios_intelligence"],
+          ai_recommendations: [
+            ...(opportunity.ai_recommendations || []),
+            ...((intel.executive?.next_actions as string[]) || []),
+          ].filter(Boolean).slice(0, 12),
+          risks: (intel.executive?.risks || []).map((r) =>
+            typeof r === "string" ? { nivel: "medio", descripcion: r } : { nivel: "medio", descripcion: String(r) },
+          ) as DGCPOpportunity["risks"],
+        });
+      } catch {
+        /* intelligence is additive; requirements result still applies */
+      }
       setRequirements(result.requirements);
       setChecklist(result.checklist);
       setBidPackage(result.bid_package);
@@ -359,6 +378,7 @@ export function OpportunityBidSection({
       await apiClient.prepareDGCPExpediente(opportunity.id);
       const exp = await apiClient.getDGCPExpedienteStatus(opportunity.id);
       setExpedienteStatus(exp);
+      setDashboardRefreshKey((k) => k + 1);
       await load();
     } catch {
       setError("No se pudo preparar el expediente.");
@@ -412,7 +432,7 @@ export function OpportunityBidSection({
           ) : (
             <RefreshCw className="mr-2 h-4 w-4" />
           )}
-          Analizar requisitos
+          Analizar pliego con IA
         </Button>
         <Button variant="outline" onClick={() => void load()} disabled={loading}>
           Actualizar
@@ -469,7 +489,7 @@ export function OpportunityBidSection({
           {activeTab === "documentos-proceso" && (
             analyzed ? (
               processDocs ? (
-                <ProcessDocumentsTab documents={processDocs} opportunityId={opportunity.id} />
+                <ProcessDocumentsTab documents={processDocs} opportunityId={opportunity.id} onReload={async () => { setProcessDocs(await apiClient.getDGCPProcessDocuments(opportunity.id).catch(() => null)); }} />
               ) : (
                 <EmptyAnalysisHint message="Sin documentos del proceso indexados todavía." />
               )
@@ -525,12 +545,15 @@ export function OpportunityBidSection({
           {activeTab === "expediente" && bidPackage && (
             analyzed ? (
               <ExpedienteTab
+                opportunityId={opportunity.id}
                 bidPackage={bidPackage}
                 expedienteStatus={expedienteStatus}
                 busy={expedienteBusy}
+                refreshKey={dashboardRefreshKey}
                 onPrepare={() => void handlePrepareExpediente()}
                 onDownload={() => void handleDownloadExpediente()}
                 onMarkReady={() => void handleMarkReady()}
+                onWorkspaceChanged={() => setDashboardRefreshKey((k) => k + 1)}
               />
             ) : (
               <EmptyAnalysisHint />
@@ -741,7 +764,7 @@ function EmptyAnalysisHint({ message }: { message?: string }) {
   return (
     <p className="text-sm text-muted-foreground rounded-lg border px-3 py-4">
       {message ??
-        "Aún no hay análisis guardado. Pulse «Analizar requisitos» para generar checklist, expediente y cruces documentales."}
+        "Aún no hay análisis guardado. Pulse «Analizar pliego con IA» para generar checklist, expediente y cruces documentales."}
     </p>
   );
 }
@@ -1222,19 +1245,25 @@ function ChecklistTab({
 }
 
 function ExpedienteTab({
+  opportunityId,
   bidPackage,
   expedienteStatus,
   busy,
+  refreshKey,
   onPrepare,
   onDownload,
   onMarkReady,
+  onWorkspaceChanged,
 }: {
+  opportunityId: string;
   bidPackage: DGCPBidPackage;
   expedienteStatus: DGCPExpedienteStatus | null;
   busy: boolean;
+  refreshKey: number;
   onPrepare: () => void;
   onDownload: () => void;
   onMarkReady: () => void;
+  onWorkspaceChanged?: () => void;
 }) {
   const statusLabel =
     EXPEDIENTE_STATUS_LABELS[expedienteStatus?.expediente_status ?? "sin_preparar"] ?? "Sin preparar";
@@ -1248,10 +1277,15 @@ function ExpedienteTab({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        <ExpedienteDashboard
+          opportunityId={opportunityId}
+          refreshKey={refreshKey}
+          onChanged={onWorkspaceChanged}
+        />
         <div className="flex flex-wrap gap-2">
           <Button onClick={onPrepare} disabled={busy}>
             {busy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-            Preparar expediente
+            Preparar Expediente
           </Button>
           <Button
             variant="outline"
@@ -1351,68 +1385,209 @@ function RiesgosTab({
 
 function ProcessDocumentsTab({
   documents,
+  opportunityId,
+  onReload,
 }: {
-  documents: DGCPProcessDocuments;
+  documents: DGCPProcessDocuments | null;
   opportunityId?: string;
+  onReload?: () => Promise<void>;
 }) {
-  const items = documents.items.filter((d) => PROCESS_DOC_SOURCES.has(d.source_type));
-  const hasRealPliego = items.some(
-    (d) => PLIEGO_ROLES.has(d.doc_role) && d.has_text,
-  );
+  const [busy, setBusy] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [uploadRole, setUploadRole] = useState("pliego");
+  const [primaryId, setPrimaryId] = useState<string | null>(null);
+  const [previewDocId, setPreviewDocId] = useState<string | null>(null);
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  const items = (documents?.items ?? []).filter((d) => PROCESS_DOC_SOURCES.has(d.source_type));
+  const realItems = items.filter((d) => !d.is_portal_link && d.source_type !== "portal");
+  const portal = documents?.portal ?? items.find((d) => d.source_type === "portal") ?? null;
+  const hasRealPliego = realItems.some((d) => PLIEGO_ROLES.has(d.doc_role) && d.has_text);
+  const effectivePrimary =
+    primaryId ||
+    realItems.find((d) => PLIEGO_ROLES.has(d.doc_role))?.id ||
+    realItems[0]?.id ||
+    null;
+
+
+  async function handleRefresh() {
+    if (!opportunityId) return;
+    setBusy("refresh");
+    setMessage(null);
+    try {
+      const result = await apiClient.refreshDGCPProcessDocuments(opportunityId);
+      setMessage(result.message ?? `Búsqueda completada (${result.discovered ?? 0} detectados).`);
+      await onReload?.();
+    } catch (err) {
+      setMessage(apiErrorMessage(err, "No se pudo buscar documentos en DGCP."));
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function handleUpload(file: File) {
+    if (!opportunityId || !file) return;
+    setBusy("upload");
+    setMessage(null);
+    try {
+      const result = await apiClient.uploadDGCPProcessDocument(opportunityId, file, uploadRole);
+      setMessage(result.message ?? "Pliego cargado correctamente.");
+      await onReload?.();
+    } catch (err) {
+      setMessage(apiErrorMessage(err, "No se pudo cargar el pliego."));
+    } finally {
+      setBusy(null);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  }
 
   return (
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-base">
           <FileStack className="h-4 w-4" />
-          Documentos del comprador ({items.length})
+          Documentos del comprador ({realItems.length})
         </CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="space-y-4">
         {!hasRealPliego && (
-          <div className="rounded-lg border border-warning/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-200 mb-4">
-            No se encontró pliego/TDR real adjunto. Este análisis puede estar incompleto.
+          <div className="rounded-lg border border-warning/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-200 space-y-2">
+            <p className="font-medium">No se encontró pliego/TDR real adjunto.</p>
+            <p>Busque en el portal DGCP o cargue el pliego manualmente (PDF, DOC, DOCX o ZIP).</p>
           </div>
         )}
-        <p className="text-sm text-muted-foreground mb-4">
-          Solo documentos entregados por la institución compradora (pliego, TDR, anexos, enmiendas).
-          Almacenados en <code className="text-xs">DGCP/&#123;código&#125;/</code> — separados del
-          repositorio corporativo Justech.
-        </p>
-        {items.length === 0 ? (
+        {message && (
+          <p className="text-sm rounded-lg border border-primary/20 bg-primary/5 px-3 py-2">{message}</p>
+        )}
+        {portal?.source_url && (
+          <p className="text-sm text-muted-foreground">
+            Portal DGCP:{" "}
+            <a className="text-primary underline" href={portal.source_url} target="_blank" rel="noreferrer">
+              abrir proceso
+            </a>
+          </p>
+        )}
+        <div className="flex flex-wrap items-end gap-2">
+          <div className="space-y-1">
+            <Label className="text-xs">Rol del documento</Label>
+            <select
+              className="h-9 rounded-md border bg-background px-2 text-sm"
+              value={uploadRole}
+              onChange={(e) => setUploadRole(e.target.value)}
+            >
+              <option value="pliego">Pliego principal</option>
+              <option value="tdr">TDR / términos</option>
+              <option value="ficha_tecnica">Especificaciones técnicas</option>
+              <option value="anexo">Anexo</option>
+              <option value="formulario">Formulario</option>
+              <option value="enmienda">Enmienda / circular</option>
+              <option value="cronograma">Cronograma</option>
+              <option value="contrato">Modelo de contrato</option>
+              <option value="general">Otro</option>
+            </select>
+          </div>
+          <input
+            ref={fileRef}
+            type="file"
+            accept=".pdf,.doc,.docx,.zip,.png,.jpg,.jpeg,.txt,.xlsx,.xls"
+            className="hidden"
+            onChange={(e) => {
+              const f = e.target.files?.[0];
+              if (f) void handleUpload(f);
+            }}
+          />
+          <Button
+            size="sm"
+            disabled={!opportunityId || busy !== null}
+            onClick={() => fileRef.current?.click()}
+          >
+            {busy === "upload" ? "Cargando…" : "Cargar pliego"}
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={!opportunityId || busy !== null}
+            onClick={() => void handleRefresh()}
+          >
+            {busy === "refresh" ? "Buscando…" : "Buscar en DGCP"}
+          </Button>
+        </div>
+        {realItems.length === 0 && items.length === 0 ? (
           <p className="text-sm text-muted-foreground">No hay documentos del proceso indexados.</p>
         ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b text-left text-xs text-muted-foreground">
-                <th className="py-2 pr-4">Documento</th>
-                <th className="py-2 pr-4">Rol</th>
-                <th className="py-2 pr-4">Prioridad</th>
-                <th className="py-2 pr-4">Estado</th>
-                <th className="py-2">Texto</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.map((doc) => (
-                <tr key={doc.id} className="border-b border-border/40">
-                  <td className="py-2 pr-4">{doc.title}</td>
-                  <td className="py-2 pr-4 text-xs">
-                    {PROCESS_DOC_ROLE_LABELS[doc.doc_role] ?? doc.doc_role}
-                  </td>
-                  <td className="py-2 pr-4">
-                    <PriorityPill priority={doc.priority} />
-                  </td>
-                  <td className="py-2 pr-4">
-                    <ProcessStatusPill status={doc.display_status ?? doc.ingestion_status} />
-                  </td>
-                  <td className="py-2 text-xs">{doc.has_text ? "Sí" : "No"}</td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b text-left text-xs text-muted-foreground">
+                  <th className="py-2 pr-4">Documento</th>
+                  <th className="py-2 pr-4">Rol</th>
+                  <th className="py-2 pr-4">Prioridad</th>
+                  <th className="py-2 pr-4">Estado</th>
+                  <th className="py-2">Texto</th>
+                  <th className="py-2">Acciones</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {(realItems.length ? realItems : items).map((doc) => (
+                  <tr key={doc.id} className="border-b border-border/40">
+                    <td className="py-2 pr-4">
+                      {doc.source_url ? (
+                        <a className="text-primary underline" href={doc.source_url} target="_blank" rel="noreferrer">
+                          {doc.title}
+                        </a>
+                      ) : (
+                        doc.title
+                      )}
+                    </td>
+                    <td className="py-2 pr-4 text-xs">
+                      {PROCESS_DOC_ROLE_LABELS[doc.doc_role] ?? doc.doc_role}
+                    </td>
+                    <td className="py-2 pr-4">
+                      <PriorityPill priority={doc.priority} />
+                    </td>
+                    <td className="py-2 pr-4">
+                      <ProcessStatusPill status={doc.display_status ?? doc.ingestion_status} />
+                    </td>
+                    <td className="py-2 text-xs">{doc.has_text ? "Sí" : "No"}</td>
+                    <td className="py-2 text-xs space-x-2 whitespace-nowrap">
+                      {doc.source_type === "process_file" && opportunityId && (
+                        <button type="button" className="text-primary underline" onClick={() => setPreviewDocId(doc.id)}>
+                          Ver / Descargar
+                        </button>
+                      )}
+                      {doc.source_type !== "portal" && (
+                        <button
+                          type="button"
+                          className="text-muted-foreground underline"
+                          onClick={() => setPrimaryId(doc.id)}
+                        >
+                          {effectivePrimary === doc.id ? "Principal" : "Usar como principal"}
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
+      {previewDocId && opportunityId && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-background rounded-lg shadow-lg w-full max-w-5xl max-h-[90vh] overflow-auto p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="text-sm font-medium">Vista previa del documento</p>
+              <Button size="sm" variant="ghost" onClick={() => setPreviewDocId(null)}>Cerrar</Button>
+            </div>
+            <AuthenticatedFileViewer
+              filePath={`/dgcp/opportunities/${opportunityId}/process-documents/${previewDocId}/file?disposition=inline`}
+              filenameHint={realItems.find((d) => d.id === previewDocId)?.title || "pliego"}
+            />
+            <p className="text-xs text-muted-foreground">
+              Si el formato no es previsualizable, use Descargar. Marque el pliego principal antes de analizar.
+              {effectivePrimary ? ` Principal actual: ${realItems.find((d) => d.id === effectivePrimary)?.title || effectivePrimary}` : ""}
+            </p>
+          </div>
+        </div>
+      )}
       </CardContent>
     </Card>
   );

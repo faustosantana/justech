@@ -39,7 +39,7 @@ CHARS_PER_PAGE_FALLBACK = 3000
 MAX_FRAGMENT = 240
 MAX_CORPUS_FOR_LLM = 90_000
 LLM_TIMEOUT_HINT = 120
-MAX_LLM_RETRIES = 2
+MAX_LLM_RETRIES = 1
 
 STAGE_ORDER = (
     "A_ingestion",
@@ -59,12 +59,12 @@ STAGE_ORDER = (
 REQUIRED_STAGES = STAGE_ORDER
 
 SYSTEM_PROMPT = f"""Eres un analista senior de licitaciones públicas de República Dominicana (DGCP).
-Extrae solo hechos presentes en el texto. No inventes páginas ni montos.
-Responde ÚNICAMENTE JSON válido según el esquema pedido.
+Extrae solo hechos presentes en el texto. No inventes montos ni páginas inexistentes.
+Responde ÚNICAMENTE un JSON compacto (sin markdown) con esta forma exacta:
+{{"fields":{{"<key>":{{"value":"...","found":true,"confidence":0.0,"evidence":[{{"document_id":"...","document_name":"...","page":1,"section":null,"fragment":"...","confidence":0.0}}],"notes":""}}}}}}
+Incluye las 29 claves pedidas. Máximo 1 evidence por campo. fragment ≤ 120 chars.
+Si no hay dato: found=false, value="No identificado", evidence=[].
 Versión de prompt: {PROMPT_VERSION}. Schema: {SCHEMA_VERSION}.
-Cada hallazgo debe incluir evidence con document_id, document_name, page (int o null),
-section, fragment (máx 200 chars) y confidence (0-1).
-Si no hay dato: found=false, value="No identificado", review_required=true.
 """
 
 
@@ -1003,43 +1003,81 @@ class DGCPPliegoDeepAnalysisService:
         }
         last_err = None
         raw = None
+        content = ""
         for attempt in range(MAX_LLM_RETRIES + 1):
             try:
                 raw = await client.chat(
                     system_prompt=SYSTEM_PROMPT,
                     messages=[{"role": "user", "content": json.dumps(question, ensure_ascii=False)[:110_000]}],
                     temperature=0.1,
+                    timeout=420.0,
+                    max_tokens=8192,
                 )
-                if raw:
+                if not raw:
+                    continue
+                if isinstance(raw, dict):
+                    content = (
+                        raw.get("content")
+                        or raw.get("answer")
+                        or raw.get("message")
+                        or raw.get("text")
+                        or (raw.get("choices") or [{}])[0].get("message", {}).get("content")
+                        or ""
+                    )
+                    if not content and "fields" in raw:
+                        content = json.dumps(raw)
+                    meta["model"] = raw.get("model") or (raw.get("metadata") or {}).get("model")
+                    usage = raw.get("usage") or {}
+                    meta["tokens_in"] = (
+                        usage.get("prompt_tokens")
+                        or usage.get("input_tokens")
+                        or raw.get("prompt_tokens")
+                    )
+                    meta["tokens_out"] = (
+                        usage.get("completion_tokens")
+                        or usage.get("output_tokens")
+                        or raw.get("completion_tokens")
+                    )
+                    if raw.get("total_tokens") is not None:
+                        meta["total_tokens"] = raw.get("total_tokens")
+                    if raw.get("latency_ms") is not None:
+                        meta["latency_ms"] = raw.get("latency_ms")
+                    if raw.get("error"):
+                        meta["error"] = str(raw.get("error"))[:300]
+                parsed_try = self._extract_json(content if isinstance(content, str) else json.dumps(content))
+                if parsed_try and (
+                    "fields" in parsed_try
+                    or any(k in PLIEGO_FIELD_KEYS for k in parsed_try.keys())
+                ):
                     break
+                last_err = f"JSON sin fields (attempt {attempt})"
+                logger.warning(
+                    "pliego LLM attempt %s bad JSON preview=%s",
+                    attempt,
+                    (str(content)[:240] if content else None),
+                )
+                raw = None
             except Exception as exc:
                 last_err = str(exc)
                 logger.warning("pliego LLM attempt %s failed: %s", attempt, exc)
+                raw = None
         if not raw:
-            meta["message"] = "LLM sin respuesta"
+            meta["message"] = "LLM sin respuesta" if not content else "LLM no devolvió fields JSON"
             meta["error"] = last_err
             return {}, meta
-
-        content = ""
-        if isinstance(raw, dict):
-            content = (
-                raw.get("content")
-                or raw.get("message")
-                or raw.get("text")
-                or (raw.get("choices") or [{}])[0].get("message", {}).get("content")
-                or ""
-            )
-            if not content and "fields" in raw:
-                content = json.dumps(raw)
-            meta["model"] = raw.get("model") or (raw.get("metadata") or {}).get("model")
-            usage = raw.get("usage") or {}
-            meta["tokens_in"] = usage.get("prompt_tokens") or usage.get("input_tokens")
-            meta["tokens_out"] = usage.get("completion_tokens") or usage.get("output_tokens")
-
         parsed = self._extract_json(content if isinstance(content, str) else json.dumps(content))
         if not parsed or "fields" not in parsed:
-            meta["message"] = "LLM no devolvió fields JSON"
-            return {}, meta
+            # A veces Hermes responde el mapa de campos en la raíz.
+            if isinstance(parsed, dict) and any(k in PLIEGO_FIELD_KEYS for k in parsed.keys()):
+                parsed = {"fields": parsed}
+            else:
+                meta["message"] = "LLM no devolvió fields JSON"
+                meta["error"] = (str(content)[:400] if content else last_err)
+                logger.warning(
+                    "pliego LLM JSON parse failed preview=%s",
+                    (str(content)[:300] if content else None),
+                )
+                return {}, meta
 
         valid_doc_ids = {d.document_id for d in ctx["docs"]}
         page_max = {
@@ -1051,6 +1089,18 @@ class DGCPPliegoDeepAnalysisService:
                 continue
             evidence = []
             for e in payload.get("evidence") or []:
+                if isinstance(e, str):
+                    evidence.append(PliegoEvidence(
+                        document_id=None,
+                        document_name="",
+                        page=None,
+                        section=None,
+                        fragment=_short(e),
+                        confidence=0.4,
+                        page_identified=False,
+                        review_required=True,
+                    ))
+                    continue
                 if not isinstance(e, dict):
                     continue
                 doc_id = e.get("document_id")
@@ -1094,6 +1144,10 @@ class DGCPPliegoDeepAnalysisService:
                 review_required=not found or any(e.review_required for e in evidence),
                 notes=str(payload.get("notes") or "")[:500],
             )
+        if not out:
+            meta["message"] = "LLM respondió fields vacíos / no reconocidos"
+            meta["error"] = str(list((parsed.get("fields") or {}).keys())[:20])
+            return {}, meta
         meta["ok"] = True
         meta["message"] = f"LLM enriqueció {len(out)} campo(s)"
         return out, meta
@@ -1449,17 +1503,74 @@ class DGCPPliegoDeepAnalysisService:
         if not text:
             return None
         text = text.strip()
-        try:
-            return json.loads(text)
-        except Exception:
-            pass
-        m = re.search(r"\{[\s\S]*\}", text)
-        if not m:
+        # Hermes suele envolver el JSON en fences markdown.
+        if "```" in text:
+            text = re.sub(r"^.*?```(?:json|JSON)?\s*", "", text, count=1, flags=re.S)
+            text = re.sub(r"\s*```[\s\S]*$", "", text)
+            text = text.strip()
+        candidates = [text]
+        m = re.search(r"\{[\s\S]*", text)
+        if m:
+            candidates.append(m.group(0))
+        for cand in candidates:
+            for attempt in (cand, DGCPPliegoDeepAnalysisService._repair_truncated_json(cand)):
+                if not attempt:
+                    continue
+                try:
+                    parsed = json.loads(attempt)
+                    if isinstance(parsed, dict):
+                        return parsed
+                except Exception:
+                    continue
+        return None
+
+    @staticmethod
+    def _repair_truncated_json(text: str) -> str | None:
+        """Cierra braces/brackets truncados por max_tokens del LLM."""
+        if not text or "{" not in text:
             return None
-        try:
-            return json.loads(m.group(0))
-        except Exception:
-            return None
+        s = text.strip()
+        # Cortar string abierto al final
+        in_str = False
+        escape = False
+        for ch in s:
+            if in_str:
+                if escape:
+                    escape = False
+                elif ch == "\\":
+                    escape = True
+                elif ch == '"':
+                    in_str = False
+            elif ch == '"':
+                in_str = True
+        if in_str:
+            s += '"'
+        # Eliminar coma/colon colgante
+        s = re.sub(r"[\s,]+$", "", s)
+        s = re.sub(r":\s*$", ': null', s)
+        # Balancear
+        stack: list[str] = []
+        in_str = False
+        escape = False
+        for ch in s:
+            if in_str:
+                if escape:
+                    escape = False
+                elif ch == "\\":
+                    escape = True
+                elif ch == '"':
+                    in_str = False
+                continue
+            if ch == '"':
+                in_str = True
+            elif ch in "{[":
+                stack.append("}" if ch == "{" else "]")
+            elif ch in "}]":
+                if stack and stack[-1] == ch:
+                    stack.pop()
+        if stack:
+            s += "".join(reversed(stack))
+        return s
 
     async def _get_package(self, opportunity_id: uuid.UUID) -> DGCPBidPackage | None:
         from sqlalchemy import select

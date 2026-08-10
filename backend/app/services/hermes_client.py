@@ -108,15 +108,24 @@ class HermesClient:
             },
         )
 
-    async def _post_raw(self, path: str, payload: dict[str, Any]) -> dict[str, Any] | None:
+    async def _post_raw(
+        self,
+        path: str,
+        payload: dict[str, Any],
+        *,
+        timeout: float = 120.0,
+    ) -> dict[str, Any] | None:
         if not self.is_available():
             return None
         url = f"{self.base_url}{path}"
         try:
-            async with httpx.AsyncClient(timeout=120.0) as client:
+            async with httpx.AsyncClient(timeout=timeout) as client:
                 response = await client.post(url, json=payload, headers=self._headers())
                 response.raise_for_status()
                 return response.json()
+        except httpx.TimeoutException:
+            logger.error("Hermes timeout path=%s (>%.0fs)", path, timeout)
+            return None
         except Exception:
             logger.exception("Hermes call failed path=%s", path)
             return None
@@ -168,15 +177,21 @@ class HermesClient:
         messages: list[dict[str, str]],
         model: str | None = None,
         temperature: float = 0.7,
+        timeout: float = 120.0,
+        max_tokens: int | None = None,
     ) -> dict[str, Any] | None:
+        payload: dict[str, Any] = {
+            "system_prompt": system_prompt,
+            "messages": messages,
+            "model": model,
+            "temperature": temperature,
+        }
+        if max_tokens is not None:
+            payload["max_tokens"] = max_tokens
         return await self._post_raw(
             "/chat",
-            {
-                "system_prompt": system_prompt,
-                "messages": messages,
-                "model": model,
-                "temperature": temperature,
-            },
+            payload,
+            timeout=timeout,
         )
 
     async def analyze_observation(

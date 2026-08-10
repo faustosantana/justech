@@ -571,6 +571,32 @@ async def get_opportunity_checklist(
         raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
+@router.post("/opportunities/{opportunity_id}/checklist/items", dependencies=DGCP_MUTATE)
+async def add_manual_checklist_item(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    body: dict,
+):
+    try:
+        return await _bid_svc(db, user).add_manual_checklist_item(
+            opportunity_id,
+            name=str(body.get("name") or ""),
+            tipo=str(body.get("tipo") or body.get("category") or "administrativo"),
+            mandatory=bool(body.get("mandatory", True)),
+            description=body.get("description"),
+            source=body.get("source"),
+            page=body.get("page"),
+            due_date=body.get("due_date"),
+            assignee=body.get("assignee"),
+            notes=body.get("notes") or body.get("observations"),
+            document_type=body.get("document_type") or body.get("type"),
+        )
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
 @router.post("/opportunities/{opportunity_id}/checklist/{item_id}/task", dependencies=DGCP_MUTATE)
 async def create_checklist_task(
     opportunity_id: uuid.UUID,
@@ -671,6 +697,24 @@ async def associate_checklist_document(
 ) -> DGCPAssociateDocumentResponse:
     try:
         return await _bid_svc(db, user).associate_checklist_document(opportunity_id, item_id, data)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/checklist/{item_id}/unlink-document",
+    response_model=DGCPAssociateDocumentResponse,
+    dependencies=DGCP_MUTATE,
+)
+async def unlink_checklist_document(
+    opportunity_id: uuid.UUID,
+    item_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+) -> DGCPAssociateDocumentResponse:
+    try:
+        return await _bid_svc(db, user).unlink_checklist_document(opportunity_id, item_id)
     except ValueError as exc:
         raise _http_error_for_dgcp_value_error(exc) from exc
 
@@ -891,6 +935,30 @@ async def update_process_document_role(
             opportunity_id,
             process_document_id,
             doc_role=data.doc_role,
+        )
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.patch(
+    "/opportunities/{opportunity_id}/process-documents/{process_document_id}/flags",
+    dependencies=DGCP_MUTATE,
+)
+async def update_process_document_flags(
+    opportunity_id: uuid.UUID,
+    process_document_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    body: dict,
+):
+    try:
+        return await _bid_svc(db, user).update_process_document_flags(
+            opportunity_id,
+            process_document_id,
+            is_primary=body.get("is_primary"),
+            include_in_analysis=body.get("include_in_analysis"),
+            doc_role=body.get("doc_role"),
         )
     except ValueError as exc:
         raise _http_error_for_dgcp_value_error(exc) from exc
@@ -1166,6 +1234,147 @@ async def detect_technical_sheets(
 ):
     try:
         return await _bid_svc(db, user).detect_technical_sheets(opportunity_id, force=force)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/technical-sheets/manual",
+    dependencies=DGCP_MUTATE,
+)
+async def create_manual_technical_sheet(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    body: dict,
+):
+    try:
+        return await _bid_svc(db, user).create_manual_technical_sheet(
+            opportunity_id,
+            name=str(body.get("name") or body.get("article") or ""),
+            description=body.get("description"),
+            quantity=body.get("quantity"),
+            unit=body.get("unit"),
+        )
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/technical-sheets/upload-existing",
+    dependencies=DGCP_MUTATE,
+)
+async def upload_existing_technical_sheet(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    file: UploadFile = File(...),
+    name: str = Query(...),
+    description: str | None = Query(default=None),
+    brand: str | None = Query(default=None),
+    model: str | None = Query(default=None),
+    manufacturer: str | None = Query(default=None),
+    country: str | None = Query(default=None),
+    warranty: str | None = Query(default=None),
+    observation: str | None = Query(default=None),
+    initial_status: str = Query(default="en_elaboracion"),
+):
+    from pathlib import Path
+
+    from app.config import settings
+
+    try:
+        content = await file.read()
+        if not content:
+            raise ValueError("Archivo vacío")
+        ctx = require_tenant_context()
+        storage = Path(settings.expediente_storage_path) / str(ctx.tenant_id) / "technical_sheets" / "uploads"
+        storage.mkdir(parents=True, exist_ok=True)
+        safe_name = Path(file.filename or "ficha.pdf").name
+        dest = storage / f"{uuid.uuid4().hex}_{safe_name}"
+        dest.write_bytes(content)
+        return await _bid_svc(db, user).upload_existing_technical_sheet(
+            opportunity_id,
+            name=name,
+            description=description,
+            brand=brand,
+            model=model,
+            manufacturer=manufacturer,
+            country=country,
+            warranty=warranty,
+            observation=observation,
+            initial_status=initial_status,
+            upload_path=dest,
+            filename=safe_name,
+            mime_type=file.content_type,
+        )
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/technical-sheets/{sheet_id}/replace-file",
+    dependencies=DGCP_MUTATE,
+)
+async def replace_technical_sheet_file(
+    opportunity_id: uuid.UUID,
+    sheet_id: str,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    file: UploadFile = File(...),
+):
+    from pathlib import Path
+
+    from app.config import settings
+
+    try:
+        content = await file.read()
+        if not content:
+            raise ValueError("Archivo vacío")
+        ctx = require_tenant_context()
+        storage = Path(settings.expediente_storage_path) / str(ctx.tenant_id) / "technical_sheets" / sheet_id
+        storage.mkdir(parents=True, exist_ok=True)
+        safe_name = Path(file.filename or "ficha.pdf").name
+        dest = storage / f"{uuid.uuid4().hex}_{safe_name}"
+        dest.write_bytes(content)
+        return await _bid_svc(db, user).replace_technical_sheet_file(
+            opportunity_id,
+            sheet_id,
+            upload_path=dest,
+            filename=safe_name,
+            mime_type=file.content_type,
+        )
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.get(
+    "/opportunities/{opportunity_id}/technical-sheets/{sheet_id}/uploaded-file",
+    dependencies=DGCP_VIEW,
+)
+async def download_technical_sheet_uploaded_file(
+    opportunity_id: uuid.UUID,
+    sheet_id: str,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    disposition: str = Query(default="attachment"),
+):
+    from fastapi.responses import Response
+
+    try:
+        content, mime, filename = await _bid_svc(db, user).download_technical_sheet_uploaded_file(
+            opportunity_id, sheet_id
+        )
+        disp = "inline" if disposition == "inline" else "attachment"
+        return Response(
+            content=content,
+            media_type=mime,
+            headers={"Content-Disposition": f'{disp}; filename="{filename}"'},
+        )
     except ValueError as exc:
         raise _http_error_for_dgcp_value_error(exc) from exc
 
@@ -1702,10 +1911,17 @@ async def download_bid_package(
     user: CurrentUser,
     _: TenantCtx,
 ):
+    """Prefer prepared bid-package ZIP; fall back to real-expediente ZIP when not prepared."""
     try:
         content, filename = await _bid_svc(db, user).download_expediente(opportunity_id)
-    except ValueError as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except ValueError:
+        try:
+            builder = _real_expediente_builder(db, user)
+            opp, pkg = await builder._load_package(opportunity_id)
+            content, filename = builder.get_download_zip(opp, pkg)
+            await builder.log_download(opportunity_id, kind="zip", filename=filename)
+        except ValueError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
     return Response(
         content=content,
         media_type="application/zip",
@@ -1779,6 +1995,50 @@ async def get_real_expediente_status(
         return await _real_expediente_builder(db, user).get_status(opportunity_id)
     except ValueError as exc:
         raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.get("/opportunities/{opportunity_id}/expediente", dependencies=DGCP_VIEW)
+async def get_expediente_alias(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+):
+    """Alias canónico → expediente/dashboard (evita 404 en clientes legacy)."""
+    try:
+        return await _bid_svc(db, user).get_expediente_dashboard(opportunity_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@router.get("/opportunities/{opportunity_id}/expediente/status", dependencies=DGCP_VIEW)
+async def get_expediente_status_alias(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+):
+    """Alias canónico → real-expediente/status."""
+    try:
+        return await _real_expediente_builder(db, user).get_status(opportunity_id)
+    except ValueError as exc:
+        raise _http_error_for_dgcp_value_error(exc) from exc
+
+
+@router.get("/opportunities/{opportunity_id}/adjudicaciones", dependencies=DGCP_VIEW)
+async def get_adjudicaciones_alias(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+):
+    """Alias canónico → historical-similar (cached)."""
+    ctx = require_tenant_context()
+    service = DGCPHistoricalSimilarSearchService(db, ctx.tenant_id)
+    try:
+        return await service.get_cached(opportunity_id)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
 @router.get("/opportunities/{opportunity_id}/real-expediente/manifest", dependencies=DGCP_VIEW)

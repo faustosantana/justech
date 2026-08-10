@@ -775,8 +775,14 @@ export const apiClient = {
   downloadDGCPExpediente: async (id: string, filename?: string): Promise<void> => {
     const { blob, filename: resolvedName } = await (async () => {
       const { fetchAuthenticatedFile } = await import("@/lib/authenticated-file");
-      const payload = await fetchAuthenticatedFile(`/dgcp/opportunities/${id}/bid-package/download`);
-      return { blob: payload.blob, filename: filename ?? `expediente_${id}.zip` };
+      // Canónico operativo: real-expediente ZIP (bid-package/download puede no existir aún generado).
+      try {
+        const payload = await fetchAuthenticatedFile(`/dgcp/opportunities/${id}/real-expediente/download`);
+        return { blob: payload.blob, filename: filename ?? payload.filename ?? `expediente_${id}.zip` };
+      } catch {
+        const payload = await fetchAuthenticatedFile(`/dgcp/opportunities/${id}/bid-package/download`);
+        return { blob: payload.blob, filename: filename ?? `expediente_${id}.zip` };
+      }
     })();
     const { downloadAuthenticatedBlob } = await import("@/lib/authenticated-file");
     downloadAuthenticatedBlob(blob, resolvedName);

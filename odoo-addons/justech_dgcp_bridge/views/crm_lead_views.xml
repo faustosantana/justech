@@ -14,6 +14,10 @@
                 invisible="not justech_jaios_url">
           <div class="o_stat_info"><span class="o_stat_text">Abrir en JAIOS</span></div>
         </button>
+        <button name="action_open_justech_dgcp_lines" type="object" class="oe_stat_button" icon="fa-cubes"
+                invisible="justech_dgcp_line_count == 0">
+          <field name="justech_dgcp_line_count" widget="statinfo" string="Productos solicitados"/>
+        </button>
         <button name="action_open_justech_sales" type="object" class="oe_stat_button" icon="fa-usd"
                 invisible="justech_sale_count == 0">
           <field name="justech_sale_count" widget="statinfo" string="Cotización / OV"/>
@@ -32,6 +36,33 @@
         </button>
       </div>
       <notebook position="inside">
+        <page string="Productos solicitados" name="justech_dgcp_products">
+          <group>
+            <group>
+              <field name="justech_dgcp_line_count" string="Productos solicitados"/>
+              <field name="justech_dgcp_line_linked_count" string="Vinculados"/>
+            </group>
+            <group>
+              <field name="justech_dgcp_line_review_count" string="Requieren revisión"/>
+              <field name="justech_dgcp_line_unlinked_count" string="Sin vincular / sugeridos"/>
+              <field name="justech_dgcp_line_estimated_total" string="Total estimado productos"/>
+            </group>
+          </group>
+          <field name="justech_dgcp_line_ids" nolabel="1" mode="list">
+            <list editable="bottom">
+              <field name="line_number" string="#"/>
+              <field name="description_original" string="Descripción"/>
+              <field name="quantity"/>
+              <field name="uom_text" string="Unidad"/>
+              <field name="brand_required" string="Marca"/>
+              <field name="model_required" string="Modelo"/>
+              <field name="estimated_unit_price" string="Precio estimado"/>
+              <field name="estimated_total" string="Total estimado"/>
+              <field name="product_id" string="Producto Odoo"/>
+              <field name="match_state" string="Estado"/>
+            </list>
+          </field>
+        </page>
         <page string="JAIOS / Licitación DGCP" name="justech_dgcp">
           <group>
             <group string="Proceso">

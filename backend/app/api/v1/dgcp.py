@@ -469,6 +469,13 @@ async def decide_odoo_product_match(
         user_id=user.id,
         user_name=user.full_name,
     )
+    # Mirror decision onto Odoo DGCP lines when CRM lead exists
+    try:
+        from app.services.dgcp_odoo_crm_bridge import DGCPOdooCrmBridge
+
+        await DGCPOdooCrmBridge(db, ctx.tenant_id, user.id).ensure_opportunity_on_prepare(opportunity)
+    except Exception:
+        pass
     await db.commit()
     return {"opportunity_id": str(opportunity.id), **result}
 

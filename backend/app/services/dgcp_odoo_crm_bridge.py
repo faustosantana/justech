@@ -748,6 +748,11 @@ class DGCPOdooCrmBridge:
                 "crm.lead", [("id", "=", lead_id)], ["name"], limit=1
             )
             lead_name = (rows[0].get("name") if rows else None) or name
+
+            line_sync = await self._sync_dgcp_lines(
+                client, opportunity, lead_id=lead_id, company_id=company_id, actor=actor
+            )
+
             return self._mark_ok(
                 opportunity,
                 action,
@@ -758,16 +763,199 @@ class DGCPOdooCrmBridge:
                 partner=partner,
                 jaios_user=actor,
                 jaios_owner=await self._owner_identity(opportunity),
+                dgcp_lines=line_sync,
             )
         except Exception as exc:
             logger.exception("DGCP→Odoo ensure_opportunity failed %s", opportunity.id)
             await self.db.flush()
             return self._mark_pending(opportunity, action, str(exc))
 
+    def _match_status_to_odoo_state(self, status: str | None, *, approved: bool) -> str:
+        if approved:
+            return "linked"
+        st = (status or "").upper()
+        if st == "MATCHED":
+            return "suggested"
+        if st == "REVIEW_REQUIRED":
+            return "review_required"
+        return "unlinked"
+
+    async def _resolve_currency_id(self, client, currency_code: str | None) -> int | None:
+        code = (currency_code or "DOP").strip().upper() or "DOP"
+        try:
+            rows = await client.search_read(
+                "res.currency", [("name", "=", code)], ["id"], limit=1
+            )
+            if rows:
+                return _as_int_id(rows[0]["id"])
+        except Exception:
+            logger.debug("currency resolve failed %s", code, exc_info=True)
+        return None
+
+    async def _model_exists(self, client, model: str) -> bool:
+        try:
+            rows = await client.search_read("ir.model", [("model", "=", model)], ["id"], limit=1)
+            return bool(rows)
+        except Exception:
+            return False
+
+    async def _sync_dgcp_lines(
+        self,
+        client,
+        opportunity: DGCPOpportunity,
+        *,
+        lead_id: int,
+        company_id: int | None,
+        actor: dict[str, str],
+    ) -> dict[str, Any]:
+        """Upsert justech.dgcp.opportunity.line from JAIOS extraction+match. Idempotent."""
+        model = "justech.dgcp.opportunity.line"
+        if not await self._model_exists(client, model):
+            return {"ok": False, "error": "model_missing", "count": 0}
+
+        from app.services.dgcp_odoo_product_match_service import DGCPOdooProductMatchService
+
+        svc = DGCPOdooProductMatchService(self.db, self.tenant_id, self.user_id)
+        blob = (opportunity.full_info or {}).get("odoo_product_matches")
+        if not blob or not blob.get("lines"):
+            await svc.run_match(opportunity)
+            blob = (opportunity.full_info or {}).get("odoo_product_matches") or {}
+
+        lines = list(blob.get("lines") or [])
+        if not lines:
+            # Still create empty-safe: extract without match
+            raw_lines = await svc.extract_lines_async(opportunity)
+            lines = [
+                {**ln, "status": "UNMATCHED", "approved": False, "confidence": 0, "candidates": []}
+                for ln in raw_lines
+            ]
+
+        currency_id = await self._resolve_currency_id(client, opportunity.currency)
+        now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+        created = 0
+        updated = 0
+        synced_ids: list[int] = []
+
+        for ln in lines:
+            line_no = int(ln.get("line_number") or 0) or None
+            dgcp_line_id = str(ln.get("dgcp_line_id") or f"{opportunity.code}:{line_no}")
+            domain = [("lead_id", "=", lead_id)]
+            if line_no:
+                domain = ["&", ("lead_id", "=", lead_id), ("line_number", "=", line_no)]
+            else:
+                domain = ["&", ("lead_id", "=", lead_id), ("dgcp_line_id", "=", dgcp_line_id)]
+
+            approved = bool(ln.get("approved"))
+            match_state = self._match_status_to_odoo_state(ln.get("status"), approved=approved)
+            # If approved, force linked
+            if approved and ln.get("suggested_product_id"):
+                match_state = "linked"
+
+            qty = float(ln.get("quantity") or 1)
+            unit = float(ln.get("estimated_price") or 0) if ln.get("estimated_price") is not None else 0.0
+            vals: dict[str, Any] = {
+                "lead_id": lead_id,
+                "dgcp_process_code": opportunity.code,
+                "dgcp_process_id": str(opportunity.id),
+                "dgcp_line_id": dgcp_line_id,
+                "line_number": line_no or 1,
+                "description_original": (ln.get("original_text") or ln.get("description") or "—")[:2000],
+                "quantity": qty,
+                "uom_text": (ln.get("uom") or "")[:64] or False,
+                "specifications": (ln.get("specs") or "")[:4000] or False,
+                "brand_required": (ln.get("brand") or "")[:120] or False,
+                "model_required": (ln.get("model") or "")[:120] or False,
+                "reference": (ln.get("reference") or "")[:120] or False,
+                "estimated_unit_price": unit,
+                "match_state": match_state,
+                "match_confidence": float(ln.get("confidence") or 0),
+                "match_method": (ln.get("match_method") or "")[:64] or False,
+                "match_approved": approved,
+                "match_approved_by_jaios_id": (ln.get("approved_by") or "")[:64] or False,
+                "match_approved_by_name": (ln.get("approved_name") or "")[:120] or False,
+                "jaios_updated_by_id": actor.get("id") or False,
+                "jaios_updated_by_name": actor.get("name") or False,
+                "last_sync_at": now,
+            }
+            if currency_id:
+                vals["currency_id"] = currency_id
+            if ln.get("suggested_product_id") and match_state in ("suggested", "linked", "review_required"):
+                vals["product_id"] = int(ln["suggested_product_id"])
+            elif match_state == "unlinked":
+                vals["product_id"] = False
+
+            existing = await client.search_read(model, domain, ["id", "jaios_created_by_id"], limit=1)
+            if existing:
+                oid = _as_int_id(existing[0]["id"])
+                # Do not overwrite created_by if set
+                await client.execute_kw(model, "write", [[oid], vals])
+                updated += 1
+                synced_ids.append(oid)
+            else:
+                vals["jaios_created_by_id"] = actor.get("id") or False
+                vals["jaios_created_by_name"] = actor.get("name") or False
+                oid = _as_int_id(await client.execute_kw(model, "create", [vals]))
+                created += 1
+                synced_ids.append(oid)
+
+        return {
+            "ok": True,
+            "count": len(synced_ids),
+            "created": created,
+            "updated": updated,
+            "line_ids": synced_ids,
+            "summary": blob.get("summary"),
+        }
+
     async def _map_product_lines(
         self, client, opportunity: DGCPOpportunity
     ) -> list[dict[str, Any]]:
-        """Delegate to product match service; only MATCHED+approved become SO lines."""
+        """Prefer Odoo DGCP lines linked+approved; fallback to JAIOS match approvals."""
+        lead_id = self._sync_blob(opportunity).get("crm_opportunity_id")
+        if lead_id and await self._model_exists(client, "justech.dgcp.opportunity.line"):
+            rows = await client.search_read(
+                "justech.dgcp.opportunity.line",
+                [
+                    ("lead_id", "=", _as_int_id(lead_id)),
+                    ("match_state", "=", "linked"),
+                    ("match_approved", "=", True),
+                    ("product_id", "!=", False),
+                ],
+                [
+                    "id",
+                    "line_number",
+                    "description_original",
+                    "quantity",
+                    "estimated_unit_price",
+                    "product_id",
+                    "reference",
+                    "match_confidence",
+                    "match_method",
+                    "match_approved_by_jaios_id",
+                    "dgcp_line_id",
+                ],
+                limit=200,
+            )
+            if rows:
+                return [
+                    {
+                        "status": "MATCHED",
+                        "approved": True,
+                        "product_id": _as_int_id(r["product_id"][0] if isinstance(r.get("product_id"), list) else r["product_id"]),
+                        "name": r.get("description_original"),
+                        "sku": r.get("reference"),
+                        "qty": r.get("quantity") or 1,
+                        "price": r.get("estimated_unit_price") or 0,
+                        "line_number": r.get("line_number"),
+                        "confidence": r.get("match_confidence"),
+                        "match_method": r.get("match_method"),
+                        "original_text": r.get("description_original"),
+                        "approved_by": r.get("match_approved_by_jaios_id"),
+                        "dgcp_line_id": r.get("dgcp_line_id"),
+                    }
+                    for r in rows
+                ]
+
         from app.services.dgcp_odoo_product_match_service import DGCPOdooProductMatchService
 
         svc = DGCPOdooProductMatchService(self.db, self.tenant_id, self.user_id)
@@ -775,7 +963,6 @@ class DGCPOdooCrmBridge:
         if not blob or not (blob.get("lines")):
             await svc.run_match(opportunity)
         approved = svc.approved_matched_lines(opportunity)
-        # Also expose full mapping for sync metadata
         all_lines = ((opportunity.full_info or {}).get("odoo_product_matches") or {}).get("lines") or []
         lines_out: list[dict[str, Any]] = []
         for m in all_lines:
@@ -795,7 +982,6 @@ class DGCPOdooCrmBridge:
                     "approved_by": m.get("approved_by"),
                 }
             )
-        # Prefer approved for order creation
         if approved:
             return [
                 {

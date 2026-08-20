@@ -37,10 +37,51 @@ class CrmLead(models.Model):
         help="res.users id si el email JAIOS coincide de forma única. No asigna vendedor automáticamente.",
     )
 
+    justech_dgcp_line_ids = fields.One2many(
+        "justech.dgcp.opportunity.line",
+        "lead_id",
+        string="Productos solicitados DGCP",
+    )
+    justech_dgcp_line_count = fields.Integer(
+        string="Productos solicitados",
+        compute="_compute_justech_dgcp_line_kpis",
+    )
+    justech_dgcp_line_linked_count = fields.Integer(
+        compute="_compute_justech_dgcp_line_kpis",
+    )
+    justech_dgcp_line_review_count = fields.Integer(
+        compute="_compute_justech_dgcp_line_kpis",
+    )
+    justech_dgcp_line_unlinked_count = fields.Integer(
+        compute="_compute_justech_dgcp_line_kpis",
+    )
+    justech_dgcp_line_estimated_total = fields.Float(
+        string="Total estimado productos",
+        compute="_compute_justech_dgcp_line_kpis",
+    )
+
     justech_sale_count = fields.Integer(compute="_compute_justech_counts")
     justech_purchase_count = fields.Integer(compute="_compute_justech_counts")
     justech_delivery_count = fields.Integer(compute="_compute_justech_counts")
     justech_invoice_count = fields.Integer(compute="_compute_justech_counts")
+
+    @api.depends(
+        "justech_dgcp_line_ids",
+        "justech_dgcp_line_ids.match_state",
+        "justech_dgcp_line_ids.estimated_total",
+    )
+    def _compute_justech_dgcp_line_kpis(self):
+        for lead in self:
+            lines = lead.justech_dgcp_line_ids
+            lead.justech_dgcp_line_count = len(lines)
+            lead.justech_dgcp_line_linked_count = len(lines.filtered(lambda l: l.match_state == "linked"))
+            lead.justech_dgcp_line_review_count = len(
+                lines.filtered(lambda l: l.match_state == "review_required")
+            )
+            lead.justech_dgcp_line_unlinked_count = len(
+                lines.filtered(lambda l: l.match_state in ("unlinked", "suggested"))
+            )
+            lead.justech_dgcp_line_estimated_total = sum(lines.mapped("estimated_total"))
 
     @api.depends("justech_dgcp_code", "order_ids")
     def _compute_justech_counts(self):
@@ -66,6 +107,17 @@ class CrmLead(models.Model):
             lead.justech_purchase_count = len(pos)
             lead.justech_delivery_count = len(pickings)
             lead.justech_invoice_count = len(invoices)
+
+    def action_open_justech_dgcp_lines(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Productos solicitados",
+            "res_model": "justech.dgcp.opportunity.line",
+            "view_mode": "list,form",
+            "domain": [("lead_id", "=", self.id)],
+            "context": {"default_lead_id": self.id},
+        }
 
     def action_open_justech_dgcp(self):
         self.ensure_one()

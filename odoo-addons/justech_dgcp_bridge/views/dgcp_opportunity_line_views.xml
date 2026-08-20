@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_justech_dgcp_opportunity_line_tree" model="ir.ui.view">
+    <field name="name">justech.dgcp.opportunity.line.list</field>
+    <field name="model">justech.dgcp.opportunity.line</field>
+    <field name="arch" type="xml">
+      <list string="Productos solicitados DGCP" editable="bottom">
+        <field name="line_number" string="#"/>
+        <field name="description_original" string="Descripción"/>
+        <field name="quantity"/>
+        <field name="uom_text" string="Unidad"/>
+        <field name="brand_required" string="Marca"/>
+        <field name="model_required" string="Modelo"/>
+        <field name="estimated_unit_price" string="Precio estimado"/>
+        <field name="estimated_total" string="Total estimado" sum="Total estimado"/>
+        <field name="currency_id" optional="hide"/>
+        <field name="product_id" string="Producto Odoo"/>
+        <field name="match_state" string="Estado"/>
+        <field name="match_confidence" optional="hide"/>
+        <field name="match_approved" optional="hide"/>
+      </list>
+    </field>
+  </record>
+
+  <record id="view_justech_dgcp_opportunity_line_form" model="ir.ui.view">
+    <field name="name">justech.dgcp.opportunity.line.form</field>
+    <field name="model">justech.dgcp.opportunity.line</field>
+    <field name="arch" type="xml">
+      <form string="Producto solicitado DGCP">
+        <header>
+          <button name="action_use_suggested_product" type="object" string="Usar producto"
+                  invisible="not product_id or match_state == 'linked'"/>
+          <button name="action_clear_product_link" type="object" string="Dejar sin vincular"
+                  invisible="match_state == 'unlinked'"/>
+          <field name="match_state" widget="statusbar"
+                  statusbar_visible="unlinked,suggested,review_required,linked"/>
+        </header>
+        <sheet>
+          <group>
+            <group string="Solicitado DGCP">
+              <field name="line_number"/>
+              <field name="description_original"/>
+              <field name="quantity"/>
+              <field name="uom_text"/>
+              <field name="brand_required"/>
+              <field name="model_required"/>
+              <field name="reference"/>
+              <field name="specifications"/>
+            </group>
+            <group string="Estimación / vínculo">
+              <field name="estimated_unit_price"/>
+              <field name="estimated_total"/>
+              <field name="currency_id"/>
+              <field name="product_id"/>
+              <field name="match_confidence"/>
+              <field name="match_method"/>
+              <field name="match_approved"/>
+              <field name="document_ref"/>
+            </group>
+          </group>
+          <group string="Auditoría JAIOS">
+            <field name="dgcp_process_code"/>
+            <field name="dgcp_process_id"/>
+            <field name="dgcp_line_id"/>
+            <field name="jaios_created_by_name"/>
+            <field name="jaios_updated_by_name"/>
+            <field name="last_sync_at"/>
+          </group>
+        </sheet>
+      </form>
+    </field>
+  </record>
+
+  <record id="action_justech_dgcp_opportunity_lines" model="ir.actions.act_window">
+    <field name="name">Productos solicitados</field>
+    <field name="res_model">justech.dgcp.opportunity.line</field>
+    <field name="view_mode">list,form</field>
+    <field name="domain">[('lead_id', '=', active_id)]</field>
+    <field name="context">{'default_lead_id': active_id}</field>
+  </record>
+</odoo>

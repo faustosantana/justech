@@ -176,6 +176,7 @@ async def get_dashboard(
     user: CurrentUser,
     _: TenantCtx,
     include_expired: Annotated[bool, Query()] = False,
+    company: Annotated[OpportunityCompany | None, Query()] = None,
 ) -> DGCPOpportunitySummary:
     ctx = require_tenant_context()
     service = DGCPService(db)
@@ -183,6 +184,7 @@ async def get_dashboard(
         ctx.tenant_id,
         user_id=user.id,
         include_expired=include_expired,
+        company=company,
     )
 
 

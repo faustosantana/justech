@@ -14,6 +14,7 @@ import { OpportunitiesTable } from "@/components/dgcp/opportunities-table";
 import { Button } from "@/components/ui/button";
 import { usePlatformAccess } from "@/hooks/use-platform-access";
 import { apiClient } from "@/lib/api";
+import { useCompanyContext } from "@/lib/company-context";
 import type { CompanyProfile } from "@/lib/settings";
 import {
   formatDateTime,
@@ -53,6 +54,7 @@ type Mode = "list" | "kanban" | "calendar" | "won";
 
 export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) {
   const { access } = usePlatformAccess();
+  const { context: companyCtx, setSelection } = useCompanyContext();
   const searchParams = useSearchParams();
   const urlQuery = searchParams.get("q")?.trim() ?? "";
   const [items, setItems] = useState<DGCPOpportunity[]>([]);
@@ -78,6 +80,14 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
     refreshProfiles();
   }, [refreshProfiles]);
 
+  useEffect(() => {
+    if (!companyCtx?.odoo_connected) return;
+    if (!effectiveCompany) return;
+    void syncGlobalCompany(effectiveCompany);
+    // Solo al montar / cuando llegan empresas permitidas
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [companyCtx?.odoo_connected, companyCtx?.allowed_companies?.length]);
+
   const effectiveCompany = useMemo(() => {
     if (companyFilter) return companyFilter;
     if (rpeFilter.trim()) {
@@ -86,6 +96,51 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
     }
     return "" as OpportunityCompany | "";
   }, [companyFilter, rpeFilter, profiles]);
+
+  /** Alinea el header multiempresa con el filtro Empresa/RPE de licitaciones. */
+  const syncGlobalCompany = useCallback(
+    async (company: OpportunityCompany | "") => {
+      const allowed = companyCtx?.allowed_companies ?? [];
+      if (!company) {
+        if (companyCtx?.can_select_all) {
+          try {
+            await setSelection({
+              selection_mode: "all",
+              selected_company_ids: allowed.map((c) => c.id),
+            });
+          } catch {
+            /* no bloquear listado */
+          }
+        }
+        return;
+      }
+      const match = allowed.find((c) => {
+        const n = c.name.toLowerCase();
+        if (company === "just_office") return n.includes("just office") || n.includes("justoffice");
+        if (company === "justech") return n.includes("justech") && !n.includes("office");
+        if (company === "mf_plug_safe") return n.includes("plug");
+        if (company === "omni_solutions") return n.includes("omni");
+        return false;
+      });
+      if (!match) return;
+      if (
+        companyCtx?.selection_mode === "single" &&
+        (companyCtx.active_company_id === match.id || companyCtx.selected_company_ids?.[0] === match.id)
+      ) {
+        return;
+      }
+      try {
+        await setSelection({
+          selection_mode: "single",
+          active_company_id: match.id,
+          selected_company_ids: [match.id],
+        });
+      } catch {
+        /* no bloquear listado */
+      }
+    },
+    [companyCtx, setSelection],
+  );
 
   useEffect(() => {
     setSearchQuery(urlQuery);
@@ -116,7 +171,7 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
         (list) => ({ ok: true as const, list }),
         (err) => ({ ok: false as const, err }),
       );
-      const dashResult = await apiClient.getDGCPDashboard().then(
+      const dashResult = await apiClient.getDGCPDashboard({ company }).then(
         (dash) => ({ ok: true as const, dash }),
         (err) => ({ ok: false as const, err }),
       );
@@ -281,6 +336,7 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
         onFilterChange={(company, rpe) => {
           setCompanyFilter(company);
           setRpeFilter(rpe);
+          void syncGlobalCompany(company);
         }}
         onProfilesRefresh={refreshProfiles}
       />

@@ -357,7 +357,15 @@ export const apiClient = {
   ) =>
     request(`/admin/users/${userId}/companies`, { method: "PUT", body: JSON.stringify(payload) }, true),
 
-  getDGCPDashboard: () => request<DGCPSummary>("/dgcp/dashboard", {}, true),
+  getDGCPDashboard: (filters?: { company?: OpportunityCompany; include_expired?: boolean }) =>
+    request<DGCPSummary>(
+      `/dgcp/dashboard${buildQuery({
+        company: filters?.company,
+        include_expired: filters?.include_expired,
+      })}`,
+      {},
+      true,
+    ),
   getExecutiveDashboard: () => request<ExecutiveDashboard>("/dashboard/executive", {}, true),
 
   getCompanies: (params?: {

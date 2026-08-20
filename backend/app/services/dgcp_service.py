@@ -181,17 +181,28 @@ class DGCPService:
         if user_id:
             from app.services.company_scope_filter import CompanyScopeFilter
 
-            keys = await CompanyScopeFilter(self.db, tenant_id, user_id).dgcp_company_keys()
-            if keys:
-                query = query.where(DGCPOpportunity.company.in_(keys))
-                base_filter = base_filter & DGCPOpportunity.company.in_(keys)
+            scope = CompanyScopeFilter(self.db, tenant_id, user_id)
+            selected_keys = await scope.dgcp_company_keys()
+            allowed_keys = await scope.allowed_dgcp_company_keys()
+            if company:
+                # Filtro explícito Empresa/RPE: no cruzar con el header (Just Office vs Justech).
+                if allowed_keys and company.value not in allowed_keys and company.value != "unclassified":
+                    query = query.where(DGCPOpportunity.id.is_(None))  # sin permiso → vacío
+                    base_filter = base_filter & DGCPOpportunity.id.is_(None)
+                else:
+                    query = query.where(DGCPOpportunity.company == company.value)
+                    base_filter = base_filter & (DGCPOpportunity.company == company.value)
+            elif selected_keys:
+                query = query.where(DGCPOpportunity.company.in_(selected_keys))
+                base_filter = base_filter & DGCPOpportunity.company.in_(selected_keys)
+        elif company:
+            query = query.where(DGCPOpportunity.company == company.value)
+            base_filter = base_filter & (DGCPOpportunity.company == company.value)
         if status:
             query = query.where(DGCPOpportunity.status == status.value)
         if funnel_stage:
             stage_statuses = statuses_for_funnel_stage(funnel_stage)
             query = query.where(DGCPOpportunity.status.in_(tuple(stage_statuses)))
-        if company:
-            query = query.where(DGCPOpportunity.company == company.value)
         if priority:
             query = query.where(DGCPOpportunity.priority == priority.value)
 
@@ -204,8 +215,6 @@ class DGCPService:
         if funnel_stage:
             stage_statuses = statuses_for_funnel_stage(funnel_stage)
             count_query = count_query.where(DGCPOpportunity.status.in_(tuple(stage_statuses)))
-        if company:
-            count_query = count_query.where(DGCPOpportunity.company == company.value)
         if priority:
             count_query = count_query.where(DGCPOpportunity.priority == priority.value)
         total = (await self.db.execute(count_query)).scalar_one()
@@ -214,6 +223,7 @@ class DGCPService:
             tenant_id,
             user_id=user_id,
             include_expired=include_expired,
+            company=company,
         )
         # Listado liviano: la inteligencia completa se carga en el detalle.
         slim_items = [
@@ -298,6 +308,22 @@ class DGCPService:
         elif action.value == "descartar":
             opportunity.needs_review = False
 
+        # Puente Odoo CRM (soft-fail): lead al iniciar preparación; won/lost al cerrar.
+        odoo_sync: dict | None = None
+        if user_id:
+            try:
+                from app.services.dgcp_odoo_crm_bridge import DGCPOdooCrmBridge
+
+                bridge = DGCPOdooCrmBridge(self.db, tenant_id, user_id)
+                if action.value == "iniciar_preparacion":
+                    odoo_sync = await bridge.ensure_opportunity_on_prepare(opportunity)
+                elif action.value == "marcar_adjudicada":
+                    odoo_sync = await bridge.sync_outcome(opportunity, won=True)
+                elif action.value == "marcar_no_adjudicada":
+                    odoo_sync = await bridge.sync_outcome(opportunity, won=False)
+            except Exception as exc:  # noqa: BLE001 — no bloquear embudo DGCP
+                odoo_sync = {"ok": False, "error": str(exc)}
+
         await self._record_history(
             tenant_id=tenant_id,
             opportunity_id=opportunity.id,
@@ -318,6 +344,7 @@ class DGCPService:
                 "from_status": from_status,
                 "to_status": to_status,
                 "notes": data.notes,
+                "odoo_sync": odoo_sync,
             },
             request=request,
         )
@@ -430,6 +457,7 @@ class DGCPService:
         *,
         user_id: uuid.UUID | None = None,
         include_expired: bool = False,
+        company: OpportunityCompany | None = None,
     ) -> DGCPOpportunitySummary:
         base = DGCPOpportunity.tenant_id == tenant_id
         for clause in self.vigente_filters(include_expired=include_expired):
@@ -437,9 +465,18 @@ class DGCPService:
         if user_id:
             from app.services.company_scope_filter import CompanyScopeFilter
 
-            keys = await CompanyScopeFilter(self.db, tenant_id, user_id).dgcp_company_keys()
-            if keys:
-                base = base & DGCPOpportunity.company.in_(keys)
+            scope = CompanyScopeFilter(self.db, tenant_id, user_id)
+            selected_keys = await scope.dgcp_company_keys()
+            allowed_keys = await scope.allowed_dgcp_company_keys()
+            if company:
+                if allowed_keys and company.value not in allowed_keys and company.value != "unclassified":
+                    base = base & DGCPOpportunity.id.is_(None)
+                else:
+                    base = base & (DGCPOpportunity.company == company.value)
+            elif selected_keys:
+                base = base & DGCPOpportunity.company.in_(selected_keys)
+        elif company:
+            base = base & (DGCPOpportunity.company == company.value)
 
         status_rows = await self.db.execute(
             select(DGCPOpportunity.status, func.count())
@@ -487,7 +524,10 @@ class DGCPService:
         )
         for clause in self.vigente_filters(include_expired=include_expired):
             pkg_query = pkg_query.where(clause)
-        if user_id:
+        # Reusar el mismo alcance de empresa que `base`
+        if company:
+            pkg_query = pkg_query.where(DGCPOpportunity.company == company.value)
+        elif user_id:
             from app.services.company_scope_filter import CompanyScopeFilter
 
             keys = await CompanyScopeFilter(self.db, tenant_id, user_id).dgcp_company_keys()
@@ -513,7 +553,9 @@ class DGCPService:
         }
 
         closed_base = DGCPOpportunity.tenant_id == tenant_id
-        if user_id:
+        if company:
+            closed_base = closed_base & (DGCPOpportunity.company == company.value)
+        elif user_id:
             from app.services.company_scope_filter import CompanyScopeFilter
 
             keys = await CompanyScopeFilter(self.db, tenant_id, user_id).dgcp_company_keys()

@@ -68,6 +68,7 @@ class CompanyScopeFilter:
         return None
 
     async def dgcp_company_keys(self) -> list[str]:
+        """Claves DGCP del alcance *actualmente seleccionado* (header multiempresa)."""
         sc = await self.scope()
         keys: list[str] = []
         for name in sc.company_names:
@@ -75,6 +76,29 @@ class CompanyScopeFilter:
             if key and key not in keys:
                 keys.append(key)
         return keys
+
+    async def allowed_dgcp_company_keys(self) -> list[str]:
+        """Claves DGCP de todas las empresas Odoo que el usuario *puede* consultar."""
+        allowed = await GlobalCompanyContextService(
+            self.db, self.tenant_id, self.user_id
+        ).get_allowed()
+        keys: list[str] = []
+        for item in allowed.items:
+            key = self.odoo_name_to_dgcp_key(item.name)
+            if key and key not in keys:
+                keys.append(key)
+        return keys
+
+    async def resolve_odoo_company_id_for_dgcp_key(self, dgcp_key: str) -> int | None:
+        """Mapear justech/just_office/... → id de res.company Odoo permitido."""
+        allowed = await GlobalCompanyContextService(
+            self.db, self.tenant_id, self.user_id
+        ).get_allowed()
+        needle = (dgcp_key or "").strip().lower()
+        for item in allowed.items:
+            if self.odoo_name_to_dgcp_key(item.name) == needle:
+                return int(item.id)
+        return None
 
     async def task_company_clause(self, company_id_column) -> ColumnElement | None:
         sc = await self.scope()

@@ -67,6 +67,15 @@ SO_FIELDS = {
     "x_justech_jaios_id": ("char", "ID JAIOS/DGCP"),
 }
 
+SO_LINE_FIELDS = {
+    "x_justech_dgcp_code": ("char", "Código DGCP"),
+    "x_justech_dgcp_line_number": ("integer", "Línea DGCP"),
+    "x_justech_dgcp_original": ("char", "Descripción original DGCP"),
+    "x_justech_match_confidence": ("float", "Confianza match"),
+    "x_justech_match_method": ("char", "Método match"),
+    "x_justech_jaios_approver_id": ("char", "Aprobó match (ID JAIOS)"),
+}
+
 # Keys that must not be overwritten once set (initiator)
 _INITIATOR_PAYLOAD_KEYS = ("jaios_user_id", "jaios_user_name", "jaios_user_email")
 
@@ -758,99 +767,53 @@ class DGCPOdooCrmBridge:
     async def _map_product_lines(
         self, client, opportunity: DGCPOpportunity
     ) -> list[dict[str, Any]]:
-        """Map technical-sheet / suggested lines to Odoo products. Never invent."""
+        """Delegate to product match service; only MATCHED+approved become SO lines."""
+        from app.services.dgcp_odoo_product_match_service import DGCPOdooProductMatchService
+
+        svc = DGCPOdooProductMatchService(self.db, self.tenant_id, self.user_id)
+        blob = (opportunity.full_info or {}).get("odoo_product_matches")
+        if not blob or not (blob.get("lines")):
+            await svc.run_match(opportunity)
+        approved = svc.approved_matched_lines(opportunity)
+        # Also expose full mapping for sync metadata
+        all_lines = ((opportunity.full_info or {}).get("odoo_product_matches") or {}).get("lines") or []
         lines_out: list[dict[str, Any]] = []
-        candidates: list[dict[str, Any]] = []
-
-        # From bid package technical sheets if present
-        try:
-            from sqlalchemy import select
-            from app.models.dgcp_bid_package import DGCPBidPackage
-
-            pkg = (
-                await self.db.execute(
-                    select(DGCPBidPackage).where(
-                        DGCPBidPackage.opportunity_id == opportunity.id,
-                        DGCPBidPackage.tenant_id == self.tenant_id,
-                    )
-                )
-            ).scalar_one_or_none()
-            block = (pkg.payload or {}).get("technical_sheets") if pkg and pkg.payload else None
-            if isinstance(block, dict):
-                for item in block.get("items") or []:
-                    offered = item.get("offered_product") or {}
-                    name = (
-                        offered.get("name")
-                        or offered.get("product_name")
-                        or item.get("title")
-                        or item.get("requirement")
-                        or ""
-                    )
-                    sku = offered.get("sku") or offered.get("default_code")
-                    qty = float(offered.get("quantity") or item.get("quantity") or 1)
-                    price = float(offered.get("unit_price") or offered.get("price") or 0)
-                    if name or sku:
-                        candidates.append(
-                            {"name": str(name)[:200], "sku": sku, "qty": qty, "price": price}
-                        )
-        except Exception:
-            logger.debug("No technical sheet lines for %s", opportunity.id, exc_info=True)
-
-        # From economic offer suggestions in full_info
-        info = opportunity.full_info or {}
-        for p in info.get("suggested_products") or []:
-            if isinstance(p, dict):
-                candidates.append(
-                    {
-                        "name": str(p.get("product_name") or "")[:200],
-                        "sku": p.get("sku"),
-                        "qty": float(p.get("quantity") or 1),
-                        "price": float(p.get("unit_price") or p.get("price") or 0),
-                    }
-                )
-
-        for cand in candidates[:40]:
-            product_id = None
-            status = "UNMATCHED"
-            if cand.get("sku"):
-                rows = await client.search_read(
-                    "product.product",
-                    [("default_code", "=", str(cand["sku"]))],
-                    ["id", "name", "list_price", "default_code"],
-                    limit=2,
-                )
-                if len(rows) == 1:
-                    product_id = _as_int_id(rows[0]["id"])
-                    status = "MATCHED"
-                    if not cand["price"]:
-                        cand["price"] = float(rows[0].get("list_price") or 0)
-                elif len(rows) > 1:
-                    status = "REVIEW_REQUIRED"
-            if not product_id and cand.get("name") and len(cand["name"]) >= 5:
-                rows = await client.search_read(
-                    "product.product",
-                    [("name", "=ilike", cand["name"])],
-                    ["id", "name", "list_price"],
-                    limit=3,
-                )
-                if len(rows) == 1:
-                    product_id = _as_int_id(rows[0]["id"])
-                    status = "MATCHED"
-                    if not cand["price"]:
-                        cand["price"] = float(rows[0].get("list_price") or 0)
-                elif len(rows) > 1:
-                    status = "REVIEW_REQUIRED"
-
+        for m in all_lines:
             lines_out.append(
                 {
-                    "status": status,
-                    "product_id": product_id,
-                    "name": cand.get("name"),
-                    "sku": cand.get("sku"),
-                    "qty": cand.get("qty") or 1,
-                    "price": cand.get("price") or 0,
+                    "status": m.get("status"),
+                    "product_id": m.get("suggested_product_id") if m.get("approved") else None,
+                    "name": m.get("description") or m.get("suggested_product_name"),
+                    "sku": m.get("reference") or m.get("suggested_default_code"),
+                    "qty": m.get("quantity") or 1,
+                    "price": m.get("estimated_price") or 0,
+                    "approved": bool(m.get("approved")),
+                    "line_number": m.get("line_number"),
+                    "confidence": m.get("confidence"),
+                    "match_method": m.get("match_method"),
+                    "original_text": m.get("original_text"),
+                    "approved_by": m.get("approved_by"),
                 }
             )
+        # Prefer approved for order creation
+        if approved:
+            return [
+                {
+                    "status": "MATCHED",
+                    "product_id": m["suggested_product_id"],
+                    "name": m.get("suggested_product_name") or m.get("description"),
+                    "sku": m.get("suggested_default_code") or m.get("reference"),
+                    "qty": m.get("quantity") or 1,
+                    "price": m.get("estimated_price") or 0,
+                    "line_number": m.get("line_number"),
+                    "confidence": m.get("confidence"),
+                    "match_method": m.get("match_method"),
+                    "original_text": m.get("original_text"),
+                    "approved_by": m.get("approved_by"),
+                    "approved": True,
+                }
+                for m in approved
+            ]
         return lines_out
 
     async def _ensure_draft_quotation(
@@ -896,14 +859,19 @@ class DGCPOdooCrmBridge:
 
         partner = await self._resolve_partner(client, opportunity, company_id=company_id)
         mapped = await self._map_product_lines(client, opportunity)
-        matched = [m for m in mapped if m["status"] == "MATCHED" and m.get("product_id")]
+        matched = [
+            m
+            for m in mapped
+            if m.get("status") == "MATCHED" and m.get("product_id") and m.get("approved")
+        ]
 
         vals: dict[str, Any] = {
             "origin": opportunity.code,
             "opportunity_id": lead_id,
             "note": (
                 f"Cotización borrador generada desde JAIOS al adjudicar {opportunity.code}.\n"
-                f"Requiere revisión comercial antes de confirmar."
+                f"Requiere revisión comercial antes de confirmar.\n"
+                f"Líneas MATCHED aprobadas: {len(matched)}."
             ),
         }
         if "justech_dgcp_code" in so_fields:
@@ -919,8 +887,6 @@ class DGCPOdooCrmBridge:
         if partner.get("partner_id"):
             vals["partner_id"] = partner["partner_id"]
         else:
-            # Odoo requires partner_id — use a placeholder review partner only if exact company internal?
-            # Do NOT invent. Mark pending for quotation if no partner.
             return {
                 "sale_order_id": None,
                 "customer_required": True,
@@ -930,21 +896,28 @@ class DGCPOdooCrmBridge:
                 "error": "customer_required_for_quotation",
             }
 
+        line_fields = await self._ensure_custom_fields(client, "sale.order.line", SO_LINE_FIELDS)
         order_lines = []
         for m in matched:
-            order_lines.append(
-                (
-                    0,
-                    0,
-                    {
-                        "product_id": m["product_id"],
-                        "name": m["name"] or "Línea DGCP",
-                        "product_uom_qty": m["qty"] or 1,
-                        "price_unit": float(m["price"] or 0),
-                    },
-                )
-            )
-        # If no matched lines, create a note line via display_type if supported, else skip lines
+            line_vals: dict[str, Any] = {
+                "product_id": m["product_id"],
+                "name": m["name"] or "Línea DGCP",
+                "product_uom_qty": m["qty"] or 1,
+                "price_unit": float(m["price"] or 0),
+            }
+            if "x_justech_dgcp_code" in line_fields:
+                line_vals["x_justech_dgcp_code"] = opportunity.code
+            if "x_justech_dgcp_line_number" in line_fields and m.get("line_number") is not None:
+                line_vals["x_justech_dgcp_line_number"] = int(m["line_number"])
+            if "x_justech_dgcp_original" in line_fields and m.get("original_text"):
+                line_vals["x_justech_dgcp_original"] = str(m["original_text"])[:500]
+            if "x_justech_match_confidence" in line_fields and m.get("confidence") is not None:
+                line_vals["x_justech_match_confidence"] = float(m["confidence"])
+            if "x_justech_match_method" in line_fields and m.get("match_method"):
+                line_vals["x_justech_match_method"] = str(m["match_method"])[:64]
+            if "x_justech_jaios_approver_id" in line_fields and m.get("approved_by"):
+                line_vals["x_justech_jaios_approver_id"] = str(m["approved_by"])
+            order_lines.append((0, 0, line_vals))
         if order_lines:
             vals["order_line"] = order_lines
 

@@ -406,6 +406,73 @@ async def retry_odoo_sync(
     }
 
 
+@router.get(
+    "/opportunities/{opportunity_id}/odoo-product-matches",
+    dependencies=DGCP_VIEW,
+)
+async def get_odoo_product_matches(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+):
+    ctx = require_tenant_context()
+    opportunity = await DGCPService(db).get_opportunity(ctx.tenant_id, opportunity_id)
+    blob = (opportunity.full_info or {}).get("odoo_product_matches") or {}
+    return {"opportunity_id": str(opportunity.id), "code": opportunity.code, **blob}
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/odoo-product-matches/run",
+    dependencies=DGCP_MUTATE,
+)
+async def run_odoo_product_matches(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+):
+    ctx = require_tenant_context()
+    service = DGCPService(db)
+    opportunity = await service.get_opportunity(ctx.tenant_id, opportunity_id)
+    from app.services.dgcp_odoo_product_match_service import DGCPOdooProductMatchService
+
+    result = await DGCPOdooProductMatchService(db, ctx.tenant_id, user.id).run_match(opportunity)
+    await db.commit()
+    return {"opportunity_id": str(opportunity.id), "code": opportunity.code, **result}
+
+
+@router.post(
+    "/opportunities/{opportunity_id}/odoo-product-matches/{line_number}/decision",
+    dependencies=DGCP_MUTATE,
+)
+async def decide_odoo_product_match(
+    opportunity_id: uuid.UUID,
+    line_number: int,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    approve: Annotated[bool, Query()] = True,
+    product_id: Annotated[int | None, Query()] = None,
+):
+    """Usar sugerido / seleccionar candidato / dejar pendiente (approve=false)."""
+    ctx = require_tenant_context()
+    service = DGCPService(db)
+    opportunity = await service.get_opportunity(ctx.tenant_id, opportunity_id)
+    from app.services.dgcp_odoo_product_match_service import DGCPOdooProductMatchService
+
+    result = DGCPOdooProductMatchService(db, ctx.tenant_id, user.id).approve_line(
+        opportunity,
+        line_number=line_number,
+        product_id=product_id,
+        approve=approve,
+        user_id=user.id,
+        user_name=user.full_name,
+    )
+    await db.commit()
+    return {"opportunity_id": str(opportunity.id), **result}
+
+
 def _bid_svc(db, user) -> DGCPBidPackageService:
     ctx = require_tenant_context()
     return DGCPBidPackageService(db, ctx.tenant_id, user_id=user.id)

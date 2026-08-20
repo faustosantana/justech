@@ -542,6 +542,43 @@ export const apiClient = {
       result?: { ok?: boolean; error?: string; status?: string };
     }>(`/dgcp/opportunities/${id}/odoo-sync/retry`, { method: "POST", body: "{}" }, true),
 
+  getDGCPOdooProductMatches: (id: string) =>
+    request<{
+      opportunity_id: string;
+      code: string;
+      lines?: Array<Record<string, unknown>>;
+      summary?: Record<string, number>;
+    }>(`/dgcp/opportunities/${id}/odoo-product-matches`, {}, true),
+
+  runDGCPOdooProductMatches: (id: string) =>
+    request<{
+      opportunity_id: string;
+      ok?: boolean;
+      lines?: Array<Record<string, unknown>>;
+      summary?: Record<string, number>;
+      error?: string;
+    }>(`/dgcp/opportunities/${id}/odoo-product-matches/run`, { method: "POST", body: "{}" }, true),
+
+  decideDGCPOdooProductMatch: (
+    id: string,
+    lineNumber: number,
+    opts: { approve?: boolean; productId?: number } = {},
+  ) =>
+    request<{
+      opportunity_id: string;
+      ok?: boolean;
+      line?: Record<string, unknown>;
+      summary?: Record<string, number>;
+      error?: string;
+    }>(
+      `/dgcp/opportunities/${id}/odoo-product-matches/${lineNumber}/decision${buildQuery({
+        approve: opts.approve ?? true,
+        product_id: opts.productId,
+      })}`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
   getDGCPOpportunityHistory: (id: string) =>
     request<DGCPOpportunityHistory[]>(`/dgcp/opportunities/${id}/history`, {}, true),
 
@@ -646,7 +683,7 @@ export const apiClient = {
   associateDGCPChecklistDocument: (
     opportunityId: string,
     itemId: string,
-    data: { document_id?: string; knowledge_asset_id?: string },
+    data: { document_id?: string; knowledge_asset_id?: string; process_document_id?: string },
   ) =>
     request<{
       checklist: import("@/lib/dgcp").DGCPChecklist;
@@ -655,6 +692,17 @@ export const apiClient = {
     }>(
       `/dgcp/opportunities/${opportunityId}/checklist/${itemId}/associate-document`,
       { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
+
+  unlinkDGCPChecklistDocument: (opportunityId: string, itemId: string) =>
+    request<{
+      checklist: import("@/lib/dgcp").DGCPChecklist;
+      bid_package: import("@/lib/dgcp").DGCPBidPackage;
+      expediente_status: string;
+    }>(
+      `/dgcp/opportunities/${opportunityId}/checklist/${itemId}/unlink-document`,
+      { method: "POST", body: "{}" },
       true,
     ),
 
@@ -991,6 +1039,230 @@ export const apiClient = {
     request<import("@/lib/dgcp").DGCPIntelligence>(
       `/dgcp/opportunities/${id}/intelligence/analyze`,
       { method: "POST", body: "{}" },
+      true,
+    ),
+
+  getDGCPTechnicalSheets: (opportunityId: string) =>
+    request<import("@/lib/dgcp").DGCPTechSheetsResponse>(
+      `/dgcp/opportunities/${opportunityId}/technical-sheets`,
+      {},
+      true,
+    ),
+
+  detectDGCPTechnicalSheets: (opportunityId: string, force = false) =>
+    request<import("@/lib/dgcp").DGCPTechSheetsResponse & { detected_count?: number }>(
+      `/dgcp/opportunities/${opportunityId}/technical-sheets/detect${buildQuery({ force: force ? "true" : undefined })}`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  createDGCPTechnicalSheetManual: (
+    opportunityId: string,
+    data: { name: string; description?: string; quantity?: string; unit?: string },
+  ) =>
+    request<import("@/lib/dgcp").DGCPTechSheetsResponse>(
+      `/dgcp/opportunities/${opportunityId}/technical-sheets/manual`,
+      { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
+
+  uploadDGCPTechnicalSheetExisting: async (
+    opportunityId: string,
+    file: File,
+    data: {
+      name: string;
+      description?: string;
+      brand?: string;
+      model?: string;
+      manufacturer?: string;
+      country?: string;
+      warranty?: string;
+      observation?: string;
+      initial_status?: string;
+    },
+  ) => {
+    const token = getAccessToken();
+    const tenantId = getTenantId();
+    if (!token) throw new Error("UNAUTHORIZED");
+    const form = new FormData();
+    form.append("file", file);
+    const q = buildQuery({
+      name: data.name,
+      description: data.description,
+      brand: data.brand,
+      model: data.model,
+      manufacturer: data.manufacturer,
+      country: data.country,
+      warranty: data.warranty,
+      observation: data.observation,
+      initial_status: data.initial_status || "en_elaboracion",
+    });
+    const response = await fetch(
+      `${getApiUrl()}/dgcp/opportunities/${opportunityId}/technical-sheets/upload-existing${q}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          ...(tenantId ? { "X-Tenant-ID": tenantId } : {}),
+        },
+        body: form,
+      },
+    );
+    if (!response.ok) {
+      const body = (await response.json().catch(() => ({}))) as { detail?: string };
+      throw new ApiError(response.status, "UPLOAD_ERROR", body.detail ?? "Error al subir ficha");
+    }
+    return response.json() as Promise<import("@/lib/dgcp").DGCPTechSheetsResponse>;
+  },
+
+  replaceDGCPTechnicalSheetFile: async (opportunityId: string, sheetId: string, file: File) => {
+    const token = getAccessToken();
+    const tenantId = getTenantId();
+    if (!token) throw new Error("UNAUTHORIZED");
+    const form = new FormData();
+    form.append("file", file);
+    const response = await fetch(
+      `${getApiUrl()}/dgcp/opportunities/${opportunityId}/technical-sheets/${sheetId}/replace-file`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          ...(tenantId ? { "X-Tenant-ID": tenantId } : {}),
+        },
+        body: form,
+      },
+    );
+    if (!response.ok) {
+      const body = (await response.json().catch(() => ({}))) as { detail?: string };
+      throw new ApiError(response.status, "UPLOAD_ERROR", body.detail ?? "Error al sustituir archivo");
+    }
+    return response.json() as Promise<import("@/lib/dgcp").DGCPTechSheetItem>;
+  },
+
+  getDGCPTechnicalSheetUploadedFileUrl: (
+    opportunityId: string,
+    sheetId: string,
+    disposition: "inline" | "attachment" = "attachment",
+  ) =>
+    `${getApiUrl()}/dgcp/opportunities/${opportunityId}/technical-sheets/${sheetId}/uploaded-file${buildQuery({ disposition })}`,
+
+  selectDGCPTechSheetProduct: (
+    opportunityId: string,
+    sheetId: string,
+    data: {
+      brand?: string;
+      model?: string;
+      manufacturer?: string;
+      sku?: string;
+      description?: string;
+      source?: string;
+    },
+  ) =>
+    request<import("@/lib/dgcp").DGCPTechSheetItem>(
+      `/dgcp/opportunities/${opportunityId}/technical-sheets/${sheetId}/select-product`,
+      { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
+
+  generateDGCPTechSheetDraft: (opportunityId: string, sheetId: string) =>
+    request<{ sheet_id: string; status: string; confidence: number }>(
+      `/dgcp/opportunities/${opportunityId}/technical-sheets/${sheetId}/generate-draft`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  approveDGCPTechSheet: (opportunityId: string, sheetId: string) =>
+    request<{ sheet_id: string; status: string }>(
+      `/dgcp/opportunities/${opportunityId}/technical-sheets/${sheetId}/approve`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  rejectDGCPTechSheet: (opportunityId: string, sheetId: string) =>
+    request<{ sheet_id: string; status: string }>(
+      `/dgcp/opportunities/${opportunityId}/technical-sheets/${sheetId}/reject`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  exportDGCPTechSheet: (opportunityId: string, sheetId: string, fmt: "markdown" | "pdf" = "markdown") =>
+    request<{ content: string; filename: string }>(
+      `/dgcp/opportunities/${opportunityId}/technical-sheets/${sheetId}/export${buildQuery({ fmt })}`,
+      {},
+      true,
+    ),
+
+  exportDGCPTechSheetPdf: async (opportunityId: string, sheetId: string) => {
+    const { fetchAuthenticatedFile, downloadAuthenticatedBlob } = await import(
+      "@/lib/authenticated-file"
+    );
+    const blob = await fetchAuthenticatedFile(
+      `/dgcp/opportunities/${opportunityId}/technical-sheets/${sheetId}/export?fmt=pdf`,
+    );
+    downloadAuthenticatedBlob(blob, `ficha-tecnica-${sheetId}.pdf`);
+  },
+
+  addDGCPTechSheetImage: async (opportunityId: string, sheetId: string, file: File) => {
+    const token = getAccessToken();
+    const tenantId = getTenantId();
+    if (!token) throw new Error("UNAUTHORIZED");
+    const form = new FormData();
+    form.append("file", file);
+    const response = await fetch(
+      `${getApiUrl()}/dgcp/opportunities/${opportunityId}/technical-sheets/${sheetId}/images`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          ...(tenantId ? { "X-Tenant-ID": tenantId } : {}),
+        },
+        body: form,
+      },
+    );
+    if (!response.ok) {
+      const body = (await response.json().catch(() => ({}))) as { detail?: string };
+      throw new ApiError(response.status, "UPLOAD_ERROR", body.detail ?? "Error al subir imagen");
+    }
+    return response.json() as Promise<import("@/lib/dgcp").DGCPTechSheetItem>;
+  },
+
+  removeDGCPTechSheetImage: (opportunityId: string, sheetId: string, imageId: string) =>
+    request<import("@/lib/dgcp").DGCPTechSheetItem>(
+      `/dgcp/opportunities/${opportunityId}/technical-sheets/${sheetId}/images/${imageId}`,
+      { method: "DELETE" },
+      true,
+    ),
+
+  addDGCPChecklistItem: (
+    opportunityId: string,
+    data: {
+      name: string;
+      tipo?: string;
+      mandatory?: boolean;
+      description?: string;
+      source?: string;
+      page?: string;
+      due_date?: string;
+      assignee?: string;
+      notes?: string;
+      document_type?: string;
+    },
+  ) =>
+    request<{
+      item: import("@/lib/dgcp").DGCPChecklistItem;
+      checklist: import("@/lib/dgcp").DGCPChecklist;
+      bid_package: import("@/lib/dgcp").DGCPBidPackage;
+      expediente_status: string;
+    }>(`/dgcp/opportunities/${opportunityId}/checklist/items`, { method: "POST", body: JSON.stringify(data) }, true),
+
+  updateDGCPProcessDocumentFlags: (
+    opportunityId: string,
+    docId: string,
+    data: { is_primary?: boolean; include_in_analysis?: boolean; doc_role?: string },
+  ) =>
+    request<import("@/lib/dgcp").DGCPProcessDocument>(
+      `/dgcp/opportunities/${opportunityId}/process-documents/${docId}/flags`,
+      { method: "PATCH", body: JSON.stringify(data) },
       true,
     ),
 

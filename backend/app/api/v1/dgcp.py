@@ -380,6 +380,32 @@ async def apply_opportunity_action(
     return service.to_response(opportunity)
 
 
+@router.post(
+    "/opportunities/{opportunity_id}/odoo-sync/retry",
+    dependencies=DGCP_MUTATE,
+)
+async def retry_odoo_sync(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+):
+    """Reintenta sincronización Odoo sin cambiar el estado DGCP del usuario."""
+    ctx = require_tenant_context()
+    service = DGCPService(db)
+    opportunity = await service.get_opportunity(ctx.tenant_id, opportunity_id)
+    from app.services.dgcp_odoo_crm_bridge import DGCPOdooCrmBridge
+
+    result = await DGCPOdooCrmBridge(db, ctx.tenant_id, user.id).retry_sync(opportunity)
+    await db.commit()
+    return {
+        "opportunity_id": str(opportunity.id),
+        "code": opportunity.code,
+        "odoo_sync": (opportunity.full_info or {}).get("odoo_sync"),
+        "result": result,
+    }
+
+
 def _bid_svc(db, user) -> DGCPBidPackageService:
     ctx = require_tenant_context()
     return DGCPBidPackageService(db, ctx.tenant_id, user_id=user.id)

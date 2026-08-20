@@ -80,14 +80,6 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
     refreshProfiles();
   }, [refreshProfiles]);
 
-  useEffect(() => {
-    if (!companyCtx?.odoo_connected) return;
-    if (!effectiveCompany) return;
-    void syncGlobalCompany(effectiveCompany);
-    // Solo al montar / cuando llegan empresas permitidas
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [companyCtx?.odoo_connected, companyCtx?.allowed_companies?.length]);
-
   const effectiveCompany = useMemo(() => {
     if (companyFilter) return companyFilter;
     if (rpeFilter.trim()) {
@@ -141,6 +133,12 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
     },
     [companyCtx, setSelection],
   );
+
+  useEffect(() => {
+    if (!companyCtx?.odoo_connected) return;
+    void syncGlobalCompany(effectiveCompany);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [companyCtx?.odoo_connected, companyCtx?.allowed_companies?.length, effectiveCompany]);
 
   useEffect(() => {
     setSearchQuery(urlQuery);

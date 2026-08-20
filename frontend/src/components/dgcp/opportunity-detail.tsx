@@ -33,6 +33,7 @@ import { DGCPIntelligencePanel } from "@/components/dgcp/dgcp-intelligence-panel
 import { OpportunityBidSection } from "@/components/dgcp/opportunity-bid-section";
 import { PliegoDeepAnalysisPanel } from "@/components/dgcp/pliego-deep-analysis-panel";
 import { DgcpFunnelHeader } from "@/components/dgcp/dgcp-funnel-header";
+import { DgcpOdooSyncCard } from "@/components/dgcp/dgcp-odoo-sync-card";
 import { CreateTaskButton } from "@/components/work/create-task-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -278,6 +279,9 @@ export function OpportunityDetail({ opportunity: initial }: OpportunityDetailPro
         onAction={(a) => void applyAction(a)}
         variant="card"
       />
+      <div className="mt-3">
+        <DgcpOdooSyncCard opportunity={opportunity} onUpdated={setOpportunity} />
+      </div>
 
       {flash && (
         <p

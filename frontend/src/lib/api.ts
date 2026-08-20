@@ -534,6 +534,14 @@ export const apiClient = {
       true,
     ),
 
+  retryDGCPOdooSync: (id: string) =>
+    request<{
+      opportunity_id: string;
+      code: string;
+      odoo_sync?: Record<string, unknown>;
+      result?: { ok?: boolean; error?: string; status?: string };
+    }>(`/dgcp/opportunities/${id}/odoo-sync/retry`, { method: "POST", body: "{}" }, true),
+
   getDGCPOpportunityHistory: (id: string) =>
     request<DGCPOpportunityHistory[]>(`/dgcp/opportunities/${id}/history`, {}, true),
 

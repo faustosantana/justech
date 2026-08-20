@@ -26,6 +26,14 @@ export function DgcpOdooSyncCard({ opportunity, onUpdated }: Props) {
   const crmUrl = String(sync?.crm_opportunity_url || fullInfo?.odoo_crm_opportunity_url || "");
   const soUrl = String(sync?.sale_order_url || "");
   const pending = status === "sync_pending";
+  const synced = status === "synced";
+  const owner =
+    (sync?.jaios_owner as { name?: string; email?: string; id?: string } | undefined) ||
+    undefined;
+  const responsible =
+    opportunity.responsible_name ||
+    owner?.name ||
+    (typeof fullInfo?.responsible_name === "string" ? fullInfo.responsible_name : null);
 
   async function retry() {
     setBusy(true);
@@ -42,33 +50,63 @@ export function DgcpOdooSyncCard({ opportunity, onUpdated }: Props) {
     }
   }
 
+  const statusLabel = synced ? "✅ Sincronizado" : pending ? "⚠ Pendiente" : status === "—" ? "—" : "❌ Error";
+
   return (
     <Card className="border-primary/20">
       <CardHeader className="flex flex-row items-center justify-between py-3">
         <CardTitle className="text-sm">Odoo CRM / Cotización</CardTitle>
-        {pending && (
+        {(pending || status === "error") && (
           <Button size="sm" variant="outline" disabled={busy} onClick={() => void retry()}>
             <RefreshCw className={`mr-1 h-3.5 w-3.5 ${busy ? "animate-spin" : ""}`} />
-            Reintentar sync
+            Reintentar sincronización
           </Button>
         )}
       </CardHeader>
       <CardContent className="space-y-2 text-xs text-muted-foreground">
+        {responsible ? (
+          <p>
+            Responsable: <span className="font-medium text-foreground">{responsible}</span>
+          </p>
+        ) : null}
         <p>
-          Estado sync: <span className="font-medium text-foreground">{status}</span>
+          Sincronización Odoo: <span className="font-medium text-foreground">{statusLabel}</span>
           {sync?.retry_count != null ? ` · reintentos: ${String(sync.retry_count)}` : ""}
         </p>
+        {sync?.crm_opportunity_name || sync?.crm_opportunity_id ? (
+          <p>
+            Oportunidad:{" "}
+            <span className="font-medium text-foreground">
+              {String(sync?.crm_opportunity_name || `#${sync?.crm_opportunity_id}`)}
+            </span>
+          </p>
+        ) : null}
+        {sync?.sale_order_name ? (
+          <p>
+            Cotización: <span className="font-medium text-foreground">{String(sync.sale_order_name)}</span>
+          </p>
+        ) : null}
         {sync?.last_error ? <p className="text-destructive">Error: {String(sync.last_error)}</p> : null}
-        <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2 pt-1">
           {crmUrl ? (
-            <a href={crmUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
-              Oportunidad CRM <ExternalLink className="h-3 w-3" />
+            <a
+              href={crmUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 text-primary hover:underline"
+            >
+              Abrir en Odoo <ExternalLink className="h-3 w-3" />
             </a>
           ) : (
             <span>Sin oportunidad CRM aún</span>
           )}
           {soUrl ? (
-            <a href={soUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
+            <a
+              href={soUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1 text-primary hover:underline"
+            >
               Cotización <ExternalLink className="h-3 w-3" />
             </a>
           ) : null}

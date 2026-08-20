@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_sale_order_form_justech_dgcp" model="ir.ui.view">
+    <field name="name">sale.order.form.justech.dgcp</field>
+    <field name="model">sale.order</field>
+    <field name="inherit_id" ref="sale.view_order_form"/>
+    <field name="arch" type="xml">
+      <div name="button_box" position="inside">
+        <button name="action_open_justech_opportunity" type="object" class="oe_stat_button" icon="fa-star"
+                invisible="not opportunity_id">
+          <div class="o_stat_info"><span class="o_stat_text">Abrir oportunidad</span></div>
+        </button>
+        <button name="action_open_justech_jaios" type="object" class="oe_stat_button" icon="fa-globe"
+                invisible="not justech_jaios_url">
+          <div class="o_stat_info"><span class="o_stat_text">Abrir licitación JAIOS</span></div>
+        </button>
+      </div>
+      <field name="partner_id" position="after">
+        <field name="justech_dgcp_code" string="Licitación DGCP" readonly="1"/>
+        <field name="justech_jaios_user_name" readonly="1"/>
+        <field name="justech_jaios_owner_name" readonly="1"/>
+        <field name="justech_jaios_id" invisible="1"/>
+        <field name="justech_jaios_url" invisible="1"/>
+      </field>
+    </field>
+  </record>
+</odoo>

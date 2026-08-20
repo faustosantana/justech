@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+  <record id="view_crm_lead_form_justech_dgcp" model="ir.ui.view">
+    <field name="name">crm.lead.form.justech.dgcp</field>
+    <field name="model">crm.lead</field>
+    <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+    <field name="arch" type="xml">
+      <div name="button_box" position="inside">
+        <button name="action_open_justech_dgcp" type="object" class="oe_stat_button" icon="fa-external-link"
+                invisible="not justech_url">
+          <div class="o_stat_info"><span class="o_stat_text">Licitación DGCP</span></div>
+        </button>
+        <button name="action_open_justech_jaios" type="object" class="oe_stat_button" icon="fa-globe"
+                invisible="not justech_jaios_url">
+          <div class="o_stat_info"><span class="o_stat_text">Abrir en JAIOS</span></div>
+        </button>
+        <button name="action_open_justech_sales" type="object" class="oe_stat_button" icon="fa-usd"
+                invisible="justech_sale_count == 0">
+          <field name="justech_sale_count" widget="statinfo" string="Cotización / OV"/>
+        </button>
+        <button name="action_open_justech_purchases" type="object" class="oe_stat_button" icon="fa-shopping-cart"
+                invisible="justech_purchase_count == 0">
+          <field name="justech_purchase_count" widget="statinfo" string="Compras"/>
+        </button>
+        <button name="action_open_justech_deliveries" type="object" class="oe_stat_button" icon="fa-truck"
+                invisible="justech_delivery_count == 0">
+          <field name="justech_delivery_count" widget="statinfo" string="Entregas"/>
+        </button>
+        <button name="action_open_justech_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o"
+                invisible="justech_invoice_count == 0">
+          <field name="justech_invoice_count" widget="statinfo" string="Facturas"/>
+        </button>
+      </div>
+      <notebook position="inside">
+        <page string="JAIOS / Licitación DGCP" name="justech_dgcp">
+          <group>
+            <group string="Proceso">
+              <field name="justech_dgcp_code"/>
+              <field name="justech_jaios_id"/>
+              <field name="justech_institution"/>
+              <field name="justech_company_key"/>
+              <field name="justech_rpe"/>
+              <field name="justech_dgcp_status"/>
+              <field name="justech_url" widget="url"/>
+              <field name="justech_jaios_url" widget="url"/>
+            </group>
+            <group string="Usuarios JAIOS">
+              <field name="justech_jaios_user_name" string="Iniciado por"/>
+              <field name="justech_jaios_user_email"/>
+              <field name="justech_jaios_user_id"/>
+              <field name="justech_jaios_owner_name" string="Responsable actual"/>
+              <field name="justech_jaios_owner_email"/>
+              <field name="justech_jaios_owner_id"/>
+              <field name="justech_jaios_last_sync_at"/>
+              <field name="justech_jaios_last_action_user_name"/>
+              <field name="justech_jaios_last_action_at"/>
+              <field name="justech_jaios_odoo_user_id" groups="base.group_no_one"/>
+            </group>
+          </group>
+          <group string="Montos / fechas">
+            <group>
+              <field name="justech_amount"/>
+              <field name="justech_currency"/>
+              <field name="justech_publish_date"/>
+              <field name="justech_deadline"/>
+            </group>
+            <group>
+              <field name="justech_jaios_stage"/>
+              <field name="justech_awarded_amount"/>
+              <field name="justech_awarded_date"/>
+              <field name="justech_result"/>
+            </group>
+          </group>
+        </page>
+      </notebook>
+    </field>
+  </record>
+
+  <record id="view_crm_lead_kanban_justech_dgcp" model="ir.ui.view">
+    <field name="name">crm.lead.kanban.justech.dgcp</field>
+    <field name="model">crm.lead</field>
+    <field name="inherit_id" ref="crm.crm_case_kanban_view_leads"/>
+    <field name="arch" type="xml">
+      <xpath expr="//kanban" position="inside">
+        <field name="justech_dgcp_code"/>
+        <field name="justech_jaios_user_name"/>
+      </xpath>
+      <xpath expr="//t[@t-name='card']//div[hasclass('o_kanban_card_crm_lead_revenue')]" position="after">
+        <div t-if="record.justech_dgcp_code.raw_value" class="text-muted" style="font-size:11px;line-height:1.3;">
+          <div>DGCP: <field name="justech_dgcp_code"/></div>
+          <div t-if="record.justech_jaios_user_name.raw_value">
+            JAIOS: <field name="justech_jaios_user_name"/>
+          </div>
+        </div>
+      </xpath>
+    </field>
+  </record>
+</odoo>

@@ -30,7 +30,7 @@ def _as_int_id(value: Any) -> int:
 # Persistencia en full_info["odoo_sync"]
 SYNC_KEY = "odoo_sync"
 
-# Campos custom Odoo (x_ porque se crean vía API sin módulo; el addon usa justech_*)
+# Campos custom Odoo (x_ vía API sin módulo; el addon preferido usa justech_*)
 CRM_FIELDS = {
     "x_justech_dgcp_code": ("char", "Código DGCP"),
     "x_justech_jaios_id": ("char", "ID JAIOS/DGCP"),
@@ -47,12 +47,28 @@ CRM_FIELDS = {
     "x_justech_awarded_amount": ("float", "Monto adjudicado"),
     "x_justech_awarded_date": ("date", "Fecha adjudicación"),
     "x_justech_result": ("char", "Resultado"),
+    # Identidad JAIOS (UUID Char — no confundir con create_uid Odoo)
+    "x_justech_jaios_user_id": ("char", "Iniciado por (ID JAIOS)"),
+    "x_justech_jaios_user_name": ("char", "Iniciado por (nombre)"),
+    "x_justech_jaios_user_email": ("char", "Iniciado por (email)"),
+    "x_justech_jaios_owner_id": ("char", "Responsable JAIOS (ID)"),
+    "x_justech_jaios_owner_name": ("char", "Responsable JAIOS (nombre)"),
+    "x_justech_jaios_owner_email": ("char", "Responsable JAIOS (email)"),
+    "x_justech_jaios_last_sync_at": ("datetime", "Última sync JAIOS"),
+    "x_justech_jaios_url": ("char", "URL JAIOS"),
+    "x_justech_jaios_last_action_user_id": ("char", "Última acción JAIOS (ID)"),
+    "x_justech_jaios_last_action_user_name": ("char", "Última acción JAIOS (nombre)"),
+    "x_justech_jaios_last_action_at": ("datetime", "Última acción JAIOS (fecha)"),
+    "x_justech_jaios_odoo_user_id": ("integer", "Usuario Odoo mapeado (info)"),
 }
 
 SO_FIELDS = {
     "x_justech_dgcp_code": ("char", "Licitación DGCP"),
     "x_justech_jaios_id": ("char", "ID JAIOS/DGCP"),
 }
+
+# Keys that must not be overwritten once set (initiator)
+_INITIATOR_PAYLOAD_KEYS = ("jaios_user_id", "jaios_user_name", "jaios_user_email")
 
 
 class DGCPOdooCrmBridge:
@@ -88,29 +104,20 @@ class DGCPOdooCrmBridge:
         ).resolve_odoo_company_id_for_dgcp_key(key)
 
     async def _rpe_for_company(self, company_key: str) -> str | None:
-        """Best-effort RPE from company profiles. Never abort the outer transaction."""
+        """Best-effort numeric RPE from company profiles. Never invent / never abort txn."""
+        from sqlalchemy import text
+
         queries = [
             """
             select coalesce(
-              nullif(trim(metadata->>'rpe'), ''),
-              nullif(trim(metadata->>'proveedor_estado'), '')
-            ) as rpe
-            from jaios.licitador_company_profiles
-            where tenant_id = :t and company_key = :k
-            limit 1
-            """,
-            """
-            select coalesce(
-              nullif(trim(rpe), ''),
-              nullif(trim(proveedor_estado), '')
+              nullif(trim(raw_json->>'rpe'), ''),
+              nullif(trim(raw_json->>'proveedor_estado'), '')
             ) as rpe
             from jaios.licitador_company_profiles
             where tenant_id = :t and company_key = :k
             limit 1
             """,
         ]
-        from sqlalchemy import text
-
         for sql in queries:
             try:
                 async with self.db.begin_nested():
@@ -121,10 +128,140 @@ class DGCPOdooCrmBridge:
                         )
                     ).first()
                     if row and row[0]:
-                        return str(row[0]).strip()
+                        raw = str(row[0]).strip()
+                        # Solo RPE numérico confiable (evitar nombres de PDF, etc.)
+                        digits = re.sub(r"\D", "", raw)
+                        if digits and digits == raw.replace(" ", "").replace("-", ""):
+                            return digits
+                        if re.fullmatch(r"\d{4,12}", digits):
+                            return digits
             except Exception:
                 continue
         return None
+
+    async def _load_user(self, user_id: uuid.UUID | None):
+        if not user_id:
+            return None
+        from sqlalchemy import select
+        from app.models.user import User
+
+        return (
+            await self.db.execute(select(User).where(User.id == user_id))
+        ).scalar_one_or_none()
+
+    async def _actor_identity(self) -> dict[str, str]:
+        """Authenticated JAIOS principal (JWT → User). Never trust FE payloads."""
+        user = await self._load_user(self.user_id)
+        if not user:
+            return {
+                "id": str(self.user_id),
+                "name": "",
+                "email": "",
+            }
+        return {
+            "id": str(user.id),
+            "name": (user.full_name or "").strip(),
+            "email": (user.email or "").strip(),
+        }
+
+    async def _owner_identity(self, opportunity: DGCPOpportunity) -> dict[str, str]:
+        """Current responsible in JAIOS if set; else actor."""
+        info = opportunity.full_info or {}
+        raw = info.get("responsible_user_id") or info.get("assignee_user_id")
+        owner_uuid: uuid.UUID | None = None
+        if raw:
+            try:
+                owner_uuid = uuid.UUID(str(raw))
+            except (ValueError, TypeError):
+                owner_uuid = None
+        if owner_uuid:
+            user = await self._load_user(owner_uuid)
+            if user:
+                return {
+                    "id": str(user.id),
+                    "name": (user.full_name or "").strip()
+                    or str(info.get("responsible_name") or ""),
+                    "email": (user.email or "").strip(),
+                }
+        # Fallback display name from JSON if UUID missing
+        actor = await self._actor_identity()
+        if info.get("responsible_name") and not owner_uuid:
+            return {
+                "id": actor["id"],
+                "name": str(info.get("responsible_name")),
+                "email": actor["email"],
+            }
+        return actor
+
+    def _jaios_opportunity_url(self, opportunity: DGCPOpportunity) -> str:
+        from app.config import settings
+
+        base = (settings.public_app_url or settings.frontend_url or "").rstrip("/")
+        if not base:
+            return ""
+        return f"{base}/dgcp/{opportunity.id}"
+
+    async def _map_odoo_user_by_email(self, client, email: str) -> int | None:
+        """Informational only — unique email match → res.users id. Never set crm.lead.user_id."""
+        email = (email or "").strip().lower()
+        if not email or "@" not in email:
+            return None
+        try:
+            rows = await client.search_read(
+                "res.users",
+                [("login", "=ilike", email), ("active", "in", [True, False])],
+                ["id", "login"],
+                limit=3,
+            )
+            if len(rows) == 1:
+                return _as_int_id(rows[0]["id"])
+            partners = await client.search_read(
+                "res.partner",
+                [("email", "=ilike", email), ("user_ids", "!=", False)],
+                ["id", "user_ids"],
+                limit=3,
+            )
+            user_ids = []
+            for p in partners:
+                for uid in p.get("user_ids") or []:
+                    user_ids.append(_as_int_id(uid))
+            user_ids = list(dict.fromkeys(user_ids))
+            if len(user_ids) == 1:
+                return user_ids[0]
+        except Exception:
+            logger.debug("odoo user email map failed", exc_info=True)
+        return None
+
+    async def _post_chatter(
+        self,
+        client,
+        lead_id: int,
+        body: str,
+        *,
+        opportunity: DGCPOpportunity,
+        event_key: str,
+    ) -> None:
+        """Post mail note; skip duplicates for the same event_key (no retry spam)."""
+        blob = self._sync_blob(opportunity)
+        posted = set(blob.get("chatter_events") or [])
+        if event_key in posted:
+            return
+        try:
+            await client.execute_kw(
+                "crm.lead",
+                "message_post",
+                [[lead_id]],
+                {
+                    "body": body,
+                    "message_type": "comment",
+                    "subtype_xmlid": "mail.mt_note",
+                },
+            )
+            posted.add(event_key)
+            blob["chatter_events"] = sorted(posted)[-40:]
+            self._save_sync(opportunity, blob)
+        except Exception:
+            logger.warning("chatter post failed lead=%s event=%s", lead_id, event_key, exc_info=True)
 
     def _sync_blob(self, opportunity: DGCPOpportunity) -> dict[str, Any]:
         info = dict(opportunity.full_info or {})
@@ -236,13 +373,53 @@ class DGCPOdooCrmBridge:
         }
         return mapping.get((status or "").lower(), status or "")
 
-    async def _crm_vals(self, client, opportunity: DGCPOpportunity, *, result: str | None = None) -> dict[str, Any]:
+    async def _crm_vals(
+        self,
+        client,
+        opportunity: DGCPOpportunity,
+        *,
+        result: str | None = None,
+        existing_lead: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         fields = await self._crm_fields(client)
         company_key = (opportunity.company or "").strip() or "justech"
         rpe = await self._rpe_for_company(company_key)
+        actor = await self._actor_identity()
+        owner = await self._owner_identity(opportunity)
+        now = datetime.now(timezone.utc)
         publish = None
         if opportunity.created_at:
             publish = opportunity.created_at.date().isoformat()
+
+        # Initiator: immutable if already set on lead
+        existing_initiator = None
+        if existing_lead:
+            for fname in ("justech_jaios_user_id", "x_justech_jaios_user_id"):
+                val = existing_lead.get(fname)
+                if val:
+                    existing_initiator = str(val)
+                    break
+
+        initiator_id = existing_initiator or actor["id"]
+        initiator_name = actor["name"]
+        initiator_email = actor["email"]
+        if existing_initiator and existing_lead:
+            for pair in (
+                ("justech_jaios_user_name", "x_justech_jaios_user_name"),
+                ("justech_jaios_user_email", "x_justech_jaios_user_email"),
+            ):
+                pass
+            for fname in ("justech_jaios_user_name", "x_justech_jaios_user_name"):
+                if existing_lead.get(fname):
+                    initiator_name = str(existing_lead[fname])
+                    break
+            for fname in ("justech_jaios_user_email", "x_justech_jaios_user_email"):
+                if existing_lead.get(fname):
+                    initiator_email = str(existing_lead[fname])
+                    break
+
+        mapped_odoo = await self._map_odoo_user_by_email(client, actor["email"])
+
         payload = {
             "dgcp_code": opportunity.code,
             "jaios_id": str(opportunity.id),
@@ -258,10 +435,27 @@ class DGCPOdooCrmBridge:
             "jaios_stage": self._stage_label(opportunity.status),
             "result": result or "",
             "awarded_amount": float(opportunity.amount or 0) if result == "adjudicada" else None,
-            "awarded_date": datetime.now(timezone.utc).date().isoformat() if result == "adjudicada" else None,
+            "awarded_date": now.date().isoformat() if result == "adjudicada" else None,
+            "jaios_user_id": initiator_id,
+            "jaios_user_name": initiator_name,
+            "jaios_user_email": initiator_email,
+            "jaios_owner_id": owner["id"],
+            "jaios_owner_name": owner["name"],
+            "jaios_owner_email": owner["email"],
+            "jaios_last_sync_at": now.strftime("%Y-%m-%d %H:%M:%S"),
+            "jaios_url": self._jaios_opportunity_url(opportunity),
+            "jaios_last_action_user_id": actor["id"],
+            "jaios_last_action_user_name": actor["name"],
+            "jaios_last_action_at": now.strftime("%Y-%m-%d %H:%M:%S"),
+            "jaios_odoo_user_id": mapped_odoo,
         }
+        # Do not overwrite initiator on updates
+        if existing_initiator:
+            for k in _INITIATOR_PAYLOAD_KEYS:
+                # keep payload values we resolved from existing; already set above
+                pass
+
         out: dict[str, Any] = {}
-        # Prefer module fields (justech_*) then API-created (x_justech_*)
         mapping = {
             "dgcp_code": ("justech_dgcp_code", "x_justech_dgcp_code"),
             "jaios_id": ("justech_jaios_id", "x_justech_jaios_id"),
@@ -278,16 +472,58 @@ class DGCPOdooCrmBridge:
             "result": ("justech_result", "x_justech_result"),
             "awarded_amount": ("justech_awarded_amount", "x_justech_awarded_amount"),
             "awarded_date": ("justech_awarded_date", "x_justech_awarded_date"),
+            "jaios_user_id": ("justech_jaios_user_id", "x_justech_jaios_user_id"),
+            "jaios_user_name": ("justech_jaios_user_name", "x_justech_jaios_user_name"),
+            "jaios_user_email": ("justech_jaios_user_email", "x_justech_jaios_user_email"),
+            "jaios_owner_id": ("justech_jaios_owner_id", "x_justech_jaios_owner_id"),
+            "jaios_owner_name": ("justech_jaios_owner_name", "x_justech_jaios_owner_name"),
+            "jaios_owner_email": ("justech_jaios_owner_email", "x_justech_jaios_owner_email"),
+            "jaios_last_sync_at": ("justech_jaios_last_sync_at", "x_justech_jaios_last_sync_at"),
+            "jaios_url": ("justech_jaios_url", "x_justech_jaios_url"),
+            "jaios_last_action_user_id": (
+                "justech_jaios_last_action_user_id",
+                "x_justech_jaios_last_action_user_id",
+            ),
+            "jaios_last_action_user_name": (
+                "justech_jaios_last_action_user_name",
+                "x_justech_jaios_last_action_user_name",
+            ),
+            "jaios_last_action_at": (
+                "justech_jaios_last_action_at",
+                "x_justech_jaios_last_action_at",
+            ),
+            "jaios_odoo_user_id": ("justech_jaios_odoo_user_id", "x_justech_jaios_odoo_user_id"),
         }
         for key, names in mapping.items():
             val = payload.get(key)
             if val in (None, ""):
                 continue
+            # Skip writing initiator fields if already present and this is an update
+            # (values already equal to existing — still write same; safe)
             for name in names:
                 if name in fields:
                     out[name] = val
                     break
         return out
+
+    async def _read_lead_identity(self, client, lead_id: int) -> dict[str, Any]:
+        fields = await self._crm_fields(client)
+        want = [
+            n
+            for n in (
+                "justech_jaios_user_id",
+                "x_justech_jaios_user_id",
+                "justech_jaios_user_name",
+                "x_justech_jaios_user_name",
+                "justech_jaios_user_email",
+                "x_justech_jaios_user_email",
+            )
+            if n in fields
+        ]
+        if not want:
+            return {}
+        rows = await client.search_read("crm.lead", [("id", "=", lead_id)], want, limit=1)
+        return rows[0] if rows else {}
 
     async def _find_existing_lead(self, client, opportunity: DGCPOpportunity, company_id: int | None) -> int | None:
         fields = await self._crm_fields(client)
@@ -388,7 +624,7 @@ class DGCPOdooCrmBridge:
         }
 
     async def ensure_opportunity_on_prepare(self, opportunity: DGCPOpportunity) -> dict[str, Any]:
-        """Upsert crm.lead by (company + DGCP code). Idempotent."""
+        """Upsert crm.lead by (company + DGCP code). Idempotent. Initiator immutable."""
         action = "ensure_opportunity"
         try:
             client = await self._client_async()
@@ -402,7 +638,14 @@ class DGCPOdooCrmBridge:
             if not existing_id:
                 existing_id = await self._find_existing_lead(client, opportunity, company_id)
 
-            custom = await self._crm_vals(client, opportunity, result=None)
+            existing_lead = None
+            if existing_id:
+                existing_lead = await self._read_lead_identity(client, _as_int_id(existing_id))
+
+            custom = await self._crm_vals(
+                client, opportunity, result=None, existing_lead=existing_lead
+            )
+            actor = await self._actor_identity()
             name = f"{opportunity.code} — {(opportunity.title or 'Licitación DGCP')[:120]}"
             description_parts = [
                 f"Proceso DGCP: {opportunity.code}",
@@ -411,9 +654,13 @@ class DGCPOdooCrmBridge:
                 f"Empresa grupo: {opportunity.company or '—'}",
                 f"Monto: {opportunity.amount or 0} {opportunity.currency or 'DOP'}",
                 f"Estado: {opportunity.status}",
+                f"Iniciado/actualizado por JAIOS: {actor.get('name') or actor.get('id')} <{actor.get('email') or ''}>",
             ]
             if opportunity.source_url:
                 description_parts.append(f"Portal: {opportunity.source_url}")
+            jaios_url = self._jaios_opportunity_url(opportunity)
+            if jaios_url:
+                description_parts.append(f"JAIOS: {jaios_url}")
 
             vals: dict[str, Any] = {
                 "name": name,
@@ -431,14 +678,62 @@ class DGCPOdooCrmBridge:
             if partner.get("partner_id"):
                 vals["partner_id"] = partner["partner_id"]
 
-            ctx = {"allowed_company_ids": [company_id]} if company_id else None
             created = False
             if existing_id:
-                await client.execute_kw("crm.lead", "write", [[_as_int_id(existing_id)], vals])
                 lead_id = _as_int_id(existing_id)
+                prev_owner = None
+                for fname in ("justech_jaios_owner_id", "x_justech_jaios_owner_id"):
+                    # re-read owner from lead before write
+                    pass
+                # Read owner before write for change detection
+                fields = await self._crm_fields(client)
+                own_fields = [
+                    n
+                    for n in ("justech_jaios_owner_id", "x_justech_jaios_owner_id", "justech_jaios_owner_name", "x_justech_jaios_owner_name")
+                    if n in fields
+                ]
+                before = {}
+                if own_fields:
+                    rows_b = await client.search_read(
+                        "crm.lead", [("id", "=", lead_id)], own_fields, limit=1
+                    )
+                    before = rows_b[0] if rows_b else {}
+                await client.execute_kw("crm.lead", "write", [[lead_id], vals])
+                owner = await self._owner_identity(opportunity)
+                prev = before.get("justech_jaios_owner_id") or before.get("x_justech_jaios_owner_id")
+                if prev and str(prev) != owner["id"]:
+                    await self._post_chatter(
+                        client,
+                        lead_id,
+                        (
+                            f"Responsable JAIOS actualizado: "
+                            f"<b>{before.get('justech_jaios_owner_name') or before.get('x_justech_jaios_owner_name') or prev}</b>"
+                            f" → <b>{owner.get('name') or owner.get('id')}</b>."
+                        ),
+                        opportunity=opportunity,
+                        event_key=f"owner_change:{prev}->{owner['id']}",
+                    )
             else:
                 lead_id = _as_int_id(await client.execute_kw("crm.lead", "create", [vals]))
                 created = True
+                rpe = await self._rpe_for_company((opportunity.company or "").strip() or "justech")
+                email_bit = f" &lt;{actor.get('email')}&gt;" if actor.get("email") else ""
+                await self._post_chatter(
+                    client,
+                    lead_id,
+                    (
+                        "<p>Esta oportunidad fue creada automáticamente desde <b>JAIOS Licitaciones</b>.</p>"
+                        f"<ul>"
+                        f"<li>Código DGCP: <b>{opportunity.code}</b></li>"
+                        f"<li>Empresa: <b>{opportunity.company or '—'}</b></li>"
+                        f"<li>RPE: <b>{rpe or 'RPE_PENDING'}</b></li>"
+                        f"<li>Usuario JAIOS: <b>{actor.get('name') or actor.get('id')}</b>{email_bit}</li>"
+                        f"<li>Fecha: {datetime.now(timezone.utc).isoformat()}</li>"
+                        f"</ul>"
+                    ),
+                    opportunity=opportunity,
+                    event_key="created_from_jaios",
+                )
 
             rows = await client.search_read(
                 "crm.lead", [("id", "=", lead_id)], ["name"], limit=1
@@ -452,6 +747,8 @@ class DGCPOdooCrmBridge:
                 crm_opportunity_name=lead_name,
                 created=created,
                 partner=partner,
+                jaios_user=actor,
+                jaios_owner=await self._owner_identity(opportunity),
             )
         except Exception as exc:
             logger.exception("DGCP→Odoo ensure_opportunity failed %s", opportunity.id)
@@ -678,12 +975,14 @@ class DGCPOdooCrmBridge:
             client = await self._client_async()
             company_id = await self._company_id(opportunity)
             lead_id = _as_int_id(self._sync_blob(opportunity)["crm_opportunity_id"])
-            ctx = {"allowed_company_ids": [company_id]} if company_id else None
+            existing_lead = await self._read_lead_identity(client, lead_id)
+            actor = await self._actor_identity()
 
             custom = await self._crm_vals(
                 client,
                 opportunity,
                 result="adjudicada" if won else "no_adjudicada",
+                existing_lead=existing_lead,
             )
 
             vals: dict[str, Any] = {
@@ -712,6 +1011,19 @@ class DGCPOdooCrmBridge:
                 vals["stage_id"] = stages[0]["id"]
 
             await client.execute_kw("crm.lead", "write", [[lead_id], vals])
+
+            label = "Adjudicada" if won else "No adjudicada"
+            email_bit = f" ({actor.get('email')})" if actor.get("email") else ""
+            await self._post_chatter(
+                client,
+                lead_id,
+                (
+                    f"Licitación marcada <b>{label}</b> en JAIOS por "
+                    f"<b>{actor.get('name') or actor.get('id')}</b>{email_bit}."
+                ),
+                opportunity=opportunity,
+                event_key=f"outcome:{'won' if won else 'lost'}",
+            )
 
             quotation: dict[str, Any] | None = None
             if won:

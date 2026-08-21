@@ -893,6 +893,158 @@ export interface DGCPHistoricalIntelligence {
   message?: string;
 }
 
+export interface DGCPSupplierProfile {
+  identity: {
+    stable_key: string;
+    display_name: string;
+    identity_kind: string;
+    identity_confidence: string;
+    rnc?: string | null;
+    rpe?: string | null;
+    rnc_available?: boolean;
+    rpe_available?: boolean;
+    note?: string | null;
+  };
+  window_months?: number | null;
+  data_quality?: { overall: string };
+  totals_by_currency: Array<{ currency: string; amount: number | string; awards_count: number }>;
+  awards_count: number;
+  process_count: number;
+  institutions_count: number;
+  categories_count: number;
+  last_award_date?: string | null;
+  last_award?: DGCPHistoricalPurchaseRow | null;
+  last_12m_amount?: number | string | null;
+  last_12m_awards?: number;
+  last_12m_currency?: string;
+  primary_category?: string | null;
+  indexed_at?: string | null;
+  executive_summary?: string[];
+  awards?: DGCPHistoricalPurchaseRow[];
+  institutions?: Array<{
+    name: string;
+    stable_key: string;
+    awards_count: number;
+    process_count: number;
+    total_amount: number | string;
+    currency?: string;
+    last_award_date?: string | null;
+    share_pct: number;
+  }>;
+  categories?: Array<{
+    category: string;
+    awards_count: number;
+    process_count: number;
+    total_amount: number | string;
+    currency?: string;
+    last_award_date?: string | null;
+  }>;
+  products?: Array<{
+    description_original: string;
+    quantity?: number | string | null;
+    unit_price?: number | string | null;
+    awarded_amount?: number | string | null;
+    currency?: string;
+    institution?: string | null;
+    institution_key?: string | null;
+    award_date?: string | null;
+    process_code: string;
+  }>;
+  timeline?: Array<{ period: string; awards_count: number; amount: number | string; currency: string }>;
+  diversification: {
+    level: string;
+    top1_share_pct?: number | null;
+    top3_share_pct?: number | null;
+    note?: string;
+  };
+  pair?: {
+    institution_name: string;
+    awards_count: number;
+    process_count: number;
+    total_amount: number | string;
+    currency?: string;
+    first_award_date?: string | null;
+    last_award_date?: string | null;
+  } | null;
+  latency_ms?: number | null;
+  cache_hit?: boolean;
+  message?: string;
+}
+
+export interface DGCPInstitutionProfile {
+  identity: {
+    stable_key: string;
+    display_name: string;
+    identity_kind: string;
+    identity_confidence: string;
+    institution_code?: string | null;
+  };
+  window_months?: number | null;
+  data_quality?: { overall: string };
+  totals_by_currency: Array<{ currency: string; amount: number | string; awards_count: number }>;
+  awards_count: number;
+  process_count: number;
+  suppliers_count: number;
+  categories_count: number;
+  last_award_date?: string | null;
+  last_purchase?: DGCPHistoricalPurchaseRow | null;
+  last_supplier_name?: string | null;
+  last_supplier_key?: string | null;
+  primary_category?: string | null;
+  indexed_at?: string | null;
+  executive_summary?: string[];
+  awards?: DGCPHistoricalPurchaseRow[];
+  suppliers?: Array<{
+    name: string;
+    stable_key: string;
+    rpe?: string | null;
+    rnc?: string | null;
+    awards_count: number;
+    total_amount: number | string;
+    currency?: string;
+    last_award_date?: string | null;
+    share_pct: number;
+  }>;
+  concentration: {
+    level: string;
+    top1_share_pct?: number | null;
+    top3_share_pct?: number | null;
+    note?: string;
+  };
+  categories?: Array<{ category: string; awards_count: number; total_amount: number | string }>;
+  products?: Array<{
+    description_original: string;
+    quantity?: number | string | null;
+    unit_price?: number | string | null;
+    supplier_name?: string | null;
+    supplier_key?: string | null;
+    award_date?: string | null;
+    process_code: string;
+    currency?: string;
+  }>;
+  price_history: DGCPHistoricalIntelligence["price_history"];
+  frequency?: { available: boolean; summary?: string; temporal_pattern?: string | null };
+  modalities?: Array<{ modality: string; process_count: number; total_amount: number | string }>;
+  latency_ms?: number | null;
+  cache_hit?: boolean;
+  message?: string;
+}
+
+export interface DGCPSupplierCompareResponse {
+  window_months?: number | null;
+  rows: Array<{
+    identity: DGCPSupplierProfile["identity"];
+    awards_count: number;
+    total_amount?: number | string | null;
+    currency?: string;
+    last_award_date?: string | null;
+    institutions_count: number;
+    categories_count: number;
+    last_12m_amount?: number | string | null;
+  }>;
+  note?: string;
+}
+
 export interface DGCPExpedienteDashboardKpis {
   porcentaje_completado: number;
   requisitos_pendientes: number;

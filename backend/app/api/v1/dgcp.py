@@ -39,8 +39,15 @@ from app.schemas.dgcp_historical import (
     DGCPHistoricalSimilarSearchRequest,
 )
 from app.schemas.dgcp_historical_intelligence import DGCPHistoricalIntelligenceResponse
+from app.schemas.dgcp_historical_profiles import (
+    DGCPInstitutionProfileResponse,
+    DGCPSupplierCompareRequest,
+    DGCPSupplierCompareResponse,
+    DGCPSupplierProfileResponse,
+)
 from app.services.dgcp_historical_awards_service import DGCPHistoricalAwardsService
 from app.services.dgcp_historical_intelligence_service import DGCPHistoricalIntelligenceService
+from app.services.dgcp_historical_profile_service import DGCPHistoricalProfileService
 from app.services.dgcp_historical_similar_search_service import DGCPHistoricalSimilarSearchService
 from app.services.dgcp_expediente_context_service import DGCPExpedienteContextService
 from app.services.audit_service import AuditService
@@ -2600,6 +2607,67 @@ async def get_historical_intelligence(
         )
     except ValueError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
+
+
+@router.get(
+    "/intelligence/supplier/{supplier_key}",
+    response_model=DGCPSupplierProfileResponse,
+    dependencies=DGCP_VIEW,
+)
+async def get_supplier_profile_360(
+    supplier_key: str,
+    db: DbSession,
+    _: CurrentUser,
+    __: TenantCtx,
+    window_months: int | None = Query(24),
+    institution_key: str | None = Query(None),
+    limit: int = Query(100, ge=10, le=300),
+) -> DGCPSupplierProfileResponse:
+    ctx = require_tenant_context()
+    months = None if window_months in (0,) else window_months
+    return await DGCPHistoricalProfileService(db, ctx.tenant_id).get_supplier_profile(
+        supplier_key,
+        window_months=months,
+        institution_key=institution_key,
+        limit=limit,
+    )
+
+
+@router.get(
+    "/intelligence/institution/{institution_key}",
+    response_model=DGCPInstitutionProfileResponse,
+    dependencies=DGCP_VIEW,
+)
+async def get_institution_profile_360(
+    institution_key: str,
+    db: DbSession,
+    _: CurrentUser,
+    __: TenantCtx,
+    window_months: int | None = Query(24),
+    limit: int = Query(100, ge=10, le=300),
+) -> DGCPInstitutionProfileResponse:
+    ctx = require_tenant_context()
+    months = None if window_months in (0,) else window_months
+    return await DGCPHistoricalProfileService(db, ctx.tenant_id).get_institution_profile(
+        institution_key, window_months=months, limit=limit
+    )
+
+
+@router.post(
+    "/intelligence/suppliers/compare",
+    response_model=DGCPSupplierCompareResponse,
+    dependencies=DGCP_VIEW,
+)
+async def compare_suppliers_360(
+    data: DGCPSupplierCompareRequest,
+    db: DbSession,
+    _: CurrentUser,
+    __: TenantCtx,
+) -> DGCPSupplierCompareResponse:
+    ctx = require_tenant_context()
+    return await DGCPHistoricalProfileService(db, ctx.tenant_id).compare_suppliers(
+        data.keys, window_months=data.window_months
+    )
 
 
 @router.get(

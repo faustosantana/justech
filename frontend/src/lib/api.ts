@@ -975,6 +975,47 @@ export const apiClient = {
     );
   },
 
+  getDGCPSupplierProfile: (
+    supplierKey: string,
+    opts?: { window_months?: number; institution_key?: string; limit?: number },
+  ) => {
+    const params = new URLSearchParams();
+    if (opts?.window_months !== undefined) params.set("window_months", String(opts.window_months));
+    if (opts?.institution_key) params.set("institution_key", opts.institution_key);
+    if (opts?.limit !== undefined) params.set("limit", String(opts.limit));
+    const qs = params.toString();
+    return request<import("./dgcp").DGCPSupplierProfile>(
+      `/dgcp/intelligence/supplier/${encodeURIComponent(supplierKey)}${qs ? `?${qs}` : ""}`,
+      {},
+      true,
+    );
+  },
+
+  getDGCPInstitutionProfile: (
+    institutionKey: string,
+    opts?: { window_months?: number; limit?: number },
+  ) => {
+    const params = new URLSearchParams();
+    if (opts?.window_months !== undefined) params.set("window_months", String(opts.window_months));
+    if (opts?.limit !== undefined) params.set("limit", String(opts.limit));
+    const qs = params.toString();
+    return request<import("./dgcp").DGCPInstitutionProfile>(
+      `/dgcp/intelligence/institution/${encodeURIComponent(institutionKey)}${qs ? `?${qs}` : ""}`,
+      {},
+      true,
+    );
+  },
+
+  compareDGCPSuppliers: (keys: string[], window_months?: number) =>
+    request<import("./dgcp").DGCPSupplierCompareResponse>(
+      `/dgcp/intelligence/suppliers/compare`,
+      {
+        method: "POST",
+        body: JSON.stringify({ keys, window_months: window_months ?? 24 }),
+      },
+      true,
+    ),
+
   reindexDGCPHistoricalAwards: (opts?: {
     institution_code?: string | number;
     institution_name?: string;

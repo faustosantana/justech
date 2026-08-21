@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   AlertCircle,
   ExternalLink,
@@ -8,6 +9,7 @@ import {
   Trophy,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +22,10 @@ import {
   type DGCPHistoricalPurchaseRow,
   type DGCPOpportunity,
 } from "@/lib/dgcp";
+import {
+  institutionProfileHref,
+  supplierProfileHref,
+} from "@/lib/dgcp-historical-keys";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -58,6 +64,8 @@ function SourceLink({ row }: { row?: DGCPHistoricalPurchaseRow | null }) {
 }
 
 export function DGCPHistoricalAwardsPanel({ opportunity }: Props) {
+  const pathname = usePathname();
+  const from = pathname ? `?from=${encodeURIComponent(pathname)}` : "";
   const [data, setData] = useState<DGCPHistoricalIntelligence | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -139,7 +147,23 @@ export function DGCPHistoricalAwardsPanel({ opportunity }: Props) {
                   <>
                     <div className="text-lg font-semibold">{formatDate(last.purchase.award_date)}</div>
                     <Badge className={matchBadge(last.match_class)}>{last.match_class_label}</Badge>
-                    <div className="text-sm text-slate-700">{last.purchase.supplier_name || "—"}</div>
+                    <div className="text-sm text-slate-700">
+                      {last.purchase.supplier_name ? (
+                        <Link
+                          href={`${supplierProfileHref({
+                            name: last.purchase.supplier_name,
+                            rpe: last.purchase.supplier_rpe,
+                            rnc: last.purchase.supplier_rnc,
+                            windowMonths,
+                          })}&from=${encodeURIComponent(pathname || "/dgcp")}`}
+                          className="text-sky-700 hover:underline"
+                        >
+                          {last.purchase.supplier_name}
+                        </Link>
+                      ) : (
+                        "—"
+                      )}
+                    </div>
                     <div className="text-sm font-medium">
                       {last.purchase.awarded_amount != null
                         ? formatCurrency(Number(last.purchase.awarded_amount), last.purchase.currency)
@@ -161,7 +185,22 @@ export function DGCPHistoricalAwardsPanel({ opportunity }: Props) {
               <CardContent className="space-y-1">
                 {lastSup?.available ? (
                   <>
-                    <div className="text-lg font-semibold leading-snug">{lastSup.supplier_name}</div>
+                    <div className="text-lg font-semibold leading-snug">
+                      {lastSup.supplier_name ? (
+                        <Link
+                          href={`${supplierProfileHref({
+                            name: lastSup.supplier_name,
+                            rpe: lastSup.supplier_rpe,
+                            windowMonths,
+                          })}&from=${encodeURIComponent(pathname || "/dgcp")}`}
+                          className="text-sky-800 hover:underline"
+                        >
+                          {lastSup.supplier_name}
+                        </Link>
+                      ) : (
+                        "—"
+                      )}
+                    </div>
                     <div className="text-sm">{formatDate(lastSup.award_date)}</div>
                     <div className="text-sm font-medium">
                       {lastSup.awarded_amount != null
@@ -285,7 +324,11 @@ export function DGCPHistoricalAwardsPanel({ opportunity }: Props) {
           )}
 
           {tab === "compras" && (
-            <PurchasesTable rows={data.institution_purchases || []} />
+            <PurchasesTable
+              rows={data.institution_purchases || []}
+              windowMonths={windowMonths}
+              fromPath={pathname || "/dgcp"}
+            />
           )}
 
           {tab === "proveedores" && (
@@ -304,7 +347,18 @@ export function DGCPHistoricalAwardsPanel({ opportunity }: Props) {
                 <tbody>
                   {(data.suppliers_ranking || []).map((s) => (
                     <tr key={s.supplier_name} className="border-b border-slate-100">
-                      <td className="py-2 pr-3 font-medium">{s.supplier_name}</td>
+                      <td className="py-2 pr-3 font-medium">
+                        <Link
+                          href={`${supplierProfileHref({
+                            name: s.supplier_name,
+                            rpe: s.supplier_rpe,
+                            windowMonths,
+                          })}&from=${encodeURIComponent(pathname || "/dgcp")}`}
+                          className="text-sky-700 hover:underline"
+                        >
+                          {s.supplier_name}
+                        </Link>
+                      </td>
                       <td className="py-2 pr-3">{s.supplier_rpe || "—"}</td>
                       <td className="py-2 pr-3">{s.awards_count}</td>
                       <td className="py-2 pr-3">{formatCurrency(Number(s.total_amount), s.currency)}</td>
@@ -391,7 +445,14 @@ export function DGCPHistoricalAwardsPanel({ opportunity }: Props) {
             </div>
           )}
 
-          {tab === "relacionados" && <PurchasesTable rows={data.related_processes || []} showInstitution />}
+          {tab === "relacionados" && (
+            <PurchasesTable
+              rows={data.related_processes || []}
+              showInstitution
+              windowMonths={windowMonths}
+              fromPath={pathname || "/dgcp"}
+            />
+          )}
         </>
       )}
     </div>
@@ -401,13 +462,18 @@ export function DGCPHistoricalAwardsPanel({ opportunity }: Props) {
 function PurchasesTable({
   rows,
   showInstitution = false,
+  windowMonths = 24,
+  fromPath = "/dgcp",
 }: {
   rows: DGCPHistoricalPurchaseRow[];
   showInstitution?: boolean;
+  windowMonths?: number;
+  fromPath?: string;
 }) {
   if (!rows.length) {
     return <p className="text-sm text-slate-500">Sin compras en esta vista.</p>;
   }
+  const from = encodeURIComponent(fromPath);
   return (
     <div className="overflow-x-auto">
       <table className="min-w-full text-sm">
@@ -444,9 +510,34 @@ function PurchasesTable({
                   r.process_code
                 )}
               </td>
-              {showInstitution && <td className="py-2 pr-3 max-w-[140px]">{r.institution}</td>}
+              {showInstitution && (
+                <td className="py-2 pr-3 max-w-[140px]">
+                  <Link
+                    href={`${institutionProfileHref({ name: r.institution, windowMonths })}&from=${from}`}
+                    className="text-sky-700 hover:underline"
+                  >
+                    {r.institution}
+                  </Link>
+                </td>
+              )}
               <td className="py-2 pr-3 max-w-[220px]">{r.description || "—"}</td>
-              <td className="py-2 pr-3">{r.supplier_name || "—"}</td>
+              <td className="py-2 pr-3">
+                {r.supplier_name ? (
+                  <Link
+                    href={`${supplierProfileHref({
+                      name: r.supplier_name,
+                      rpe: r.supplier_rpe,
+                      rnc: r.supplier_rnc,
+                      windowMonths,
+                    })}&from=${from}`}
+                    className="text-sky-700 hover:underline"
+                  >
+                    {r.supplier_name}
+                  </Link>
+                ) : (
+                  "—"
+                )}
+              </td>
               <td className="py-2 pr-3">{r.supplier_rpe || "—"}</td>
               <td className="py-2 pr-3 whitespace-nowrap">
                 {r.awarded_amount != null ? formatCurrency(Number(r.awarded_amount), r.currency) : "—"}

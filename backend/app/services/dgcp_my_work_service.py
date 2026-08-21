@@ -326,30 +326,6 @@ class DGCPMyWorkService:
         names = await self._user_names({task.assigned_user_id} if task.assigned_user_id else set())
         return self._task_out(task, names)
 
-    async def update_task(self, task_id: uuid.UUID, data: PrepTaskUpdate) -> PrepTaskOut:
-        task = await self._get_task(task_id)
-        if data.title is not None:
-            task.title = data.title.strip()
-        if data.description is not None:
-            task.description = data.description
-        if data.priority is not None:
-            task.priority = data.priority
-        if data.assigned_user_id is not None:
-            task.assigned_user_id = data.assigned_user_id
-        if data.due_at is not None:
-            task.due_at = data.due_at
-        if data.status is not None:
-            task.status = data.status
-            if data.status == "completed":
-                task.completed_at = datetime.now(UTC)
-                task.completed_by_id = self.user_id
-            elif data.status in OPEN_TASK_STATUSES:
-                task.completed_at = None
-                task.completed_by_id = None
-        await self.db.flush()
-        names = await self._user_names({task.assigned_user_id} if task.assigned_user_id else set())
-        return self._task_out(task, names)
-
     async def toggle_complete(self, task_id: uuid.UUID) -> PrepTaskOut:
         task = await self._get_task(task_id)
         if task.status == "completed":
@@ -361,7 +337,37 @@ class DGCPMyWorkService:
             task.completed_at = datetime.now(UTC)
             task.completed_by_id = self.user_id
         await self.db.flush()
-        names = await self._user_names({task.assigned_user_id} if task.assigned_user_id else set())
+        await self.db.refresh(task)
+        names: dict[uuid.UUID, str] = {}
+        if task.assigned_user_id:
+            names = await self._user_names({task.assigned_user_id})
+        return self._task_out(task, names)
+
+    async def update_task(self, task_id: uuid.UUID, data: PrepTaskUpdate) -> PrepTaskOut:
+        task = await self._get_task(task_id)
+        if data.title is not None:
+            task.title = data.title.strip()
+        if data.description is not None:
+            task.description = data.description
+        if data.priority is not None:
+            task.priority = data.priority
+        if "assigned_user_id" in data.model_fields_set:
+            task.assigned_user_id = data.assigned_user_id
+        if "due_at" in data.model_fields_set:
+            task.due_at = data.due_at
+        if data.status is not None:
+            task.status = data.status
+            if data.status == "completed":
+                task.completed_at = datetime.now(UTC)
+                task.completed_by_id = self.user_id
+            elif data.status in OPEN_TASK_STATUSES or data.status == "not_applicable":
+                task.completed_at = None
+                task.completed_by_id = None
+        await self.db.flush()
+        await self.db.refresh(task)
+        names: dict[uuid.UUID, str] = {}
+        if task.assigned_user_id:
+            names = await self._user_names({task.assigned_user_id})
         return self._task_out(task, names)
 
     async def apply_template(

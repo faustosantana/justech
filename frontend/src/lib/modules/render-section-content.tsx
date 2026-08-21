@@ -54,6 +54,27 @@ const LicitacionesProcesosSection = dynamic(
   () => import("@/components/modules/licitaciones/licitaciones-sections").then((m) => m.LicitacionesProcesosSection),
   { loading: () => <LoadingState message="Cargando procesos…" /> },
 );
+const LicitacionesMisLicitacionesSection = dynamic(
+  () =>
+    import("@/components/modules/licitaciones/licitaciones-my-work-sections").then(
+      (m) => m.LicitacionesMisLicitacionesSection,
+    ),
+  { loading: () => <LoadingState message="Cargando Mis Licitaciones…" /> },
+);
+const LicitacionesMisPendientesSection = dynamic(
+  () =>
+    import("@/components/modules/licitaciones/licitaciones-my-work-sections").then(
+      (m) => m.LicitacionesMisPendientesSection,
+    ),
+  { loading: () => <LoadingState message="Cargando pendientes…" /> },
+);
+const LicitacionesChecklistPlantillasSection = dynamic(
+  () =>
+    import("@/components/modules/licitaciones/licitaciones-my-work-sections").then(
+      (m) => m.LicitacionesChecklistPlantillasSection,
+    ),
+  { loading: () => <LoadingState message="Cargando plantillas…" /> },
+);
 const LicitacionesExpedientesSection = dynamic(
   () => import("@/components/modules/licitaciones/licitaciones-sections").then((m) => m.LicitacionesExpedientesSection),
   { loading: () => <LoadingState message="Cargando expedientes…" /> },
@@ -221,6 +242,9 @@ export function renderSectionContent(
 
   if (key === "odoo:tab" && section.odooTab) return <OdooSectionView tab={section.odooTab} />;
 
+  if (key === "licitaciones:mis-licitaciones") return <LicitacionesMisLicitacionesSection />;
+  if (key === "licitaciones:mis-pendientes") return <LicitacionesMisPendientesSection />;
+  if (key === "licitaciones:checklist-plantillas") return <LicitacionesChecklistPlantillasSection />;
   if (key === "licitaciones:procesos" || key === "dgcp:procesos") {
     return <LicitacionesProcesosSection mode={licitacionesMode(section, activeView)} />;
   }

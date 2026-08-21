@@ -27,6 +27,12 @@ from app.models.document_pending import CompanyProfileFormToken, DocumentPending
 from app.models.knowledge import KnowledgeAlert, KnowledgeAsset, KnowledgeEntity, KnowledgeRelationship, KnowledgeSyncState
 from app.models.dgcp_bid_package import DGCPBidPackage
 from app.models.dgcp_historical_award import DGCPHistoricalAward, DGCPHistoricalIndexJob, DGCPHistoricalIdentityAction
+from app.models.dgcp_preparation import (
+    DGCPChecklistTemplate,
+    DGCPChecklistTemplateItem,
+    DGCPPreparationTask,
+    DGCPPrepAlertLog,
+)
 from app.models.dgcp_historical_similar_cache import DGCPProcessHistoricalSimilarResult
 from app.models.dgcp_history import DGCPOpportunityHistory
 from app.models.dgcp_opportunity import DGCPOpportunity
@@ -112,6 +118,10 @@ __all__ = [
     "DGCPHistoricalAward",
     "DGCPHistoricalIndexJob",
     "DGCPHistoricalIdentityAction",
+    "DGCPChecklistTemplate",
+    "DGCPChecklistTemplateItem",
+    "DGCPPreparationTask",
+    "DGCPPrepAlertLog",
     "DGCPProcessHistoricalSimilarResult",
     "DGCPOpportunity",
     "DGCPProcessDocument",

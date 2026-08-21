@@ -13,6 +13,7 @@ from app.api.v1 import (
     corporate_identity,
     dashboard,
     dgcp,
+    dgcp_my_work,
     documents,
     health,
     integrations,
@@ -56,6 +57,7 @@ api_router.include_router(company_context.router)
 api_router.include_router(corporate_identity.router)
 api_router.include_router(dashboard.router)
 api_router.include_router(dgcp.router)
+api_router.include_router(dgcp_my_work.router)
 api_router.include_router(bids.router)
 api_router.include_router(bids.integrations_router)
 api_router.include_router(odoo.router)

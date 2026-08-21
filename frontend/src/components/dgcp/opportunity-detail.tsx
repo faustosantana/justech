@@ -16,6 +16,7 @@ import { DgcpFunnelHeader } from "@/components/dgcp/dgcp-funnel-header";
 import { DgcpOdooSyncCard } from "@/components/dgcp/dgcp-odoo-sync-card";
 import { DgcpOdooProductMatchPanel } from "@/components/dgcp/dgcp-odoo-product-match-panel";
 import { DgcpTechnicalSheetsPanel } from "@/components/dgcp/dgcp-technical-sheets-panel";
+import { DGCPPrepPanel } from "@/components/modules/licitaciones/licitaciones-my-work-sections";
 import { CreateTaskButton } from "@/components/work/create-task-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -257,6 +258,12 @@ export function OpportunityDetail({ opportunity: initial }: OpportunityDetailPro
           onAction={(a) => void applyAction(a)}
           variant="card"
         />
+
+        {isDGCPOperationalInterest(opportunity.status) ? (
+          <div className="mt-3">
+            <DGCPPrepPanel opportunityId={opportunity.id} />
+          </div>
+        ) : null}
 
         <DgcpOdooSyncCard opportunity={opportunity} onUpdated={setOpportunity} />
         <div className="mt-3">

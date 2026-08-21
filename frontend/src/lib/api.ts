@@ -1058,6 +1058,95 @@ export const apiClient = {
       message?: string;
     }>(`/dgcp/intelligence/source-health`, {}, true),
 
+  getDGCPMyLicitaciones: (opts?: { scope?: string; company?: string; q?: string; limit?: number }) => {
+    const params = new URLSearchParams();
+    if (opts?.scope) params.set("scope", opts.scope);
+    if (opts?.company) params.set("company", opts.company);
+    if (opts?.q) params.set("q", opts.q);
+    if (opts?.limit) params.set("limit", String(opts.limit));
+    const qs = params.toString();
+    return request<import("./dgcp-my-work").MyLicitacionesResponse>(
+      `/dgcp/my-work/licitations${qs ? `?${qs}` : ""}`,
+      {},
+      true,
+    );
+  },
+
+  getDGCPHoy: () => request<import("./dgcp-my-work").HoyResponse>(`/dgcp/my-work/hoy`, {}, true),
+
+  getDGCPMisPendientes: (opts?: { filter_mode?: string; company?: string }) => {
+    const params = new URLSearchParams();
+    if (opts?.filter_mode) params.set("filter_mode", opts.filter_mode);
+    if (opts?.company) params.set("company", opts.company);
+    const qs = params.toString();
+    return request<import("./dgcp-my-work").MisPendientesResponse>(
+      `/dgcp/my-work/pendientes${qs ? `?${qs}` : ""}`,
+      {},
+      true,
+    );
+  },
+
+  getDGCPPrepChecklist: (opportunityId: string) =>
+    request<import("./dgcp-my-work").PrepChecklistResponse>(
+      `/dgcp/my-work/opportunities/${opportunityId}/checklist`,
+      {},
+      true,
+    ),
+
+  addDGCPPrepTask: (
+    opportunityId: string,
+    body: { title: string; description?: string; priority?: string; assigned_user_id?: string; due_at?: string },
+  ) =>
+    request<import("./dgcp-my-work").PrepTask>(
+      `/dgcp/my-work/opportunities/${opportunityId}/checklist/items`,
+      { method: "POST", body: JSON.stringify(body) },
+      true,
+    ),
+
+  updateDGCPPrepTask: (taskId: string, body: Record<string, unknown>) =>
+    request<import("./dgcp-my-work").PrepTask>(`/dgcp/my-work/tasks/${taskId}`, {
+      method: "PATCH",
+      body: JSON.stringify(body),
+    }, true),
+
+  toggleDGCPPrepTask: (taskId: string) =>
+    request<import("./dgcp-my-work").PrepTask>(`/dgcp/my-work/tasks/${taskId}/toggle`, {
+      method: "POST",
+      body: "{}",
+    }, true),
+
+  applyDGCPPrepTemplate: (opportunityId: string, body?: { template_id?: string; assign_to_responsible?: boolean }) =>
+    request<import("./dgcp-my-work").ApplyTemplateResponse>(
+      `/dgcp/my-work/opportunities/${opportunityId}/apply-template`,
+      { method: "POST", body: JSON.stringify(body || {}) },
+      true,
+    ),
+
+  setDGCPPrepResponsible: (
+    opportunityId: string,
+    body: { responsible_user_id?: string | null; reassign_open_tasks?: boolean },
+  ) =>
+    request<import("./dgcp-my-work").PrepChecklistResponse>(
+      `/dgcp/my-work/opportunities/${opportunityId}/responsible`,
+      { method: "POST", body: JSON.stringify(body) },
+      true,
+    ),
+
+  listDGCPPrepTemplates: () =>
+    request<import("./dgcp-my-work").ChecklistTemplate[]>(`/dgcp/my-work/templates`, {}, true),
+
+  createDGCPPrepTemplate: (body: import("./dgcp-my-work").ChecklistTemplateCreate) =>
+    request<import("./dgcp-my-work").ChecklistTemplate>(`/dgcp/my-work/templates`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  scanDGCPPrepAlerts: () =>
+    request<{ created: number; skipped_duplicates: number }>(`/dgcp/my-work/alerts/scan`, {
+      method: "POST",
+      body: "{}",
+    }, true),
+
   reindexDGCPHistoricalAwards: (opts?: {
     institution_code?: string | number;
     institution_name?: string;

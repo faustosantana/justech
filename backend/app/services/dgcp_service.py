@@ -308,6 +308,16 @@ class DGCPService:
         elif action.value == "descartar":
             opportunity.needs_review = False
 
+        # Responsable JAIOS (sin tocar Odoo): quien inicia interés/preparación
+        if user_id and action.value in ("marcar_interes", "iniciar_preparacion"):
+            info = dict(opportunity.full_info or {})
+            info.setdefault("responsible_user_id", str(user_id))
+            if action.value == "marcar_interes":
+                info["interest_user_id"] = str(user_id)
+            if action.value == "iniciar_preparacion":
+                info["preparation_started_by"] = str(user_id)
+            opportunity.full_info = info
+
         # Puente Odoo CRM (soft-fail): lead al iniciar preparación; won/lost al cerrar.
         odoo_sync: dict | None = None
         if user_id:

@@ -22,6 +22,7 @@ from app.core.admin_permissions import (
 )
 from app.core.security import hash_password
 from app.core.tenant import get_current_role
+from app.core.module_access import ASSIGNABLE_MODULES, platform_access
 from app.models.department import Department
 from app.models.m365_account import M365UserAccount
 from app.models.routing_rule import RoutingRule
@@ -56,7 +57,6 @@ from app.schemas.admin import (
 from app.models.task import Task
 from app.models.refresh_token import RefreshToken
 from datetime import UTC, datetime
-from sqlalchemy import and_, or_
 from app.services.audit_service import AuditService
 from app.services.routing_service import RoutingService
 
@@ -261,6 +261,7 @@ class AdminService:
             supervisor_id=membership.supervisor_id,
             supervisor_name=supervisor_name,
             visible_company_ids=membership.visible_company_ids or [],
+            allowed_modules=getattr(membership, "allowed_modules", None),
             odoo_user_id=membership.odoo_user_id,
             m365_prepared=m365 is not None,
             m365_connection_status=m365.connection_status if m365 else None,
@@ -394,6 +395,8 @@ class AdminService:
             membership.visible_company_ids = payload.visible_company_ids
         if payload.odoo_user_id is not None:
             membership.odoo_user_id = payload.odoo_user_id
+        if getattr(payload, "allowed_modules", None) is not None:
+            membership.allowed_modules = payload.allowed_modules
 
         await self._audit("admin.user_updated", {"user_id": str(user_id)}, user_id)
         await self.db.flush()
@@ -499,11 +502,23 @@ class AdminService:
             RoleInfoResponse(
                 key=normalize_role(k),
                 label=ROLE_LABELS.get(k, k),
-                permissions=sorted(permissions_for_role(k)),
+                permissions=sorted(permissions_for_roles([k])),
             )
             for k in sorted(VALID_ROLES - {"member"})
         ]
         return RoleListResponse(items=items)
+
+    async def list_assignable_modules(self) -> list[dict[str, str]]:
+        return [{"key": key, "label": label} for key, label in ASSIGNABLE_MODULES]
+
+    async def get_platform_access(self, user: User) -> dict:
+        return await platform_access(
+            self.db,
+            self.tenant_id,
+            user.id,
+            get_current_role(),
+            is_superadmin=user.is_superadmin,
+        )
 
     async def list_modules(self) -> TenantModuleListResponse:
         await self.ensure_defaults()

@@ -48,6 +48,8 @@ class TenantMembership(UUIDPrimaryKeyMixin, TimestampMixin, Base):
     visible_company_ids: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
     default_company_id: Mapped[int | None] = mapped_column(Integer)
     odoo_user_id: Mapped[int | None] = mapped_column(Integer)
+    # null = heredar defaults por rol; lista = override explícito de módulos assignables
+    allowed_modules: Mapped[list | None] = mapped_column(JSONB, nullable=True)
 
     tenant: Mapped["Tenant"] = relationship(back_populates="memberships")
     user: Mapped["User"] = relationship(back_populates="memberships", foreign_keys=[user_id])

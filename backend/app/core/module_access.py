@@ -7,7 +7,15 @@ import uuid
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.admin_permissions import can_view_admin, normalize_role, permissions_for_role
+from app.core.admin_permissions import (
+    can_mutate_admin,
+    can_view_admin,
+    normalize_role,
+    normalize_roles,
+    permissions_for_role,
+    permissions_for_roles,
+    primary_role,
+)
 from app.models.tenant import TenantMembership
 from app.models.tenant_module import TenantModule
 
@@ -103,14 +111,18 @@ async def platform_access(
     is_superadmin: bool = False,
 ) -> dict:
     mem = await get_membership(db, tenant_id, user_id)
-    effective_role = mem.role if mem else normalize_role(role)
-    allowed = mem.allowed_modules if mem else None
+    roles = normalize_roles(
+        list(getattr(mem, "roles", None) or []) if mem else None,
+        fallback=(mem.role if mem else role),
+    )
+    effective_role = primary_role(roles) if mem else normalize_role(role)
+    allowed = getattr(mem, "allowed_modules", None) if mem else None
     user_modules = modules_for_membership(effective_role, allowed)
 
     prices_enabled = await tenant_module_enabled(db, tenant_id, MODULE_PRICES)
     suppliers_enabled = await tenant_module_enabled(db, tenant_id, MODULE_SUPPLIERS)
 
-    perms = set(permissions_for_role(effective_role))
+    perms = set(permissions_for_roles(roles, is_superadmin=is_superadmin))
     if is_superadmin:
         perms.add("manage_supplier_integrations")
 
@@ -119,7 +131,7 @@ async def platform_access(
     can_manage_supplier_integrations = (
         is_superadmin
         or "manage_supplier_integrations" in perms
-        or effective_role in {"owner", "admin", "gerencia", "compras"}
+        or any(r in {"owner", "admin", "gerencia", "compras"} for r in roles)
     )
 
     return {
@@ -133,6 +145,6 @@ async def platform_access(
         "can_view_prices": can_view_prices,
         "can_view_suppliers": can_view_suppliers,
         "can_manage_supplier_integrations": can_manage_supplier_integrations and can_view_suppliers,
-        "can_mutate_admin": effective_role in {"owner", "admin"} or is_superadmin,
-        "can_view_admin": can_view_admin(effective_role, is_superadmin),
+        "can_mutate_admin": can_mutate_admin(effective_role, is_superadmin, roles=roles),
+        "can_view_admin": can_view_admin(effective_role, is_superadmin, roles=roles),
     }

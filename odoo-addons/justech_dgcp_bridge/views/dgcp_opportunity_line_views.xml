@@ -33,7 +33,7 @@
           <button name="action_clear_product_link" type="object" string="Dejar sin vincular"
                   invisible="match_state == 'unlinked'"/>
           <field name="match_state" widget="statusbar"
-                  statusbar_visible="unlinked,suggested,review_required,linked"/>
+                  statusbar_visible="unlinked,review_required,linked"/>
         </header>
         <sheet>
           <group>

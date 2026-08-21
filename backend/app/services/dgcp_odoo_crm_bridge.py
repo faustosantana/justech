@@ -250,27 +250,54 @@ class DGCPOdooCrmBridge:
         opportunity: DGCPOpportunity,
         event_key: str,
     ) -> None:
-        """Post mail note; skip duplicates for the same event_key (no retry spam)."""
+        """Auditoría secundaria. Nunca debe romper el sync principal."""
         blob = self._sync_blob(opportunity)
         posted = set(blob.get("chatter_events") or [])
         if event_key in posted:
             return
         try:
-            await client.execute_kw(
-                "crm.lead",
-                "message_post",
-                [[lead_id]],
-                {
+            lid = _as_int_id(lead_id)
+            # Odoo 19 / JSON-2: message_post sobre el id escalar (no lista anidada)
+            try:
+                await client.execute_kw(
+                    "crm.lead",
+                    "message_post",
+                    [lid],
+                    {
+                        "body": body,
+                        "message_type": "comment",
+                        "subtype_xmlid": "mail.mt_note",
+                    },
+                )
+            except Exception:
+                # Fallback: crear mail.message directamente
+                subtype = await client.search_read(
+                    "mail.message.subtype",
+                    [("name", "=", "Note")],
+                    ["id"],
+                    limit=1,
+                )
+                vals: dict[str, Any] = {
+                    "model": "crm.lead",
+                    "res_id": lid,
                     "body": body,
                     "message_type": "comment",
-                    "subtype_xmlid": "mail.mt_note",
-                },
-            )
+                }
+                if subtype:
+                    vals["subtype_id"] = _as_int_id(subtype[0]["id"])
+                await client.execute_kw("mail.message", "create", [vals])
             posted.add(event_key)
             blob["chatter_events"] = sorted(posted)[-40:]
             self._save_sync(opportunity, blob)
-        except Exception:
-            logger.warning("chatter post failed lead=%s event=%s", lead_id, event_key, exc_info=True)
+        except Exception as exc:
+            logger.warning(
+                "chatter post failed lead=%s event=%s err=%s (sync continues)",
+                lead_id,
+                event_key,
+                exc,
+            )
+            # No re-raise. No marcar posted: un retry futuro puede reintentar chatter una vez.
+            return
 
     def _sync_blob(self, opportunity: DGCPOpportunity) -> dict[str, Any]:
         info = dict(opportunity.full_info or {})
@@ -643,13 +670,31 @@ class DGCPOdooCrmBridge:
             company_id = await self._company_id(opportunity)
             from app.services.odoo_url_helper import build_odoo_url
 
-            existing_id = self._sync_blob(opportunity).get("crm_opportunity_id")
+            blob0 = self._sync_blob(opportunity)
+            existing_id = blob0.get("crm_opportunity_id")
             if not existing_id:
                 existing_id = await self._find_existing_lead(client, opportunity, company_id)
 
             existing_lead = None
             if existing_id:
-                existing_lead = await self._read_lead_identity(client, _as_int_id(existing_id))
+                try:
+                    existing_lead = await self._read_lead_identity(
+                        client, _as_int_id(existing_id)
+                    )
+                except Exception:
+                    existing_lead = None
+                # Lead borrado / stale en blob → recrear (idempotente por código DGCP)
+                if not existing_lead:
+                    logger.warning(
+                        "stale crm lead id=%s for DGCP %s; recreating",
+                        existing_id,
+                        opportunity.code,
+                    )
+                    existing_id = None
+                    blob0.pop("crm_opportunity_id", None)
+                    blob0.pop("crm_opportunity_url", None)
+                    blob0.pop("crm_opportunity_name", None)
+                    self._save_sync(opportunity, blob0)
 
             custom = await self._crm_vals(
                 client, opportunity, result=None, existing_lead=existing_lead
@@ -771,13 +816,13 @@ class DGCPOdooCrmBridge:
             return self._mark_pending(opportunity, action, str(exc))
 
     def _match_status_to_odoo_state(self, status: str | None, *, approved: bool) -> str:
+        """UI simple: linked | review_required | unlinked (sin 'suggested')."""
         if approved:
             return "linked"
         st = (status or "").upper()
-        if st == "MATCHED":
-            return "suggested"
         if st == "REVIEW_REQUIRED":
             return "review_required"
+        # MATCHED sin aprobar y UNMATCHED → Sin vincular (visibilidad, no complejidad)
         return "unlinked"
 
     async def _resolve_currency_id(self, client, currency_code: str | None) -> int | None:
@@ -879,10 +924,14 @@ class DGCPOdooCrmBridge:
             }
             if currency_id:
                 vals["currency_id"] = currency_id
-            if ln.get("suggested_product_id") and match_state in ("suggested", "linked", "review_required"):
+            if ln.get("suggested_product_id") and match_state in ("linked", "review_required"):
                 vals["product_id"] = int(ln["suggested_product_id"])
             elif match_state == "unlinked":
-                vals["product_id"] = False
+                # Conservar sugerencia opcional en product_id solo si hay match MATCHED (aún sin aprobar)
+                if ln.get("suggested_product_id") and (ln.get("status") or "").upper() == "MATCHED":
+                    vals["product_id"] = int(ln["suggested_product_id"])
+                else:
+                    vals["product_id"] = False
 
             existing = await client.search_read(model, domain, ["id", "jaios_created_by_id"], limit=1)
             if existing:

@@ -1,8 +1,8 @@
 {
     "name": "Justech DGCP Bridge",
-    "version": "19.0.1.2.0",
+    "version": "19.0.1.3.0",
     "category": "Sales/CRM",
-    "summary": "DGCP líneas solicitadas en CRM + trazabilidad JAIOS ↔ cotización",
+    "summary": "Visibilidad simple DGCP/JAIOS en CRM (licitación, responsable, productos)",
     "depends": ["crm", "sale_crm", "purchase", "stock", "account", "mail", "product"],
     "data": [
         "security/ir.model.access.csv",

@@ -51,11 +51,12 @@ class JustechDgcpOpportunityLine(models.Model):
     match_state = fields.Selection(
         [
             ("unlinked", "Sin vincular"),
-            ("suggested", "Sugerido"),
-            ("linked", "Vinculado"),
             ("review_required", "Requiere revisión"),
+            ("linked", "Vinculado"),
+            # legacy value kept for migration safety; shown as Sin vincular in UI via rename
+            ("suggested", "Sin vincular"),
         ],
-        string="Estado vínculo",
+        string="Estado",
         default="unlinked",
         required=True,
         index=True,

@@ -813,6 +813,117 @@ export const apiClient = {
       true,
     ),
 
+  getDGCPExpedienteDashboard: (id: string) =>
+    request<import("@/lib/dgcp").DGCPExpedienteDashboard>(
+      `/dgcp/opportunities/${id}/expediente/dashboard`,
+      {},
+      true,
+    ),
+
+  validateDGCPExpedienteFinal: (id: string) =>
+    request<import("@/lib/dgcp").DGCPExpedienteFinalValidation>(
+      `/dgcp/opportunities/${id}/expediente/validate`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  getDGCPComplianceMatrix: (id: string) =>
+    request<import("@/lib/dgcp").DGCPComplianceMatrix>(
+      `/dgcp/opportunities/${id}/expediente/compliance-matrix`,
+      {},
+      true,
+    ),
+
+  downloadDGCPComplianceMatrixExcel: async (id: string): Promise<void> => {
+    const { fetchAuthenticatedFile, downloadAuthenticatedBlob } = await import(
+      "@/lib/authenticated-file"
+    );
+    const payload = await fetchAuthenticatedFile(
+      `/dgcp/opportunities/${id}/expediente/compliance-matrix/excel`,
+    );
+    downloadAuthenticatedBlob(payload.blob, payload.filename || `matriz_cumplimiento_${id}.xlsx`);
+  },
+
+  downloadDGCPComplianceMatrixPdf: async (id: string): Promise<void> => {
+    const { fetchAuthenticatedFile, downloadAuthenticatedBlob } = await import(
+      "@/lib/authenticated-file"
+    );
+    const payload = await fetchAuthenticatedFile(
+      `/dgcp/opportunities/${id}/expediente/compliance-matrix/pdf`,
+    );
+    downloadAuthenticatedBlob(payload.blob, payload.filename || `matriz_cumplimiento_${id}.pdf`);
+  },
+
+  getDGCPRequirementEvidence: (opportunityId: string, itemId: string) =>
+    request<import("@/lib/dgcp").DGCPRequirementEvidenceDetail>(
+      `/dgcp/opportunities/${opportunityId}/checklist/${itemId}/evidence`,
+      {},
+      true,
+    ),
+
+  askDGCPRequirementAI: (opportunityId: string, itemId: string, question: string) =>
+    request<import("@/lib/dgcp").DGCPRequirementAskResponse>(
+      `/dgcp/opportunities/${opportunityId}/checklist/${itemId}/ask${buildQuery({ question })}`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  getDGCPExpedienteScore: (id: string) =>
+    request<import("@/lib/dgcp").DGCPExpedienteScore>(
+      `/dgcp/opportunities/${id}/expediente/score`,
+      {},
+      true,
+    ),
+
+  getDGCPExpedientePreview: (id: string) =>
+    request<import("@/lib/dgcp").DGCPExpedientePreview>(
+      `/dgcp/opportunities/${id}/expediente/preview`,
+      {},
+      true,
+    ),
+
+  openDGCPExpedientePreviewFile: async (id: string, path: string) => {
+    const {
+      fetchAuthenticatedFile,
+      downloadAuthenticatedBlob,
+      openAuthenticatedBlobInNewTab,
+      isPdfContent,
+    } = await import("@/lib/authenticated-file");
+    const payload = await fetchAuthenticatedFile(
+      `/dgcp/opportunities/${id}/expediente/preview/file${buildQuery({ path })}`,
+    );
+    if (
+      isPdfContent(payload.contentType, payload.filename) ||
+      path.endsWith(".json") ||
+      path.endsWith(".md")
+    ) {
+      openAuthenticatedBlobInNewTab(payload.objectUrl);
+    } else {
+      downloadAuthenticatedBlob(payload.blob, payload.filename);
+    }
+  },
+
+  assignDGCPChecklistItem: (
+    opportunityId: string,
+    itemId: string,
+    assignee: string,
+    dueDate?: string,
+  ) =>
+    request<{
+      opportunity_id: string;
+      checklist_item_id: string;
+      assignee: string;
+      due_date?: string | null;
+      checklist: import("@/lib/dgcp").DGCPChecklist;
+    }>(
+      `/dgcp/opportunities/${opportunityId}/checklist/${itemId}/assign${buildQuery({
+        assignee,
+        due_date: dueDate,
+      })}`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
   setDGCPUserInput: (
     id: string,
     data: {

@@ -7,12 +7,17 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { DocumentPreviewModal } from "@/components/dgcp/document-preview-modal";
 import { AuthenticatedFileViewer } from "@/components/documents/authenticated-file-viewer";
 import { ExpedienteDashboard } from "@/components/dgcp/expediente-dashboard";
-import { PliegoDeepAnalysisPanel } from "@/components/dgcp/pliego-deep-analysis-panel";
+import { DgcpDocumentosOperativosTab } from "@/components/dgcp/dgcp-documentos-operativos-tab";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { apiClient } from "@/lib/api";
+import { apiClient, ApiError } from "@/lib/api";
+import {
+  buildExpedienteReadiness,
+  userFacingApiError,
+  type ExpedienteReadiness,
+} from "@/lib/dgcp-expediente-ux";
 import {
   CHECKLIST_STATUS_LABELS,
   COMPLIANCE_STATUS_LABELS,
@@ -32,7 +37,6 @@ import {
   type DGCPOpportunity,
   isDGCPOperationalInterest,
 } from "@/lib/dgcp";
-import { ApiError } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
 const PROCESS_DOC_SOURCES = new Set(["portal", "dgcp_api", "portal_text", "process_file", "reference"]);
@@ -63,15 +67,15 @@ function formatNoteTimestamp(iso: string): string {
 }
 
 function apiErrorMessage(err: unknown, fallback: string): string {
-  if (err instanceof ApiError) return err.message;
-  if (err instanceof Error && err.message !== "UNAUTHORIZED") return err.message;
-  return fallback;
+  return userFacingApiError(err, fallback);
 }
 
 interface Props {
   opportunity: DGCPOpportunity;
   activeTab: string;
   interested: boolean;
+  autofillFormTypeHint?: string;
+  onNavigateTab?: (tab: string, opts?: { formType?: string }) => void;
   onOpportunityUpdated?: (opportunity: DGCPOpportunity) => void;
   onAnalysisUpdate?: (
     bid: DGCPBidPackage,
@@ -86,8 +90,8 @@ function InterestGate() {
       <CardContent className="py-6 text-sm space-y-2">
         <p className="font-medium">Análisis operativo no habilitado</p>
         <p className="text-muted-foreground">
-          En la pestaña <strong>Resumen</strong>, pulse <strong>Mostrar interés</strong> antes de
-          analizar requisitos, ver documentos del proceso, validar, agregar notas o crear tareas.
+          Pulse <strong>Marcar interés</strong> en la cabecera antes de analizar el pliego, gestionar
+          documentos, checklist o expediente.
         </p>
       </CardContent>
     </Card>
@@ -98,9 +102,12 @@ export function OpportunityBidSection({
   opportunity,
   activeTab,
   interested,
+  autofillFormTypeHint,
+  onNavigateTab: _onNavigateTab,
   onOpportunityUpdated,
   onAnalysisUpdate,
 }: Props) {
+  const onNavigateTab = _onNavigateTab;
   const [requirements, setRequirements] = useState<DGCPRequirements | null>(null);
   const [checklist, setChecklist] = useState<DGCPChecklist | null>(null);
   const [bidPackage, setBidPackage] = useState<DGCPBidPackage | null>(null);
@@ -110,12 +117,18 @@ export function OpportunityBidSection({
   const [alerts, setAlerts] = useState<DGCPBidAlerts | null>(null);
   const [expedienteStatus, setExpedienteStatus] = useState<DGCPExpedienteStatus | null>(null);
   const [analysisWarnings, setAnalysisWarnings] = useState<string[]>([]);
-  const [selectedFormType, setSelectedFormType] = useState("SNCC.F042");
+  const [selectedFormType, setSelectedFormType] = useState(autofillFormTypeHint || "SNCC.F042");
   const [loading, setLoading] = useState(false);
   const [analyzing, setAnalyzing] = useState(false);
   const [expedienteBusy, setExpedienteBusy] = useState(false);
   const [dashboardRefreshKey, setDashboardRefreshKey] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const [prepareNotice, setPrepareNotice] = useState<{
+    kind: "success" | "functional" | "system";
+    title: string;
+    detail: string;
+    readiness?: ExpedienteReadiness;
+  } | null>(null);
   const [previewItemId, setPreviewItemId] = useState<string | null>(null);
   const [validationItemId, setValidationItemId] = useState<string | null>(null);
   const [validationNote, setValidationNote] = useState("");
@@ -375,14 +388,68 @@ export function OpportunityBidSection({
   const handlePrepareExpediente = async () => {
     setExpedienteBusy(true);
     setError(null);
+    setPrepareNotice(null);
+    const readiness = buildExpedienteReadiness(bidPackage);
     try {
-      await apiClient.prepareDGCPExpediente(opportunity.id);
+      const result = await apiClient.prepareDGCPExpediente(opportunity.id);
       const exp = await apiClient.getDGCPExpedienteStatus(opportunity.id);
       setExpedienteStatus(exp);
       setDashboardRefreshKey((k) => k + 1);
       await load();
-    } catch {
-      setError("No se pudo preparar el expediente.");
+      if (readiness.incomplete) {
+        setPrepareNotice({
+          kind: "functional",
+          title: "Expediente generado con observaciones",
+          detail:
+            `Se preparó el paquete (${Math.round(result.preparation_pct || 0)}% · estado: ${
+              EXPEDIENTE_STATUS_LABELS[result.expediente_status] || result.expediente_status
+            }). ` +
+            "Aún hay puntos pendientes: puedes seguir completándolos y volver a preparar.",
+          readiness,
+        });
+      } else {
+        setPrepareNotice({
+          kind: "success",
+          title: "Expediente preparado",
+          detail: `Paquete listo (${Math.round(result.preparation_pct || 0)}%). Ya puedes exportar o marcarlo listo para revisión.`,
+        });
+      }
+    } catch (err) {
+      console.error("[Expediente] prepare failed", err);
+      const status = err instanceof ApiError ? err.status : 0;
+      const data = err instanceof ApiError ? err.data : undefined;
+      // 409 = bloqueo funcional estructurado (si el backend lo envía)
+      if (status === 409) {
+        setPrepareNotice({
+          kind: "functional",
+          title: "No es posible preparar el expediente todavía",
+          detail: userFacingApiError(
+            err,
+            "Completa los requisitos pendientes antes de continuar.",
+          ),
+          readiness,
+        });
+        return;
+      }
+      // Mensajes de negocio (ValueError 404 con texto humano)
+      const msg = userFacingApiError(err, "");
+      if (msg && !/Inconsistencia|métricas|is not a function/i.test(msg)) {
+        setPrepareNotice({
+          kind: "functional",
+          title: "No es posible preparar el expediente todavía",
+          detail: msg,
+          readiness: readiness.incomplete ? readiness : undefined,
+        });
+        return;
+      }
+      setPrepareNotice({
+        kind: "system",
+        title: "No pudimos preparar el expediente por un problema del sistema",
+        detail:
+          "Intenta nuevamente. Si el problema continúa, consulta el registro técnico con el equipo JAIOS.",
+        readiness: readiness.incomplete ? readiness : undefined,
+      });
+      void data;
     } finally {
       setExpedienteBusy(false);
     }
@@ -416,7 +483,17 @@ export function OpportunityBidSection({
     }
   };
 
-  if (activeTab === "resumen" || activeTab === "historial" || activeTab === "tareas") {
+  const parentHandledTabs = new Set([
+    "analisis-ia",
+    "tareas",
+    "adjudicaciones",
+    "fichas",
+    "resumen",
+    "historial",
+    "historico",
+    "comercial",
+  ]);
+  if (parentHandledTabs.has(activeTab)) {
     return null;
   }
 
@@ -424,21 +501,29 @@ export function OpportunityBidSection({
     return <InterestGate />;
   }
 
+  const showToolbar = ["documentos", "checklist", "expediente", "requisitos", "documentos-proceso", "autollenado"].includes(
+    activeTab,
+  );
+
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
-        <Button onClick={() => void handleAnalyze()} disabled={analyzing || !interested}>
-          {analyzing ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          ) : (
-            <RefreshCw className="mr-2 h-4 w-4" />
-          )}
-          Analizar pliego con IA
-        </Button>
-        <Button variant="outline" onClick={() => void load()} disabled={loading}>
-          Actualizar
-        </Button>
-      </div>
+      {showToolbar ? (
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={() => void load()} disabled={loading}>
+            Actualizar
+          </Button>
+          {activeTab === "documentos" || activeTab === "requisitos" ? (
+            <Button onClick={() => void handleAnalyze()} disabled={analyzing || !interested}>
+              {analyzing ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <RefreshCw className="mr-2 h-4 w-4" />
+              )}
+              Analizar pliego con IA
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
 
       {analysisWarnings.length > 0 && (
         <div className="rounded-lg border border-warning/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-800 dark:text-amber-200">
@@ -455,19 +540,53 @@ export function OpportunityBidSection({
       )}
 
       {error && (
-        <p className="text-sm text-destructive rounded-lg border border-destructive/30 px-3 py-2">{error}</p>
+        <p className="text-sm text-destructive rounded-lg border border-destructive/30 px-3 py-2">
+          {userFacingApiError(error, error)}
+        </p>
+      )}
+
+      {prepareNotice && (
+        <div
+          className={
+            prepareNotice.kind === "system"
+              ? "rounded-lg border border-destructive/30 bg-destructive/5 px-3 py-3 text-sm"
+              : prepareNotice.kind === "success"
+                ? "rounded-lg border border-emerald-500/30 bg-emerald-500/5 px-3 py-3 text-sm"
+                : "rounded-lg border border-amber-500/40 bg-amber-500/10 px-3 py-3 text-sm text-amber-950"
+          }
+        >
+          <p className="font-medium">{prepareNotice.title}</p>
+          <p className="mt-1 text-muted-foreground">{prepareNotice.detail}</p>
+          {prepareNotice.readiness && prepareNotice.readiness.blockers.length > 0 ? (
+            <div className="mt-2">
+              <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                Antes de considerar el expediente listo
+              </p>
+              <ul className="mt-1 list-disc space-y-0.5 pl-4">
+                {prepareNotice.readiness.blockers.slice(0, 12).map((b) => (
+                  <li key={b.id}>{b.label}</li>
+                ))}
+              </ul>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <Button size="sm" variant="outline" onClick={() => onNavigateTab?.("checklist")}>
+                  Ir a checklist
+                </Button>
+                <Button size="sm" variant="outline" onClick={() => onNavigateTab?.("documentos")}>
+                  Ver documentos
+                </Button>
+              </div>
+            </div>
+          ) : null}
+        </div>
       )}
 
       {loading && !requirements ? (
         <p className="text-sm text-muted-foreground">Cargando análisis…</p>
       ) : (
         <>
+          {/* Compat legado: requisitos / alertas / riesgos redirigen vía alias, pero se mantienen renderizables */}
           {activeTab === "requisitos" && (
             <div className="space-y-4">
-              <PliegoDeepAnalysisPanel
-                opportunityId={opportunity.id}
-                interested={interested}
-              />
               {analyzed && checklist && matches ? (
                 <ComplianceBoardTab
                   opportunityId={opportunity.id}
@@ -493,38 +612,15 @@ export function OpportunityBidSection({
               )}
             </div>
           )}
-          {activeTab === "documentos-proceso" && (
-            analyzed ? (
-              processDocs ? (
-                <ProcessDocumentsTab documents={processDocs} opportunityId={opportunity.id} onReload={async () => { setProcessDocs(await apiClient.getDGCPProcessDocuments(opportunity.id).catch(() => null)); }} />
-              ) : (
-                <EmptyAnalysisHint message="Sin documentos del proceso indexados todavía." />
-              )
-            ) : (
-              <EmptyAnalysisHint />
-            )
+
+          {(activeTab === "documentos" || activeTab === "documentos-proceso" || activeTab === "autollenado") && (
+            <DgcpDocumentosOperativosTab
+              opportunityId={opportunity.id}
+              opportunityCode={opportunity.code}
+              companyKey={opportunity.company || "justech"}
+            />
           )}
-          {activeTab === "documentos" && matches && (
-            analyzed ? (
-              <DocumentosJustechTab
-                matches={matches}
-                checklist={checklist}
-                onPreview={setPreviewItemId}
-                onValidate={(itemId) => {
-                  setValidationItemId(itemId);
-                  setValidationStatus("validado_manual");
-                }}
-                onAddNote={(itemId) => {
-                  setNoteItemId(itemId);
-                  setNoteText("");
-                }}
-                onCreateTask={handleCreateTask}
-                taskBusyId={taskBusyId}
-              />
-            ) : (
-              <EmptyAnalysisHint />
-            )
-          )}
+
           {activeTab === "checklist" && checklist && (
             analyzed && checklist.total > 0 ? (
               <ChecklistTab
@@ -561,19 +657,7 @@ export function OpportunityBidSection({
                 onDownload={() => void handleDownloadExpediente()}
                 onMarkReady={() => void handleMarkReady()}
                 onWorkspaceChanged={() => setDashboardRefreshKey((k) => k + 1)}
-              />
-            ) : (
-              <EmptyAnalysisHint />
-            )
-          )}
-          {activeTab === "autollenado" && (
-            analyzed ? (
-              <AutollenadoTab
-                formType={selectedFormType}
-                onFormTypeChange={setSelectedFormType}
-                onPreview={() => void handleAutofillPreview()}
-                onGenerate={() => void handleGenerateForm()}
-                preview={formPreview}
+                onNavigateTab={onNavigateTab}
               />
             ) : (
               <EmptyAnalysisHint />
@@ -1261,6 +1345,7 @@ function ExpedienteTab({
   onDownload,
   onMarkReady,
   onWorkspaceChanged,
+  onNavigateTab,
 }: {
   opportunityId: string;
   bidPackage: DGCPBidPackage;
@@ -1271,24 +1356,59 @@ function ExpedienteTab({
   onDownload: () => void;
   onMarkReady: () => void;
   onWorkspaceChanged?: () => void;
+  onNavigateTab?: (tab: string, opts?: { formType?: string }) => void;
 }) {
-  const statusLabel =
-    EXPEDIENTE_STATUS_LABELS[expedienteStatus?.expediente_status ?? "sin_preparar"] ?? "Sin preparar";
+  const statusKey = expedienteStatus?.expediente_status ?? "sin_preparar";
+  const statusLabel = EXPEDIENTE_STATUS_LABELS[statusKey] ?? "Sin preparar";
+  const readiness = buildExpedienteReadiness(bidPackage);
+  const { counts } = readiness;
 
   return (
     <Card className="border-primary/20">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base">
+      <CardHeader className="pb-3">
+        <CardTitle className="flex flex-wrap items-center gap-2 text-base">
           <Package className="h-4 w-4 text-primary" />
           Expediente — {statusLabel}
         </CardTitle>
+        <p className="text-sm text-muted-foreground">{readiness.summary}</p>
       </CardHeader>
       <CardContent className="space-y-4">
-        <ExpedienteDashboard
-          opportunityId={opportunityId}
-          refreshKey={refreshKey}
-          onChanged={onWorkspaceChanged}
-        />
+        <div className="flex flex-wrap items-end gap-4">
+          <p className="text-4xl font-bold tabular-nums text-primary">
+            {bidPackage.preparation_pct.toFixed(0)}%
+          </p>
+          <p className="pb-1 text-sm text-muted-foreground">
+            {counts.compliant}/{counts.total || "—"} requisitos cumplidos
+            {counts.missing ? ` · ${counts.missing} faltantes` : ""}
+            {counts.toComplete ? ` · ${counts.toComplete} por completar` : ""}
+            {counts.review ? ` · ${counts.review} en revisión` : ""}
+            {counts.otherOpen ? ` · ${counts.otherOpen} en otro estado` : ""}
+          </p>
+        </div>
+
+        {readiness.incomplete && readiness.blockers.length > 0 ? (
+          <div className="rounded-md border border-amber-200 bg-amber-50/70 px-3 py-3 text-sm text-amber-950">
+            <p className="font-medium">Pendientes para un expediente completo</p>
+            <p className="mt-1 text-xs text-amber-900/80">
+              Puedes preparar el paquete ahora (se generará con observaciones). Para marcarlo listo,
+              resuelve estos puntos:
+            </p>
+            <ul className="mt-2 list-disc space-y-0.5 pl-4">
+              {readiness.blockers.slice(0, 10).map((b) => (
+                <li key={b.id}>{b.label}</li>
+              ))}
+            </ul>
+            <div className="mt-2 flex flex-wrap gap-2">
+              <Button size="sm" variant="outline" onClick={() => onNavigateTab?.("checklist")}>
+                Ir a checklist
+              </Button>
+              <Button size="sm" variant="outline" onClick={() => onNavigateTab?.("documentos")}>
+                Ver documentos
+              </Button>
+            </div>
+          </div>
+        ) : null}
+
         <div className="flex flex-wrap gap-2">
           <Button onClick={onPrepare} disabled={busy}>
             {busy ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
@@ -1300,7 +1420,7 @@ function ExpedienteTab({
             disabled={busy || !expedienteStatus?.can_download}
           >
             <Download className="mr-2 h-4 w-4" />
-            Descargar expediente
+            Exportar expediente
           </Button>
           <Button
             variant="secondary"
@@ -1309,18 +1429,15 @@ function ExpedienteTab({
           >
             Marcar listo para revisión
           </Button>
-          <Button variant="ghost" disabled title="Presentación DGCP — fase futura">
-            Presentar en DGCP
-          </Button>
         </div>
-        <div className="flex items-end gap-4">
-          <p className="text-4xl font-bold text-primary">{bidPackage.preparation_pct.toFixed(0)}%</p>
-          <p className="text-sm text-muted-foreground pb-1">
-            {bidPackage.compliant_count ?? bidPackage.found_documents}/
-            {bidPackage.mandatory_requirements ?? bidPackage.total_requirements ?? "—"} requisitos cumplidos
-          </p>
-        </div>
-        <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-6 text-sm">
+
+        <ExpedienteDashboard
+          opportunityId={opportunityId}
+          refreshKey={refreshKey}
+          onChanged={onWorkspaceChanged}
+        />
+
+        <div className="grid gap-2 text-sm sm:grid-cols-3 lg:grid-cols-6">
           <Metric label="Total requisitos" value={bidPackage.total_requirements ?? 0} />
           <Metric label="Cumplidos" value={bidPackage.compliant_count ?? 0} />
           <Metric label="Faltantes" value={bidPackage.pending_documents} />
@@ -1330,15 +1447,17 @@ function ExpedienteTab({
         </div>
         {bidPackage.recommended_tasks.length > 0 && (
           <div>
-            <p className="text-xs font-medium text-muted-foreground uppercase mb-2">Tareas recomendadas</p>
-            <ul className="list-disc pl-4 text-sm space-y-1">
+            <p className="mb-2 text-xs font-medium uppercase text-muted-foreground">
+              Tareas recomendadas
+            </p>
+            <ul className="list-disc space-y-1 pl-4 text-sm">
               {bidPackage.recommended_tasks.map((t) => (
                 <li key={t}>{t}</li>
               ))}
             </ul>
           </div>
         )}
-        <div className="grid gap-4 sm:grid-cols-2 text-sm">
+        <div className="grid gap-4 text-sm sm:grid-cols-2">
           <ListBlock title="Disponibles" items={bidPackage.available} />
           <ListBlock title="Faltantes" items={bidPackage.missing} empty="Ninguno" />
           <ListBlock title="Vencidos" items={bidPackage.expired} empty="Ninguno" />
@@ -1621,7 +1740,7 @@ function AutollenadoTab({
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
             <PenLine className="h-4 w-4" />
-            Autollenado controlado
+            Autollenado / Formularios
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">

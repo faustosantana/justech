@@ -113,7 +113,25 @@ class DGCPExpedienteService:
     @staticmethod
     def _safe_name(label: str, *, fallback: str = "documento") -> str:
         cleaned = "".join(ch if ch.isalnum() or ch in " ._-" else "_" for ch in str(label)).strip()
+        cleaned = " ".join(cleaned.split())
         return cleaned or fallback
+
+    @classmethod
+    def export_document_filename(
+        cls,
+        document_code: str,
+        process_ref: str,
+        ext: str,
+        *,
+        duplicate_index: int | None = None,
+    ) -> str:
+        """Nombre de exportación: ``F033 - REF.pdf`` o ``F033 - REF - 01.pdf``."""
+        code = cls._safe_name(document_code, fallback="DOCUMENTO").upper()
+        ref = cls._safe_name(process_ref, fallback="PROCESO")
+        suffix = ext if ext.startswith(".") else f".{ext}" if ext else ""
+        if duplicate_index is not None and duplicate_index > 0:
+            return f"{code} - {ref} - {duplicate_index:02d}{suffix}"
+        return f"{code} - {ref}{suffix}"
 
     @classmethod
     def inventory_content_files(cls, base: Path) -> list[Path]:
@@ -157,9 +175,10 @@ class DGCPExpedienteService:
             candidate.write_bytes(content)
             return candidate
         stem, suffix = candidate.stem, candidate.suffix
-        idx = 2
+        # Convención: ``nombre - 01.ext`` (sin UUID)
+        idx = 1
         while True:
-            alt = dest_dir / f"{stem}_{idx}{suffix}"
+            alt = dest_dir / f"{stem} - {idx:02d}{suffix}"
             if not alt.exists():
                 alt.write_bytes(content)
                 return alt
@@ -171,6 +190,7 @@ class DGCPExpedienteService:
         base: Path,
         checklist: list[dict],
         matches: list[dict],
+        process_ref: str,
     ) -> list[dict]:
         copied: list[dict] = []
         for match in matches:
@@ -198,7 +218,13 @@ class DGCPExpedienteService:
             except Exception:
                 continue
             ext = Path(rel).suffix or ".pdf"
-            dest_name = f"{self._safe_name(req_label)}{ext}"
+            code_hint = str(req_label or req_key or "DOCUMENTO")
+            upper = code_hint.upper()
+            if "SNCC." in upper:
+                code_hint = upper.replace("SNCC.", "").split()[0]
+            elif upper.startswith("F0") or upper in {"RPE", "RNC", "MIPYME", "DGII", "TSS"}:
+                code_hint = upper.split()[0]
+            dest_name = self.export_document_filename(code_hint, process_ref, ext)
             dest = self._write_unique(base / folder, dest_name, src_bytes)
             copied.append(
                 {
@@ -227,6 +253,7 @@ class DGCPExpedienteService:
         )
         docs = list(result.scalars().all())
         copied: list[dict] = []
+        process_ref = opportunity.code.replace("/", "_")
         for doc in docs:
             meta = doc.metadata_ or {}
             filename = meta.get("storage_filename")
@@ -238,7 +265,10 @@ class DGCPExpedienteService:
                 logger.debug("process doc missing on disk: %s", filename)
                 continue
             folder = ROLE_FOLDER_MAP.get(str(doc.doc_role or "").lower(), "11_Anexos")
-            dest = self._write_unique(base / folder, Path(filename).name, content)
+            code_hint = str(doc.doc_role or doc.title or Path(filename).stem)
+            ext = Path(filename).suffix or ".pdf"
+            dest_name = self.export_document_filename(code_hint, process_ref, ext)
+            dest = self._write_unique(base / folder, dest_name, content)
             copied.append(
                 {
                     "requirement": doc.title,
@@ -332,22 +362,30 @@ class DGCPExpedienteService:
         manifest: dict,
         zip_content_count: int,
     ) -> None:
+        """Ensure API metrics match the manifest.
+
+        The ZIP may include generated artifacts (reportes, índices) beyond copied
+        requirement documents, so zip file count is only a lower-bound check when
+        documents were actually copied.
+        """
         manifest_copied = manifest.get("copied_documents")
         if isinstance(manifest_copied, list):
             manifest_count = len(manifest_copied)
         else:
             manifest_count = int(manifest_copied or 0)
         manifest_pct = float(manifest.get("preparation_pct") or 0)
-        if (
-            api_copied != manifest_count
-            or api_copied != zip_content_count
-            or round(api_pct, 1) != round(manifest_pct, 1)
-        ):
+        if api_copied != manifest_count or round(api_pct, 1) != round(manifest_pct, 1):
             raise ExpedienteMetricsConsistencyError(
                 "Inconsistencia de métricas de expediente: "
                 f"api(copied={api_copied}, pct={api_pct}) "
                 f"manifest(copied={manifest_count}, pct={manifest_pct}) "
-                f"zip(copied={zip_content_count})"
+                f"zip(files={zip_content_count})"
+            )
+        if api_copied > 0 and zip_content_count < api_copied:
+            raise ExpedienteMetricsConsistencyError(
+                "Inconsistencia de métricas de expediente: "
+                f"el ZIP tiene menos archivos de contenido ({zip_content_count}) "
+                f"que documentos copiados ({api_copied})"
             )
 
     async def prepare(
@@ -395,7 +433,12 @@ class DGCPExpedienteService:
 
         copied_entries: list[dict] = []
         copied_entries.extend(
-            await self._copy_knowledge_matches(base=base, checklist=checklist, matches=matches)
+            await self._copy_knowledge_matches(
+                base=base,
+                checklist=checklist,
+                matches=matches,
+                process_ref=opp_code.replace("/", "_"),
+            )
         )
         copied_entries.extend(
             await self._copy_process_documents(opportunity=opportunity, base=base)
@@ -466,12 +509,26 @@ class DGCPExpedienteService:
             "",
             f"Generado: {index_payload['generated_at']}",
             "",
+            "| Orden | Código | Documento | Estado | Responsable | Archivo |",
+            "| --- | --- | --- | --- | --- | --- |",
         ]
         for entry in index_entries:
-            index_md.append(
-                f"{entry['orden']}. **{entry['nombre']}** — {entry['estado']}"
-                + (f" · Resp: {entry['responsable']}" if entry.get("responsable") else "")
+            linked = next(
+                (c for c in copied_entries if c.get("requirement_key") == entry.get("requirement_key")),
+                None,
             )
+            archivo = (linked or {}).get("pliego_filename") or entry.get("documento") or "—"
+            index_md.append(
+                f"| {entry['orden']} | {entry.get('requirement_key') or '—'} | "
+                f"{entry['nombre']} | {entry['estado']} | "
+                f"{entry.get('responsable') or '—'} | {archivo} |"
+            )
+        index_filename = self.export_document_filename("INDICE", opp_code.replace("/", "_"), ".md")
+        (base / "00_Informacion_General" / index_filename).write_text(
+            "\n".join(index_md),
+            encoding="utf-8",
+        )
+        # Compat: mantener nombre histórico
         (base / "00_Informacion_General" / "indice_expediente.md").write_text(
             "\n".join(index_md),
             encoding="utf-8",

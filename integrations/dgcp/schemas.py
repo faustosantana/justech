@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from datetime import datetime
 from decimal import Decimal
 from typing import Any
@@ -41,8 +43,78 @@ class DGCPProcesoRecord(BaseModel):
         return cls(**{k: v for k, v in data.items() if k in known}, extra=extra)
 
 
+class DGCPContratoRecord(BaseModel):
+    codigo_contrato: str
+    codigo_proceso: str
+    estado_contrato: str | None = None
+    estado_adjudicacion: str | None = None
+    fecha_adjudicacion: datetime | None = None
+    divisa: str = "DOP"
+    valor_contratado: float | Decimal = 0
+    descripcion: str | None = None
+    url_contrato: str | None = None
+    unidad_compra: str
+    codigo_unidad_compra: str | int | None = None
+    rpe: str | None = None
+    razon_social: str | None = None
+    extra: dict[str, Any] = Field(default_factory=dict)
+
+    @classmethod
+    def from_api(cls, data: dict[str, Any]) -> "DGCPContratoRecord":
+        known = cls.model_fields.keys() - {"extra"}
+        extra = {k: v for k, v in data.items() if k not in known}
+        return cls(**{k: v for k, v in data.items() if k in known}, extra=extra)
+
+
+class DGCPContratoArticuloRecord(BaseModel):
+    codigo_contrato: str
+    codigo_proceso: str
+    descripcion_articulo: str | None = None
+    descripcion_usuario: str | None = None
+    unidad_medida: str | None = None
+    cantidad: float | Decimal = 0
+    precio_unitario: float | Decimal = 0
+    costo_total: float | Decimal = 0
+    familia: str | None = None
+    clase: str | None = None
+    subclase: str | None = None
+    fecha_creacion_contrato: datetime | None = None
+    extra: dict[str, Any] = Field(default_factory=dict)
+
+    @classmethod
+    def from_api(cls, data: dict[str, Any]) -> "DGCPContratoArticuloRecord":
+        known = cls.model_fields.keys() - {"extra"}
+        extra = {k: v for k, v in data.items() if k not in known}
+        return cls(**{k: v for k, v in data.items() if k in known}, extra=extra)
+
+
+class DGCPProcesoArticuloRecord(BaseModel):
+    codigo_proceso: str
+    descripcion_articulo: str | None = None
+    descripcion_usuario: str | None = None
+    cantidad: float | Decimal = 0
+    unidad_medida: str | None = None
+    precio_unitario_estimado: float | Decimal = 0
+    precio_total_estimado: float | Decimal = 0
+    familia_unspsc: str | None = None
+    clase_unspsc: str | None = None
+    subclase_unspsc: str | None = None
+    extra: dict[str, Any] = Field(default_factory=dict)
+
+    @classmethod
+    def from_api(cls, data: dict[str, Any]) -> "DGCPProcesoArticuloRecord":
+        known = cls.model_fields.keys() - {"extra"}
+        extra = {k: v for k, v in data.items() if k not in known}
+        return cls(**{k: v for k, v in data.items() if k in known}, extra=extra)
+
+
 class DGCPPaginatedResponse(BaseModel):
-    content: list[DGCPProcesoRecord]
+    content: list[
+        DGCPProcesoRecord
+        | DGCPContratoRecord
+        | DGCPContratoArticuloRecord
+        | DGCPProcesoArticuloRecord
+    ]
     page: int
     limit: int
     total_results: int

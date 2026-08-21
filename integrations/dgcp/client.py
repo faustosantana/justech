@@ -8,7 +8,13 @@ from typing import Any
 import httpx
 
 from integrations.dgcp.config import DGCPConfig
-from integrations.dgcp.schemas import DGCPPaginatedResponse, DGCPProcesoRecord
+from integrations.dgcp.schemas import (
+    DGCPContratoArticuloRecord,
+    DGCPContratoRecord,
+    DGCPPaginatedResponse,
+    DGCPProcesoArticuloRecord,
+    DGCPProcesoRecord,
+)
 
 
 class DGCPClient:
@@ -53,12 +59,18 @@ class DGCPClient:
         limit: int = 50,
         estado_proceso: str | None = "Proceso publicado",
         objeto_proceso: str | None = None,
+        proceso: str | None = None,
+        unidad_compra: str | int | None = None,
     ) -> DGCPPaginatedResponse:
         params: dict[str, Any] = {"page": page, "limit": limit}
         if estado_proceso:
             params["estado_proceso"] = estado_proceso
         if objeto_proceso:
             params["objeto_proceso"] = objeto_proceso
+        if proceso:
+            params["proceso"] = proceso
+        if unidad_compra is not None:
+            params["unidad_compra"] = unidad_compra
         data = await self._get("procesos", params)
         payload = data.get("payload", {})
         content = [DGCPProcesoRecord.from_api(item) for item in payload.get("content", [])]
@@ -69,6 +81,77 @@ class DGCPClient:
             total_results=data.get("totalResults", 0),
             pages=data.get("pages", 0),
         )
+
+    async def _fetch_paginated(
+        self,
+        path: str,
+        model_cls,
+        *,
+        page: int = 1,
+        limit: int = 50,
+        extra_params: dict[str, Any] | None = None,
+    ) -> DGCPPaginatedResponse:
+        params: dict[str, Any] = {"page": page, "limit": limit}
+        if extra_params:
+            params.update(extra_params)
+        data = await self._get(path, params)
+        payload = data.get("payload") or {}
+        raw_content = payload.get("content") or []
+        content = [model_cls.from_api(item) for item in raw_content]
+        return DGCPPaginatedResponse(
+            content=content,
+            page=data.get("page", page),
+            limit=data.get("limit", limit),
+            total_results=data.get("totalResults", 0),
+            pages=data.get("pages", 0),
+        )
+
+    async def fetch_contratos(
+        self,
+        *,
+        page: int = 1,
+        limit: int = 50,
+        proceso: str | None = None,
+        unidad_compra: str | int | None = None,
+        contrato: str | None = None,
+        rpe: str | None = None,
+    ) -> DGCPPaginatedResponse:
+        extra: dict[str, Any] = {}
+        if proceso:
+            extra["proceso"] = proceso
+        if unidad_compra is not None:
+            extra["unidad_compra"] = unidad_compra
+        if contrato:
+            extra["contrato"] = contrato
+        if rpe:
+            extra["rpe"] = rpe
+        return await self._fetch_paginated(
+            "contratos", DGCPContratoRecord, page=page, limit=limit, extra_params=extra or None
+        )
+
+    async def fetch_contratos_articulos(
+        self,
+        *,
+        page: int = 1,
+        limit: int = 50,
+        proceso: str | None = None,
+        contrato: str | None = None,
+    ) -> DGCPPaginatedResponse:
+        extra: dict[str, Any] = {}
+        if proceso:
+            extra["proceso"] = proceso
+        if contrato:
+            extra["contrato"] = contrato
+        return await self._fetch_paginated(
+            "contratos/articulos",
+            DGCPContratoArticuloRecord,
+            page=page,
+            limit=limit,
+            extra_params=extra or None,
+        )
+
+    async def fetch_procesos_articulos(self, *, page: int = 1, limit: int = 50) -> DGCPPaginatedResponse:
+        return await self._fetch_paginated("procesos/articulos", DGCPProcesoArticuloRecord, page=page, limit=limit)
 
     async def health_check(self) -> dict[str, Any]:
         try:

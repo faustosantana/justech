@@ -960,6 +960,46 @@ export const apiClient = {
       true,
     ),
 
+  getDGCPHistoricalIntelligence: (
+    opportunityId: string,
+    opts?: { window_months?: number; limit?: number },
+  ) => {
+    const params = new URLSearchParams();
+    if (opts?.window_months !== undefined) params.set("window_months", String(opts.window_months));
+    if (opts?.limit !== undefined) params.set("limit", String(opts.limit));
+    const qs = params.toString();
+    return request<import("./dgcp").DGCPHistoricalIntelligence>(
+      `/dgcp/processes/${opportunityId}/historical-intelligence${qs ? `?${qs}` : ""}`,
+      {},
+      true,
+    );
+  },
+
+  reindexDGCPHistoricalAwards: (opts?: {
+    institution_code?: string | number;
+    institution_name?: string;
+    max_pages?: number;
+    page_size?: number;
+  }) => {
+    const params = new URLSearchParams();
+    if (opts?.institution_code !== undefined && opts.institution_code !== null) {
+      params.set("institution_code", String(opts.institution_code));
+    }
+    if (opts?.institution_name) params.set("institution_name", opts.institution_name);
+    const qs = params.toString();
+    return request<import("./dgcp").DGCPHistoricalIndexResponse>(
+      `/dgcp/historical-awards/index${qs ? `?${qs}` : ""}`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          max_pages: opts?.max_pages ?? 60,
+          page_size: opts?.page_size ?? 100,
+        }),
+      },
+      true,
+    );
+  },
+
   linkDGCPProcessDocument: (
     opportunityId: string,
     data: { url: string; title?: string; doc_role?: string },

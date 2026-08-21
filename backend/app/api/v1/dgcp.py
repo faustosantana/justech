@@ -38,7 +38,9 @@ from app.schemas.dgcp_historical import (
     DGCPHistoricalSimilarResponse,
     DGCPHistoricalSimilarSearchRequest,
 )
+from app.schemas.dgcp_historical_intelligence import DGCPHistoricalIntelligenceResponse
 from app.services.dgcp_historical_awards_service import DGCPHistoricalAwardsService
+from app.services.dgcp_historical_intelligence_service import DGCPHistoricalIntelligenceService
 from app.services.dgcp_historical_similar_search_service import DGCPHistoricalSimilarSearchService
 from app.services.dgcp_expediente_context_service import DGCPExpedienteContextService
 from app.services.audit_service import AuditService
@@ -2565,6 +2567,39 @@ async def run_historical_awards_index(
         request=request,
     )
     return result
+
+
+@router.get(
+    "/opportunities/{opportunity_id}/historical-intelligence",
+    response_model=DGCPHistoricalIntelligenceResponse,
+    dependencies=DGCP_VIEW,
+)
+@router.get(
+    "/processes/{opportunity_id}/historical-intelligence",
+    response_model=DGCPHistoricalIntelligenceResponse,
+    dependencies=DGCP_VIEW,
+)
+async def get_historical_intelligence(
+    opportunity_id: uuid.UUID,
+    db: DbSession,
+    _: CurrentUser,
+    __: TenantCtx,
+    window_months: int | None = Query(
+        24,
+        description="Ventana en meses (12/24/36). 0 o null = todo el histórico indexado.",
+    ),
+    limit: int = Query(80, ge=10, le=200),
+) -> DGCPHistoricalIntelligenceResponse:
+    """Vista 360° de adjudicaciones históricas verificables (índice local DGCP)."""
+    ctx = require_tenant_context()
+    service = DGCPHistoricalIntelligenceService(db, ctx.tenant_id)
+    months = None if window_months in (0,) else window_months
+    try:
+        return await service.build_for_opportunity(
+            opportunity_id, window_months=months, limit=limit
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
 
 
 @router.get(

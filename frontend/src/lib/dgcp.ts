@@ -58,6 +58,14 @@ export type OpportunityPriority = "critical" | "high" | "medium" | "low";
 
 export type OpportunityAction =
   | "mostrar_interes"
+  | "marcar_interes"
+  | "desmarcar_interes"
+  | "iniciar_preparacion"
+  | "marcar_listo_presentar"
+  | "marcar_presentada"
+  | "marcar_suspendida"
+  | "marcar_adjudicada"
+  | "marcar_no_adjudicada"
   | "licitar"
   | "revisar"
   | "descartar"
@@ -95,6 +103,11 @@ export interface DGCPOpportunity {
   synced_at: string | null;
   created_at: string;
   updated_at: string;
+  jaios_intelligence?: DGCPIntelligence | null;
+  needs_review?: boolean;
+  responsible_name?: string | null;
+  primary_action?: string | null;
+  available_actions?: string[];
 }
 
 export interface DGCPSummary {
@@ -493,6 +506,12 @@ export interface DGCPProcessDocument {
   is_downloadable?: boolean;
   document_id?: string | null;
   storage_uri?: string | null;
+  created_at?: string | null;
+  file_size?: number | null;
+  uploaded_by?: string | null;
+  is_primary?: boolean;
+  include_in_analysis?: boolean;
+  metadata?: Record<string, unknown> | null;
 }
 
 export interface DGCPProcessDocuments {
@@ -723,6 +742,155 @@ export interface DGCPHistoricalSimilarResponse {
   price_recommendation?: DGCPHistoricalPriceRecommendation | null;
   ai_insights: string[];
   index_meta: DGCPHistoricalIndexMeta;
+}
+
+export interface DGCPHistoricalIndexResponse {
+  job_id: string;
+  status: string;
+  pages_indexed: number;
+  contracts_indexed: number;
+  items_indexed: number;
+  error_message?: string | null;
+  message?: string;
+}
+
+export interface DGCPHistoricalSourceRef {
+  source: string;
+  source_url?: string | null;
+  process_url?: string | null;
+  contract_url?: string | null;
+  dgcp_process_code?: string | null;
+  retrieved_at?: string | null;
+}
+
+export interface DGCPHistoricalPurchaseRow {
+  award_id: string;
+  process_code: string;
+  contract_code?: string | null;
+  award_date?: string | null;
+  institution: string;
+  description?: string | null;
+  supplier_name?: string | null;
+  supplier_rpe?: string | null;
+  supplier_rnc?: string | null;
+  awarded_amount?: number | string | null;
+  currency?: string;
+  quantity?: number | string | null;
+  unit_price?: number | string | null;
+  unit_measure?: string | null;
+  modality?: string | null;
+  award_status?: string | null;
+  match_class?: "EXACTA" | "ALTA_SIMILITUD" | "RELACIONADA";
+  match_class_label?: string;
+  similarity_score?: number;
+  similarity_pct?: number | null;
+  match_reasons?: string[];
+  data_quality?: "VERIFICADO" | "PARCIAL" | "INCOMPLETO";
+  source?: DGCPHistoricalSourceRef;
+}
+
+export interface DGCPHistoricalIntelligence {
+  current_process: {
+    opportunity_id: string;
+    process_code: string;
+    title?: string | null;
+    institution: string;
+    estimated_amount?: number | string | null;
+    currency?: string;
+    amount_kind?: string;
+  };
+  window_months?: number | null;
+  last_purchase: {
+    available: boolean;
+    title?: string;
+    match_class?: string | null;
+    match_class_label?: string | null;
+    criterion?: string | null;
+    purchase?: DGCPHistoricalPurchaseRow | null;
+    caveats?: string[];
+  };
+  last_supplier: {
+    available: boolean;
+    supplier_name?: string | null;
+    supplier_rpe?: string | null;
+    award_date?: string | null;
+    awarded_amount?: number | string | null;
+    currency?: string;
+    process_code?: string | null;
+    source_url?: string | null;
+  };
+  institution_purchases: DGCPHistoricalPurchaseRow[];
+  suppliers_ranking: Array<{
+    supplier_name: string;
+    supplier_rpe?: string | null;
+    awards_count: number;
+    processes_count: number;
+    total_amount: number | string;
+    currency?: string;
+    last_award_date?: string | null;
+    share_pct: number;
+  }>;
+  concentration: {
+    level: string;
+    top1_share_pct?: number | null;
+    top3_share_pct?: number | null;
+    suppliers_count: number;
+    note?: string;
+  };
+  product_lines: Array<{
+    line_number?: number | null;
+    requested_description: string;
+    last_purchase?: DGCPHistoricalPurchaseRow | null;
+    match_class?: string | null;
+    similarity_pct?: number | null;
+  }>;
+  price_history: {
+    available: boolean;
+    currency?: string;
+    points?: Array<{
+      award_date?: string | null;
+      supplier_name?: string | null;
+      quantity?: number | string | null;
+      unit_price?: number | string | null;
+      awarded_amount?: number | string | null;
+      process_code?: string | null;
+      source_url?: string | null;
+    }>;
+    last_unit_price?: number | string | null;
+    avg_unit_price?: number | string | null;
+    min_unit_price?: number | string | null;
+    max_unit_price?: number | string | null;
+    median_unit_price?: number | string | null;
+    variation_vs_last_pct?: number | null;
+    caveats?: string[];
+  };
+  frequency: {
+    available: boolean;
+    summary?: string;
+    temporal_pattern?: string | null;
+    process_count?: number;
+  };
+  related_processes: DGCPHistoricalPurchaseRow[];
+  budget_comparison?: {
+    available: boolean;
+    current_estimated_amount?: number | string | null;
+    current_currency?: string;
+    last_comparable_amount?: number | string | null;
+    variation_pct?: number | null;
+    caveats?: string[];
+  };
+  executive_summary?: { paragraphs: string[]; based_on_metrics_only?: boolean };
+  data_quality?: {
+    overall: string;
+    verified_count: number;
+    partial_count: number;
+    incomplete_count: number;
+    notes?: string[];
+  };
+  statistics?: Record<string, unknown>;
+  latency_ms?: number | null;
+  indexed_lines_scanned?: number;
+  message?: string;
 }
 
 export interface DGCPExpedienteDashboardKpis {
@@ -1101,5 +1269,101 @@ export function getOpportunityTrafficLight(
 }
 
 export { resolveOpportunityGuidance } from "./dgcp-funnel";
+
+/** Fichas técnicas — tipos alineados al schema backend. */
+export interface DGCPTechSheetOfferedProduct {
+  brand?: string | null;
+  model?: string | null;
+  manufacturer?: string | null;
+  sku?: string | null;
+  description?: string | null;
+  source?: string | null;
+  image_url?: string | null;
+}
+
+export interface DGCPTechSheetProductImage {
+  id: string;
+  label?: string | null;
+  source?: string;
+  url?: string | null;
+  local_path?: string | null;
+  filename?: string | null;
+  mime_type?: string | null;
+  sort_order?: number;
+}
+
+export interface DGCPTechSheetBrandingAssetStatus {
+  asset_type: string;
+  status: string;
+  label?: string | null;
+  source?: string | null;
+  view_url?: string | null;
+  filename?: string | null;
+}
+
+export interface DGCPTechSheetBrandingContext {
+  company_key: string;
+  company_name: string;
+  rnc?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  email?: string | null;
+  representative_name?: string | null;
+  representative_role?: string | null;
+  logo: DGCPTechSheetBrandingAssetStatus;
+  signature: DGCPTechSheetBrandingAssetStatus;
+  stamp: DGCPTechSheetBrandingAssetStatus;
+}
+
+export interface DGCPTechSheetItem {
+  id: string;
+  required_product_name: string;
+  required_description?: string | null;
+  required_specs?: string[];
+  quantity?: string | null;
+  source_document_id?: string | null;
+  source_fragment?: string | null;
+  source_page?: number | null;
+  source_section?: string | null;
+  detection_source?: string;
+  offered_product?: DGCPTechSheetOfferedProduct | null;
+  compliance_matrix?: Array<Record<string, unknown>>;
+  missing_fields?: string[];
+  status: string;
+  confidence?: number;
+  responsible_user_id?: string | null;
+  draft?: Record<string, unknown> | null;
+  draft_document_id?: string | null;
+  product_images?: DGCPTechSheetProductImage[];
+  branding?: DGCPTechSheetBrandingContext | null;
+  uploaded_file?: {
+    id?: string | null;
+    filename?: string | null;
+    local_path?: string | null;
+    mime_type?: string | null;
+    replaced_at?: string | null;
+    replaced_by?: string | null;
+  } | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+}
+
+export interface DGCPTechSheetSummary {
+  total: number;
+  detectadas: number;
+  pendientes_producto: number;
+  borradores: number;
+  aprobadas: number;
+  con_riesgo: number;
+  requires_technical_sheets: boolean;
+  message?: string | null;
+}
+
+export interface DGCPTechSheetsResponse {
+  opportunity_id: string;
+  enabled: boolean;
+  summary: DGCPTechSheetSummary;
+  items: DGCPTechSheetItem[];
+}
 
 

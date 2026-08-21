@@ -2,29 +2,22 @@
 
 import {
   AlertCircle,
-  Database,
   ExternalLink,
-  Lightbulb,
   Loader2,
   RefreshCw,
-  TrendingUp,
   Trophy,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 
-import { useDgcpExpedienteContext } from "@/components/dgcp/dgcp-expediente-context";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiClient } from "@/lib/api";
-import { isDgcpAutoExpedienteContextEnabled } from "@/lib/dgcp-expediente-context";
 import {
   formatCurrency,
   formatDate,
-  isDGCPOperationalInterest,
-  sanitizeClassificationReason,
-  sanitizeKeywordList,
-  type DGCPHistoricalSimilarResponse,
+  type DGCPHistoricalIntelligence,
+  type DGCPHistoricalPurchaseRow,
   type DGCPOpportunity,
 } from "@/lib/dgcp";
 import { cn } from "@/lib/utils";
@@ -33,473 +26,445 @@ interface Props {
   opportunity: DGCPOpportunity;
 }
 
-function institutionCodeFromOpportunity(opp: DGCPOpportunity): string | number | undefined {
-  const info = opp.full_info as Record<string, unknown> | undefined;
-  const code = info?.codigo_unidad_compra;
-  if (code !== undefined && code !== null && String(code).trim()) {
-    return code as string | number;
-  }
-  return undefined;
+type IntelTab = "resumen" | "compras" | "proveedores" | "productos" | "precios" | "relacionados";
+
+const WINDOWS = [
+  { label: "12 meses", value: 12 },
+  { label: "24 meses", value: 24 },
+  { label: "36 meses", value: 36 },
+  { label: "Todo", value: 0 },
+] as const;
+
+function qualityBadge(q?: string) {
+  if (q === "VERIFICADO") return "bg-emerald-100 text-emerald-800";
+  if (q === "PARCIAL") return "bg-amber-100 text-amber-900";
+  return "bg-slate-100 text-slate-700";
+}
+
+function matchBadge(c?: string | null) {
+  if (c === "EXACTA") return "bg-emerald-100 text-emerald-900";
+  if (c === "ALTA_SIMILITUD") return "bg-sky-100 text-sky-900";
+  return "bg-slate-100 text-slate-700";
+}
+
+function SourceLink({ row }: { row?: DGCPHistoricalPurchaseRow | null }) {
+  const url = row?.source?.contract_url || row?.source?.process_url || row?.source?.source_url;
+  if (!url) return null;
+  return (
+    <a href={url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm text-sky-700 hover:underline">
+      Abrir fuente <ExternalLink className="h-3.5 w-3.5" />
+    </a>
+  );
 }
 
 export function DGCPHistoricalAwardsPanel({ opportunity }: Props) {
-  const ctx = useDgcpExpedienteContext();
-  const autoEnabled = isDgcpAutoExpedienteContextEnabled();
-  const [data, setData] = useState<DGCPHistoricalSimilarResponse | null>(null);
+  const [data, setData] = useState<DGCPHistoricalIntelligence | null>(null);
   const [loading, setLoading] = useState(false);
-  const [searching, setSearching] = useState(false);
-  const [reindexing, setReindexing] = useState(false);
-  const [showAll, setShowAll] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [windowMonths, setWindowMonths] = useState(24);
+  const [tab, setTab] = useState<IntelTab>("resumen");
 
-  const eligible = isDGCPOperationalInterest(opportunity.status);
-  const useAuto = autoEnabled && ctx?.enabled;
-
-  const loadCache = useCallback(async () => {
-    if (useAuto) return;
+  const load = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
-      const result = await apiClient.getDGCPHistoricalSimilar(opportunity.id);
+      const result = await apiClient.getDGCPHistoricalIntelligence(opportunity.id, {
+        window_months: windowMonths,
+      });
       setData(result);
-    } catch {
+    } catch (e) {
       setData(null);
+      setError(e instanceof Error ? e.message : "No se pudo cargar la inteligencia histórica");
     } finally {
       setLoading(false);
     }
-  }, [opportunity.id, useAuto]);
+  }, [opportunity.id, windowMonths]);
 
   useEffect(() => {
-    if (useAuto) {
-      if (ctx?.historical) setData(ctx.historical);
-      return;
-    }
-    if (eligible) void loadCache();
-  }, [useAuto, ctx?.historical, eligible, loadCache]);
+    void load();
+  }, [load]);
 
-  async function runSearch(refresh = false) {
-    if (useAuto && ctx) {
-      setSearching(true);
-      try {
-        await ctx.refresh(refresh);
-      } finally {
-        setSearching(false);
-      }
-      return;
-    }
-    setSearching(true);
-    try {
-      const result = await apiClient.searchDGCPHistoricalSimilar(opportunity.id, {
-        refresh,
-        limit: 10,
-      });
-      setData(result);
-    } finally {
-      setSearching(false);
-    }
-  }
-
-  async function runReindex() {
-    setReindexing(true);
-    try {
-      const institutionCode = institutionCodeFromOpportunity(opportunity);
-      await apiClient.reindexDGCPHistoricalAwards({
-        institution_code: institutionCode,
-        institution_name: opportunity.institution ?? undefined,
-        max_pages: 60,
-      });
-      await runSearch(true);
-    } finally {
-      setReindexing(false);
-    }
-  }
-
-  const activeData = useAuto && ctx?.historical ? ctx.historical : data;
-  const isLoading = useAuto ? ctx?.loading && !activeData : loading && !activeData;
-  const indexMeta = activeData?.index_meta;
-
-  const visibleMatches = activeData?.matches
-    ? showAll
-      ? activeData.matches
-      : activeData.matches.slice(0, 10)
-    : [];
-
-  const otherMatches = activeData?.other_institution_matches ?? [];
-  const visibleOther = showAll ? otherMatches : otherMatches.slice(0, 5);
-
-  const priceRec = activeData?.price_recommendation;
-  const indicators = activeData?.indicators;
-  const hasInstitutionData = (indexMeta?.institution_indexed ?? 0) > 0;
-  const isEmpty = activeData?.status === "empty" && visibleMatches.length === 0;
-
-  if (!eligible) {
-    return (
-      <Card>
-        <CardContent className="pt-6 text-sm text-muted-foreground">
-          Marque interés operativo en el proceso para habilitar el histórico de compras de esta
-          institución.
-        </CardContent>
-      </Card>
-    );
-  }
+  const last = data?.last_purchase;
+  const lastSup = data?.last_supplier;
+  const prices = data?.price_history;
 
   return (
     <div className="space-y-4">
-      {useAuto && ctx?.loading && !activeData && (
-        <Card>
-          <CardContent className="flex items-center gap-2 py-4 text-sm text-muted-foreground">
-            <Loader2 className="h-4 w-4 animate-spin shrink-0" />
-            Indexando adjudicaciones DGCP de la institución…
-          </CardContent>
-        </Card>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 className="text-base font-semibold text-slate-900">Inteligencia histórica</h3>
+          <p className="text-sm text-slate-500">
+            Adjudicaciones/contratos indexados DGCP — sin inferencias presentadas como hechos.
+          </p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          {WINDOWS.map((w) => (
+            <Button
+              key={w.value}
+              size="sm"
+              variant={windowMonths === w.value ? "default" : "outline"}
+              onClick={() => setWindowMonths(w.value)}
+            >
+              {w.label}
+            </Button>
+          ))}
+          <Button size="sm" variant="outline" onClick={() => void load()} disabled={loading}>
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+          </Button>
+        </div>
+      </div>
+
+      {error && (
+        <div className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+          <span>{error}</span>
+        </div>
       )}
 
-      <Card>
-        <CardHeader className="flex flex-row flex-wrap items-center justify-between gap-3 pb-3">
-          <CardTitle className="text-base flex items-center gap-2">
-            <TrendingUp className="h-4 w-4 text-primary" />
-            Histórico de compras — {opportunity.institution}
-          </CardTitle>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              size="sm"
-              variant="outline"
-              disabled={reindexing || searching || isLoading}
-              title="Descarga adjudicaciones DGCP de esta institución e indexa en JAIOS"
-              onClick={() => void runReindex()}
-            >
-              <Database className={cn("mr-1.5 h-3.5 w-3.5", reindexing && "animate-spin")} />
-              {reindexing ? "Reindexando…" : "Reindexar histórico"}
-            </Button>
-            <Button size="sm" disabled={searching || isLoading} title="Busca procesos similares ya adjudicados" onClick={() => void runSearch(true)}>
-              <RefreshCw className={cn("mr-1.5 h-3.5 w-3.5", searching && "animate-spin")} />
-              {searching ? "Actualizando…" : "Actualizar búsqueda"}
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {isLoading && !activeData && (
-            <p className="text-sm text-muted-foreground">Cargando histórico indexado…</p>
-          )}
+      {loading && !data && (
+        <div className="flex items-center gap-2 text-sm text-slate-500">
+          <Loader2 className="h-4 w-4 animate-spin" /> Cargando histórico verificable…
+        </div>
+      )}
 
-          {indexMeta && (
-            <div className="rounded-lg border border-border/60 bg-muted/20 px-3 py-2 text-xs text-muted-foreground flex flex-wrap gap-x-4 gap-y-1">
-              <span>
-                <strong className="text-foreground">{indexMeta.institution_indexed}</strong> adjudicaciones
-                de esta institución
-              </span>
-              <span>
-                <strong className="text-foreground">{indexMeta.total_indexed}</strong> filas indexadas (global)
-              </span>
-              {indexMeta.last_indexed_at && (
-                <span>Última indexación: {formatDate(indexMeta.last_indexed_at)}</span>
-              )}
-              <span>Fuente: {indexMeta.source}</span>
-            </div>
-          )}
-
-          {activeData?.keywords_used && activeData.keywords_used.length > 0 && (
-            <p className="text-xs text-muted-foreground">
-              Palabras clave del proceso: {sanitizeKeywordList(activeData.keywords_used).slice(0, 10).join(", ")}
-              {activeData.keywords_used.length > 10 ? "…" : ""}
-            </p>
-          )}
-
-          {isEmpty && (
-            <div className="rounded-lg border border-border/60 bg-muted/30 p-4 text-sm space-y-3">
-              <p className="flex items-center gap-2 font-medium">
-                <AlertCircle className="h-4 w-4 text-muted-foreground shrink-0" />
-                {hasInstitutionData
-                  ? activeData?.message
-                  : "No hay adjudicaciones indexadas para esta institución."}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                Siguiente paso: pulse «Reindexar histórico» para importar adjudicaciones DGCP de {opportunity.institution}.
-              </p>
-            </div>
-          )}
-
-          {activeData?.error_message && (
-            <p className="text-sm text-destructive">{activeData.error_message}</p>
-          )}
-
-          {activeData?.searched_at && !isEmpty && (
-            <p className="text-xs text-muted-foreground">
-              {activeData.cached ? "Resultado en caché" : "Búsqueda en vivo"} ·{" "}
-              {formatDate(activeData.searched_at)}
-              {activeData.expires_at && ` · válido hasta ${formatDate(activeData.expires_at)}`}
-            </p>
-          )}
-
-          {indicators && activeData && activeData.total_matches > 0 && (
-            <div className="grid gap-3 sm:grid-cols-3">
-              <MetricCard
-                label="Precio unit. promedio"
-                value={
-                  indicators.avg_unit_price
-                    ? formatCurrency(indicators.avg_unit_price, "DOP")
-                    : "—"
-                }
-              />
-              <MetricCard
-                label="Último precio adjudicado"
-                value={
-                  indicators.last_awarded_unit_price
-                    ? formatCurrency(indicators.last_awarded_unit_price, "DOP")
-                    : "—"
-                }
-              />
-              <MetricCard label="Coincidencias" value={String(activeData.total_matches)} />
-            </div>
-          )}
-
-          {priceRec && (
-            <Card className="border-primary/20 bg-primary/5">
-              <CardContent className="pt-4 space-y-1 text-sm">
-                <p className="font-medium flex items-center gap-2">
-                  <Lightbulb className="h-4 w-4 text-primary" />
-                  Recomendación de precio
-                </p>
-                <p>{priceRec.summary}</p>
-              </CardContent>
-            </Card>
-          )}
-
-          {activeData?.ai_insights && activeData.ai_insights.length > 0 && visibleMatches.length > 0 && (
-            <ul className="space-y-1.5">
-              {activeData.ai_insights
-                .filter((insight) => !priceRec?.summary || !insight.includes(priceRec.summary.slice(0, 40)))
-                .map((insight) => (
-                <li
-                  key={insight}
-                  className="flex items-start gap-2 text-sm rounded-md border border-border/50 px-3 py-2"
-                >
-                  <Lightbulb className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" />
-                  {insight}
-                </li>
-              ))}
-            </ul>
-          )}
-
-          {indicators?.most_frequent_supplier && visibleMatches.length > 0 && (
+      {data && (
+        <>
+          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
             <Card>
               <CardHeader className="pb-2">
-                <CardTitle className="text-sm flex items-center gap-2">
-                  <Trophy className="h-4 w-4 text-amber-500" />
-                  Proveedor más frecuente
-                </CardTitle>
+                <CardTitle className="text-sm font-medium text-slate-500">Última compra</CardTitle>
               </CardHeader>
-              <CardContent>
-                <p className="font-medium">{indicators.most_frequent_supplier}</p>
+              <CardContent className="space-y-1">
+                {last?.available && last.purchase ? (
+                  <>
+                    <div className="text-lg font-semibold">{formatDate(last.purchase.award_date)}</div>
+                    <Badge className={matchBadge(last.match_class)}>{last.match_class_label}</Badge>
+                    <div className="text-sm text-slate-700">{last.purchase.supplier_name || "—"}</div>
+                    <div className="text-sm font-medium">
+                      {last.purchase.awarded_amount != null
+                        ? formatCurrency(Number(last.purchase.awarded_amount), last.purchase.currency)
+                        : "Monto no disponible"}
+                    </div>
+                    <div className="text-xs text-slate-500">{last.purchase.process_code}</div>
+                    <SourceLink row={last.purchase} />
+                  </>
+                ) : (
+                  <p className="text-sm text-slate-500">Sin compra comparable verificable.</p>
+                )}
               </CardContent>
             </Card>
-          )}
 
-          {visibleMatches.length > 0 && (
-            <MatchesTable
-              title={`Misma institución — ${opportunity.institution}`}
-              matches={visibleMatches}
-            />
-          )}
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-slate-500">Proveedor más reciente</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-1">
+                {lastSup?.available ? (
+                  <>
+                    <div className="text-lg font-semibold leading-snug">{lastSup.supplier_name}</div>
+                    <div className="text-sm">{formatDate(lastSup.award_date)}</div>
+                    <div className="text-sm font-medium">
+                      {lastSup.awarded_amount != null
+                        ? formatCurrency(Number(lastSup.awarded_amount), lastSup.currency)
+                        : "—"}
+                    </div>
+                    <div className="text-xs text-slate-500">{lastSup.process_code}</div>
+                    {lastSup.source_url && (
+                      <a href={lastSup.source_url} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-sm text-sky-700 hover:underline">
+                        Abrir fuente <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-sm text-slate-500">Sin proveedor adjudicado reciente.</p>
+                )}
+              </CardContent>
+            </Card>
 
-          {visibleOther.length > 0 && (
-            <SimilarProcessesTable matches={visibleOther} />
-          )}
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-slate-500">Precio histórico</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-1">
+                {prices?.available ? (
+                  <>
+                    <div className="text-sm">Último: <span className="font-semibold">{formatCurrency(Number(prices.last_unit_price), prices.currency)}</span></div>
+                    <div className="text-sm">Promedio: {formatCurrency(Number(prices.avg_unit_price), prices.currency)}</div>
+                    <div className="text-sm">Rango: {formatCurrency(Number(prices.min_unit_price), prices.currency)} – {formatCurrency(Number(prices.max_unit_price), prices.currency)}</div>
+                    {prices.caveats?.[0] && <p className="text-xs text-amber-700">{prices.caveats[0]}</p>}
+                  </>
+                ) : (
+                  <p className="text-sm text-slate-500">Sin precios unitarios confiables.</p>
+                )}
+              </CardContent>
+            </Card>
 
-          {activeData && (activeData.other_institution_matches?.length ?? 0) === 0 && !isEmpty && (
-            <Card className="border-border/60">
-              <CardContent className="py-4 text-sm text-muted-foreground">
-                <p className="font-medium text-foreground">Procesos similares — otras instituciones</p>
-                <p className="mt-1 text-xs">
-                  No se encontraron procesos suficientemente similares
-                  actual. Solo se muestran coincidencias técnicas claras (misma familia de producto,
-                  palabras clave específicas o UNSPSC).
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-slate-500">Procesos similares</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-1">
+                <div className="text-lg font-semibold">{data.related_processes?.length ?? 0}</div>
+                <div className="text-sm text-slate-600">
+                  {data.statistics?.unique_processes ?? 0} procesos · {data.statistics?.unique_suppliers ?? 0} proveedores
+                </div>
+                <div className="text-xs text-slate-500">
+                  Calidad: <Badge className={qualityBadge(data.data_quality?.overall)}>{data.data_quality?.overall}</Badge>
+                </div>
+                {data.latency_ms != null && (
+                  <div className="text-xs text-slate-400">{data.latency_ms} ms · {data.indexed_lines_scanned} líneas escaneadas</div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {(last?.caveats?.length || data.budget_comparison?.caveats?.length) ? (
+            <div className="rounded-md border border-slate-200 bg-slate-50 p-3 text-xs text-slate-600 space-y-1">
+              {last?.caveats?.map((c) => <p key={c}>• {c}</p>)}
+              {data.budget_comparison?.available && (
+                <p>
+                  Presupuesto actual (estimado): {formatCurrency(Number(data.budget_comparison.current_estimated_amount), data.budget_comparison.current_currency)}
+                  {" · "}
+                  Última comparable (adjudicado): {formatCurrency(Number(data.budget_comparison.last_comparable_amount), data.budget_comparison.current_currency)}
+                  {data.budget_comparison.variation_pct != null && ` · Variación ${data.budget_comparison.variation_pct}%`}
                 </p>
-              </CardContent>
-            </Card>
-          )}
+              )}
+            </div>
+          ) : null}
 
-          {activeData && activeData.matches.length > 10 && !showAll && (
-            <Button size="sm" variant="ghost" onClick={() => setShowAll(true)}>
-              Ver más ({activeData.matches.length})
-            </Button>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  );
-}
-
-function SimilarProcessesTable({
-  matches,
-}: {
-  matches: DGCPHistoricalSimilarResponse["matches"];
-}) {
-  return (
-    <div className="space-y-2">
-      <p className="text-xs font-semibold uppercase text-muted-foreground">
-        Procesos similares — otras instituciones
-      </p>
-      <div className="overflow-x-auto rounded-lg border">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b bg-muted/40 text-left text-xs uppercase text-muted-foreground">
-              <th className="px-3 py-2">Código</th>
-              <th className="px-3 py-2">Institución</th>
-              <th className="px-3 py-2">Fecha</th>
-              <th className="px-3 py-2">Objeto</th>
-              <th className="px-3 py-2">Productos / ítems</th>
-              <th className="px-3 py-2">Score</th>
-              <th className="px-3 py-2">Por qué es similar</th>
-              <th className="px-3 py-2">Palabras coincidentes</th>
-              <th className="px-3 py-2">Fuente</th>
-              <th className="px-3 py-2" />
-            </tr>
-          </thead>
-          <tbody>
-            {matches.map((m) => (
-              <tr key={m.id} className="border-b border-border/40 hover:bg-muted/20 align-top">
-                <td className="px-3 py-2 font-mono text-xs whitespace-nowrap">{m.process_code}</td>
-                <td className="px-3 py-2 max-w-[140px] text-xs">{m.buyer_institution}</td>
-                <td className="px-3 py-2 whitespace-nowrap text-xs">
-                  {m.award_date ? formatDate(m.award_date) : "—"}
-                </td>
-                <td className="px-3 py-2 max-w-[180px] text-xs">
-                  {m.contract_object ?? m.item_description ?? "—"}
-                </td>
-                <td className="px-3 py-2 max-w-[160px] text-xs text-muted-foreground">
-                  {m.item_description ?? "—"}
-                </td>
-                <td className="px-3 py-2 whitespace-nowrap text-xs">
-                  <Badge variant="secondary" className="text-[10px]">
-                    {m.similarity_score} ({m.similarity_level})
-                  </Badge>
-                </td>
-                <td className="px-3 py-2 max-w-[180px] text-[10px] text-muted-foreground">
-                  {m.match_reasons.length > 0 ? m.match_reasons.join(" · ") : "—"}
-                </td>
-                <td className="px-3 py-2 max-w-[140px] text-[10px]">
-                  {(m.matched_keywords ?? []).length > 0
-                    ? (m.matched_keywords ?? []).join(", ")
-                    : "—"}
-                </td>
-                <td className="px-3 py-2">
-                  <Badge variant="outline" className="text-[10px] whitespace-nowrap">
-                    {m.source?.includes("dgcp") ? "DGCP" : m.source ?? "DGCP"}
-                  </Badge>
-                </td>
-                <td className="px-3 py-2">
-                  {m.contract_url ? (
-                    <a
-                      href={m.contract_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline inline-flex items-center gap-1 text-xs"
-                      title="Ver contrato en DGCP"
-                    >
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
-                  ) : null}
-                </td>
-              </tr>
+          <div className="flex flex-wrap gap-1 border-b border-slate-200 pb-1">
+            {(
+              [
+                ["resumen", "Resumen"],
+                ["compras", "Compras"],
+                ["proveedores", "Proveedores"],
+                ["productos", "Productos"],
+                ["precios", "Precios"],
+                ["relacionados", "Procesos relacionados"],
+              ] as const
+            ).map(([id, label]) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setTab(id)}
+                className={cn(
+                  "rounded-md px-3 py-1.5 text-sm",
+                  tab === id ? "bg-slate-900 text-white" : "text-slate-600 hover:bg-slate-100",
+                )}
+              >
+                {label}
+              </button>
             ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
+          </div>
 
-function MatchesTable({
-  title,
-  matches,
-  muted = false,
-}: {
-  title: string;
-  matches: DGCPHistoricalSimilarResponse["matches"];
-  muted?: boolean;
-}) {
-  return (
-    <div className="space-y-2">
-      <p className={cn("text-xs font-semibold uppercase", muted ? "text-muted-foreground" : "text-primary")}>
-        {title}
-      </p>
-      <div className="overflow-x-auto rounded-lg border">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b bg-muted/40 text-left text-xs uppercase text-muted-foreground">
-              <th className="px-3 py-2">Fecha adj.</th>
-              <th className="px-3 py-2">Institución</th>
-              <th className="px-3 py-2">Proceso</th>
-              <th className="px-3 py-2">Objeto / ítem</th>
-              <th className="px-3 py-2">Proveedor</th>
-              <th className="px-3 py-2">Monto</th>
-              <th className="px-3 py-2">Producto</th>
-              <th className="px-3 py-2">Fuente</th>
-              <th className="px-3 py-2">Días pub→adj</th>
-              <th className="px-3 py-2">Por qué coincide</th>
-              <th className="px-3 py-2" />
-            </tr>
-          </thead>
-          <tbody>
-            {matches.map((m) => (
-              <tr key={m.id} className="border-b border-border/40 hover:bg-muted/20 align-top">
-                <td className="px-3 py-2 whitespace-nowrap text-xs">
-                  {m.award_date ? formatDate(m.award_date) : "—"}
-                </td>
-                <td className="px-3 py-2 max-w-[140px] text-xs">{m.buyer_institution}</td>
-                <td className="px-3 py-2 font-mono text-xs whitespace-nowrap">{m.process_code}</td>
-                <td className="px-3 py-2 max-w-[200px] text-xs">
-                  <p className="line-clamp-2">{m.contract_object ?? m.item_description ?? "—"}</p>
-                </td>
-                <td className="px-3 py-2 max-w-[120px] truncate text-xs">{m.supplier_name ?? "—"}</td>
-                <td className="px-3 py-2 whitespace-nowrap text-xs">
-                  {m.awarded_amount ? formatCurrency(m.awarded_amount, "DOP") : "—"}
-                </td>
-                <td className="px-3 py-2 max-w-[160px] text-xs text-muted-foreground">
-                  {m.item_description ?? "—"}
-                  {m.quantity && m.unit_measure && (
-                    <span className="block text-[10px]">
-                      {m.quantity} {m.unit_measure}
-                    </span>
+          {tab === "resumen" && (
+            <div className="space-y-3">
+              {data.executive_summary?.paragraphs?.map((p) => (
+                <p key={p} className="text-sm leading-relaxed text-slate-700">{p}</p>
+              ))}
+              {data.frequency?.available && (
+                <div className="rounded-md border p-3 text-sm">
+                  <div className="font-medium mb-1">Frecuencia de compra</div>
+                  <p>{data.frequency.summary}</p>
+                  {data.frequency.temporal_pattern && (
+                    <p className="mt-1 text-slate-600">{data.frequency.temporal_pattern}</p>
                   )}
-                </td>
-                <td className="px-3 py-2">
-                  <Badge variant="outline" className="text-[10px] whitespace-nowrap">
-                    DGCP
-                  </Badge>
-                </td>
-                <td className="px-3 py-2 text-xs whitespace-nowrap">
-                  {m.publication_to_award_days != null ? `${m.publication_to_award_days} d` : "—"}
-                </td>
-                <td className="px-3 py-2 max-w-[180px] text-[10px] text-muted-foreground">
-                  {m.match_reasons.length > 0 ? m.match_reasons.join(" · ") : "—"}
-                </td>
-                <td className="px-3 py-2">
-                  {m.contract_url ? (
-                    <a
-                      href={m.contract_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline inline-flex items-center gap-1 text-xs"
-                      title="Ver contrato en DGCP"
-                    >
-                      <ExternalLink className="h-3.5 w-3.5" />
-                    </a>
-                  ) : null}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                </div>
+              )}
+              {data.concentration && (
+                <div className="rounded-md border p-3 text-sm">
+                  <div className="font-medium mb-1">Concentración de proveedores: {data.concentration.level}</div>
+                  <p>
+                    Top 1: {data.concentration.top1_share_pct ?? "—"}% · Top 3: {data.concentration.top3_share_pct ?? "—"}%
+                  </p>
+                  <p className="text-xs text-slate-500 mt-1">{data.concentration.note}</p>
+                </div>
+              )}
+              <p className="text-xs text-slate-500">{data.message}</p>
+            </div>
+          )}
+
+          {tab === "compras" && (
+            <PurchasesTable rows={data.institution_purchases || []} />
+          )}
+
+          {tab === "proveedores" && (
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="border-b text-left text-slate-500">
+                    <th className="py-2 pr-3">Proveedor</th>
+                    <th className="py-2 pr-3">RPE</th>
+                    <th className="py-2 pr-3">Adjudicaciones</th>
+                    <th className="py-2 pr-3">Monto total</th>
+                    <th className="py-2 pr-3">Última</th>
+                    <th className="py-2">Participación</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(data.suppliers_ranking || []).map((s) => (
+                    <tr key={s.supplier_name} className="border-b border-slate-100">
+                      <td className="py-2 pr-3 font-medium">{s.supplier_name}</td>
+                      <td className="py-2 pr-3">{s.supplier_rpe || "—"}</td>
+                      <td className="py-2 pr-3">{s.awards_count}</td>
+                      <td className="py-2 pr-3">{formatCurrency(Number(s.total_amount), s.currency)}</td>
+                      <td className="py-2 pr-3">{formatDate(s.last_award_date)}</td>
+                      <td className="py-2">
+                        <span className="inline-flex items-center gap-1">
+                          {s.share_pct}%
+                          {s === data.suppliers_ranking?.[0] && <Trophy className="h-3.5 w-3.5 text-amber-500" />}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {!data.suppliers_ranking?.length && (
+                <p className="text-sm text-slate-500">Sin proveedores en la ventana.</p>
+              )}
+            </div>
+          )}
+
+          {tab === "productos" && (
+            <div className="space-y-3">
+              {(data.product_lines || []).map((pl) => (
+                <div key={`${pl.line_number}-${pl.requested_description.slice(0, 24)}`} className="rounded-md border p-3">
+                  <div className="text-sm font-medium">#{pl.line_number} · {pl.requested_description}</div>
+                  {pl.last_purchase ? (
+                    <div className="mt-2 grid gap-1 text-sm text-slate-700 md:grid-cols-2">
+                      <div>
+                        <Badge className={matchBadge(pl.match_class)}>{pl.match_class}</Badge>
+                        {pl.similarity_pct != null && <span className="ml-2 text-xs">{pl.similarity_pct}% similitud</span>}
+                      </div>
+                      <div>{pl.last_purchase.supplier_name}</div>
+                      <div>{formatDate(pl.last_purchase.award_date)}</div>
+                      <div>
+                        {pl.last_purchase.unit_price != null
+                          ? `${formatCurrency(Number(pl.last_purchase.unit_price), pl.last_purchase.currency)} /u`
+                          : "Sin precio unitario"}
+                        {pl.last_purchase.quantity != null ? ` · qty ${pl.last_purchase.quantity}` : ""}
+                      </div>
+                      <div className="md:col-span-2 text-xs text-slate-500">{pl.last_purchase.process_code}</div>
+                      <SourceLink row={pl.last_purchase} />
+                    </div>
+                  ) : (
+                    <p className="mt-1 text-sm text-slate-500">Sin compra histórica comparable para esta línea.</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          {tab === "precios" && (
+            <div className="overflow-x-auto">
+              <table className="min-w-full text-sm">
+                <thead>
+                  <tr className="border-b text-left text-slate-500">
+                    <th className="py-2 pr-3">Fecha</th>
+                    <th className="py-2 pr-3">Proveedor</th>
+                    <th className="py-2 pr-3">Cantidad</th>
+                    <th className="py-2 pr-3">Precio unitario</th>
+                    <th className="py-2 pr-3">Monto</th>
+                    <th className="py-2">Proceso</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(prices?.points || []).map((p, idx) => (
+                    <tr key={`${p.process_code}-${idx}`} className="border-b border-slate-100">
+                      <td className="py-2 pr-3">{formatDate(p.award_date)}</td>
+                      <td className="py-2 pr-3">{p.supplier_name || "—"}</td>
+                      <td className="py-2 pr-3">{p.quantity ?? "—"}</td>
+                      <td className="py-2 pr-3">{p.unit_price != null ? formatCurrency(Number(p.unit_price), prices?.currency) : "—"}</td>
+                      <td className="py-2 pr-3">{p.awarded_amount != null ? formatCurrency(Number(p.awarded_amount), prices?.currency) : "—"}</td>
+                      <td className="py-2">
+                        {p.source_url ? (
+                          <a href={p.source_url} target="_blank" rel="noreferrer" className="text-sky-700 hover:underline">{p.process_code}</a>
+                        ) : (
+                          p.process_code
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {!prices?.points?.length && <p className="text-sm text-slate-500">Sin serie de precios.</p>}
+            </div>
+          )}
+
+          {tab === "relacionados" && <PurchasesTable rows={data.related_processes || []} showInstitution />}
+        </>
+      )}
     </div>
   );
 }
 
-function MetricCard({ label, value }: { label: string; value: string }) {
+function PurchasesTable({
+  rows,
+  showInstitution = false,
+}: {
+  rows: DGCPHistoricalPurchaseRow[];
+  showInstitution?: boolean;
+}) {
+  if (!rows.length) {
+    return <p className="text-sm text-slate-500">Sin compras en esta vista.</p>;
+  }
   return (
-    <div className="rounded-lg border border-border/60 p-3">
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p className="text-lg font-semibold">{value}</p>
+    <div className="overflow-x-auto">
+      <table className="min-w-full text-sm">
+        <thead>
+          <tr className="border-b text-left text-slate-500">
+            <th className="py-2 pr-3">Fecha</th>
+            <th className="py-2 pr-3">Proceso</th>
+            {showInstitution && <th className="py-2 pr-3">Institución</th>}
+            <th className="py-2 pr-3">Descripción</th>
+            <th className="py-2 pr-3">Proveedor</th>
+            <th className="py-2 pr-3">RPE</th>
+            <th className="py-2 pr-3">Monto</th>
+            <th className="py-2 pr-3">Cant.</th>
+            <th className="py-2 pr-3">P. unit.</th>
+            <th className="py-2 pr-3">Match</th>
+            <th className="py-2">Calidad</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.award_id} className="border-b border-slate-100 align-top">
+              <td className="py-2 pr-3 whitespace-nowrap">{formatDate(r.award_date)}</td>
+              <td className="py-2 pr-3">
+                {r.source?.contract_url || r.source?.process_url ? (
+                  <a
+                    href={r.source.contract_url || r.source.process_url || undefined}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sky-700 hover:underline"
+                  >
+                    {r.process_code}
+                  </a>
+                ) : (
+                  r.process_code
+                )}
+              </td>
+              {showInstitution && <td className="py-2 pr-3 max-w-[140px]">{r.institution}</td>}
+              <td className="py-2 pr-3 max-w-[220px]">{r.description || "—"}</td>
+              <td className="py-2 pr-3">{r.supplier_name || "—"}</td>
+              <td className="py-2 pr-3">{r.supplier_rpe || "—"}</td>
+              <td className="py-2 pr-3 whitespace-nowrap">
+                {r.awarded_amount != null ? formatCurrency(Number(r.awarded_amount), r.currency) : "—"}
+              </td>
+              <td className="py-2 pr-3">{r.quantity ?? "—"}</td>
+              <td className="py-2 pr-3">
+                {r.unit_price != null ? formatCurrency(Number(r.unit_price), r.currency) : "—"}
+              </td>
+              <td className="py-2 pr-3">
+                <Badge className={matchBadge(r.match_class)}>{r.match_class}</Badge>
+              </td>
+              <td className="py-2">
+                <Badge className={qualityBadge(r.data_quality)}>{r.data_quality}</Badge>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

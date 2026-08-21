@@ -122,8 +122,20 @@ export default function AdminUsuariosPage() {
     }
     setBusy(true);
     try {
-      const res = await apiClient.setAdminUserStatus(user.id, activate);
-      showOk(res.message || (activate ? "Usuario activado correctamente." : "Usuario desactivado correctamente."));
+      let message =
+        activate ? "Usuario activado correctamente." : "Usuario desactivado correctamente.";
+      try {
+        const res = await apiClient.setAdminUserStatus(user.id, activate);
+        message = res.message || message;
+      } catch {
+        // Fallback si PATCH /status no está disponible en un nodo viejo.
+        await apiClient.updateAdminUser(user.id, { is_active: activate });
+      }
+      // Optimistic UI so Activar reflects immediately even if list reload lags.
+      setUsers((prev) =>
+        prev.map((u) => (u.id === user.id ? { ...u, is_active: activate } : u)),
+      );
+      showOk(message);
       await load();
     } catch (e) {
       showErr(e, "No se pudo actualizar el usuario.");
@@ -348,10 +360,11 @@ export default function AdminUsuariosPage() {
         )}
 
         <Card>
-          <CardContent className="pt-6 overflow-x-auto">
+          <CardContent className="pt-6">
             {loading ? (
               <p className="text-sm text-muted-foreground">Cargando…</p>
             ) : (
+              <div className="overflow-x-auto overflow-y-visible">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-muted-foreground border-b">
@@ -399,7 +412,17 @@ export default function AdminUsuariosPage() {
                         </td>
                         {canMutate && (
                           <td className="py-2">
-                            <div className="relative flex items-center gap-1">
+                            <div className="relative flex flex-wrap items-center gap-1">
+                              {!u.is_active && (
+                                <Button
+                                  size="sm"
+                                  data-testid={`admin-activate-btn-${u.id}`}
+                                  disabled={busy}
+                                  onClick={() => void handleStatus(u, true)}
+                                >
+                                  Activar
+                                </Button>
+                              )}
                               <Button
                                 size="sm"
                                 variant="outline"
@@ -412,6 +435,7 @@ export default function AdminUsuariosPage() {
                                 size="sm"
                                 variant="ghost"
                                 aria-label="Más acciones"
+                                data-testid={`admin-more-btn-${u.id}`}
                                 onClick={() =>
                                   setMenuUserId((id) => (id === u.id ? null : u.id))
                                 }
@@ -419,7 +443,7 @@ export default function AdminUsuariosPage() {
                                 <MoreHorizontal className="h-4 w-4" />
                               </Button>
                               {menuUserId === u.id && (
-                                <div className="absolute right-0 top-8 z-20 min-w-[180px] rounded-md border bg-background p-1 shadow-md">
+                                <div className="absolute right-0 top-8 z-50 min-w-[180px] rounded-md border bg-background p-1 shadow-md">
                                   <button
                                     type="button"
                                     className="block w-full rounded px-2 py-1.5 text-left text-xs hover:bg-muted"
@@ -479,6 +503,7 @@ export default function AdminUsuariosPage() {
                   })}
                 </tbody>
               </table>
+              </div>
             )}
           </CardContent>
         </Card>

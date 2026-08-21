@@ -95,6 +95,19 @@ async def disable_admin_user(
         raise HTTPException(status_code=400, detail=str(e)) from e
 
 
+@router.post("/users/{user_id}/enable", response_model=AdminUserStatusResponse)
+async def enable_admin_user(
+    db: DbSession, user: AdminMutator, _: TenantCtx, user_id: uuid.UUID
+) -> AdminUserStatusResponse:
+    try:
+        resp = await _svc(db, user).set_user_status(user_id, AdminUserStatusRequest(is_active=True))
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    if not resp:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return resp
+
+
 @router.patch("/users/{user_id}/status", response_model=AdminUserStatusResponse)
 async def set_admin_user_status(
     db: DbSession,

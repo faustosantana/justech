@@ -413,7 +413,18 @@ export default function AdminUsuariosPage() {
                         {canMutate && (
                           <td className="py-2">
                             <div className="relative flex flex-wrap items-center gap-1">
-                              {!u.is_active && (
+                              {u.is_active ? (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  data-testid={`admin-deactivate-btn-${u.id}`}
+                                  disabled={busy}
+                                  className="text-destructive border-destructive/40 hover:bg-destructive/10"
+                                  onClick={() => void handleStatus(u, false)}
+                                >
+                                  Desactivar
+                                </Button>
+                              ) : (
                                 <Button
                                   size="sm"
                                   data-testid={`admin-activate-btn-${u.id}`}
@@ -469,30 +480,6 @@ export default function AdminUsuariosPage() {
                                   >
                                     Cambiar contraseña
                                   </button>
-                                  <button
-                                    type="button"
-                                    className="block w-full rounded px-2 py-1.5 text-left text-xs hover:bg-muted"
-                                    onClick={() => void openCompanyEdit(u)}
-                                  >
-                                    Empresas
-                                  </button>
-                                  {u.is_active ? (
-                                    <button
-                                      type="button"
-                                      className="block w-full rounded px-2 py-1.5 text-left text-xs text-destructive hover:bg-muted"
-                                      onClick={() => void handleStatus(u, false)}
-                                    >
-                                      Desactivar
-                                    </button>
-                                  ) : (
-                                    <button
-                                      type="button"
-                                      className="block w-full rounded px-2 py-1.5 text-left text-xs hover:bg-muted"
-                                      onClick={() => void handleStatus(u, true)}
-                                    >
-                                      Activar
-                                    </button>
-                                  )}
                                 </div>
                               )}
                             </div>

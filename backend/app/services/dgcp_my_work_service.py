@@ -299,6 +299,11 @@ class DGCPMyWorkService:
             ids.add(rid)
         names = await self._user_names(ids)
         next_t = self._next_pending(tasks)
+        open_for_resp = 0
+        if rid:
+            open_for_resp = sum(
+                1 for t in tasks if t.assigned_user_id == rid and t.status in OPEN_TASK_STATUSES
+            )
         return PrepChecklistResponse(
             opportunity_id=opportunity_id,
             process_deadline=_deadline_as_dt(opp.deadline),
@@ -307,7 +312,132 @@ class DGCPMyWorkService:
             progress=self._progress(tasks),
             next_pending=self._task_out(next_t, names) if next_t else None,
             items=[self._task_out(t, names) for t in tasks],
+            open_tasks_assigned_to_responsible=open_for_resp,
         )
+
+    async def set_responsible(
+        self,
+        opportunity_id: uuid.UUID,
+        *,
+        responsible_user_id: uuid.UUID | None,
+        reassign_open_tasks: bool = False,
+    ):
+        from app.schemas.dgcp_preparation import SetResponsibleResponse
+
+        opp = await self._get_opp(opportunity_id)
+        previous = self._responsible_id(opp)
+        info = dict(opp.full_info or {})
+        if responsible_user_id:
+            info["responsible_user_id"] = str(responsible_user_id)
+            names = await self._user_names({responsible_user_id})
+            info["responsible_name"] = names.get(responsible_user_id)
+        else:
+            info.pop("responsible_user_id", None)
+            info.pop("responsible_name", None)
+        opp.full_info = info
+
+        open_prev = 0
+        reassigned = 0
+        notification_sent = False
+        now = datetime.now(UTC)
+        tasks = await self.list_tasks_for_opportunity(opportunity_id)
+        if previous:
+            open_prev = sum(
+                1 for t in tasks if t.assigned_user_id == previous and t.status in OPEN_TASK_STATUSES
+            )
+
+        if reassign_open_tasks and responsible_user_id and previous and previous != responsible_user_id:
+            for t in tasks:
+                if t.status not in OPEN_TASK_STATUSES:
+                    continue
+                if t.assigned_user_id != previous:
+                    continue
+                prev_assignee = t.assigned_user_id
+                t.assigned_user_id = responsible_user_id
+                meta = dict(t.meta or {})
+                history = list(meta.get("reassignment_history") or [])
+                history.append(
+                    {
+                        "previous_assigned_user_id": str(prev_assignee) if prev_assignee else None,
+                        "new_assigned_user_id": str(responsible_user_id),
+                        "reassigned_by": str(self.user_id),
+                        "reassigned_at": now.isoformat(),
+                        "reason": "responsible_change",
+                    }
+                )
+                meta["reassignment_history"] = history
+                meta["previous_assigned_user_id"] = str(prev_assignee) if prev_assignee else None
+                meta["new_assigned_user_id"] = str(responsible_user_id)
+                meta["reassigned_by"] = str(self.user_id)
+                meta["reassigned_at"] = now.isoformat()
+                t.meta = meta
+                reassigned += 1
+
+            if reassigned > 0:
+                notification_sent = await self._notify_reassignment(
+                    user_id=responsible_user_id,
+                    opportunity_id=opportunity_id,
+                    opportunity_code=opp.code,
+                    count=reassigned,
+                )
+
+        await self.db.flush()
+        checklist = await self.get_checklist(opportunity_id)
+        return SetResponsibleResponse(
+            checklist=checklist,
+            previous_responsible_user_id=previous,
+            new_responsible_user_id=responsible_user_id,
+            open_tasks_previous_responsible=open_prev,
+            reassigned_count=reassigned,
+            reassign_open_tasks=reassign_open_tasks,
+            notification_sent=notification_sent,
+        )
+
+    async def _notify_reassignment(
+        self,
+        *,
+        user_id: uuid.UUID,
+        opportunity_id: uuid.UUID,
+        opportunity_code: str,
+        count: int,
+    ) -> bool:
+        """Una sola notificación interna al nuevo responsable (con dedup)."""
+        alert_type = "prep_reassigned_batch"
+        deadline_key = datetime.now(UTC).strftime("%Y%m%d%H")
+        dedup = f"{user_id}:{opportunity_id}:-:{alert_type}:{deadline_key}:{count}"
+        exists = (
+            await self.db.execute(
+                select(DGCPPrepAlertLog).where(
+                    DGCPPrepAlertLog.tenant_id == self.tenant_id,
+                    DGCPPrepAlertLog.dedup_key == dedup,
+                )
+            )
+        ).scalar_one_or_none()
+        if exists:
+            return False
+        notif = NotificationService(self.db, self.tenant_id)
+        n = await notif.create(
+            user_id=user_id,
+            title=f"Se te asignaron {count} pendientes de {opportunity_code}"[:255],
+            message=f"Reasignación por cambio de responsable · {opportunity_code}",
+            type=NotificationType.DGCP_DEADLINE.value,
+            severity="info",
+            related_entity_type="dgcp_opportunity",
+            related_entity_id=str(opportunity_id),
+        )
+        self.db.add(
+            DGCPPrepAlertLog(
+                tenant_id=self.tenant_id,
+                dedup_key=dedup,
+                user_id=user_id,
+                opportunity_id=opportunity_id,
+                task_id=None,
+                alert_type=alert_type,
+                deadline_key=deadline_key,
+                notification_id=getattr(n, "id", None),
+            )
+        )
+        return True
 
     async def create_task(self, opportunity_id: uuid.UUID, data: PrepTaskCreate) -> PrepTaskOut:
         await self._get_opp(opportunity_id)
@@ -437,31 +567,6 @@ class DGCPMyWorkService:
             skipped_duplicates=skipped,
             items=checklist.items,
         )
-
-    async def set_responsible(
-        self,
-        opportunity_id: uuid.UUID,
-        *,
-        responsible_user_id: uuid.UUID | None,
-        reassign_open_tasks: bool = False,
-    ) -> PrepChecklistResponse:
-        opp = await self._get_opp(opportunity_id)
-        info = dict(opp.full_info or {})
-        if responsible_user_id:
-            info["responsible_user_id"] = str(responsible_user_id)
-            names = await self._user_names({responsible_user_id})
-            info["responsible_name"] = names.get(responsible_user_id)
-        else:
-            info.pop("responsible_user_id", None)
-            info.pop("responsible_name", None)
-        opp.full_info = info
-        if reassign_open_tasks and responsible_user_id:
-            tasks = await self.list_tasks_for_opportunity(opportunity_id)
-            for t in tasks:
-                if t.status in OPEN_TASK_STATUSES:
-                    t.assigned_user_id = responsible_user_id
-        await self.db.flush()
-        return await self.get_checklist(opportunity_id)
 
     # ── Mis Licitaciones / Hoy / Mis Pendientes ──────────────
 

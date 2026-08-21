@@ -91,6 +91,17 @@ export interface PrepChecklistResponse {
   progress: ChecklistProgress;
   next_pending?: PrepTask | null;
   items: PrepTask[];
+  open_tasks_assigned_to_responsible?: number;
+}
+
+export interface SetResponsibleResponse {
+  checklist: PrepChecklistResponse;
+  previous_responsible_user_id?: string | null;
+  new_responsible_user_id?: string | null;
+  open_tasks_previous_responsible: number;
+  reassigned_count: number;
+  reassign_open_tasks: boolean;
+  notification_sent: boolean;
 }
 
 export interface ApplyTemplateResponse {

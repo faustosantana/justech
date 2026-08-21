@@ -356,6 +356,9 @@ export function DGCPPrepPanel({ opportunityId }: { opportunityId: string }) {
   const [dueAt, setDueAt] = useState("");
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [users, setUsers] = useState<Array<{ id: string; email: string; full_name: string }>>([]);
+  const [pendingResponsibleId, setPendingResponsibleId] = useState<string | null>(null);
+  const [confirmOpen, setConfirmOpen] = useState(false);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -371,6 +374,15 @@ export function DGCPPrepPanel({ opportunityId }: { opportunityId: string }) {
   useEffect(() => {
     void load();
   }, [load]);
+
+  useEffect(() => {
+    void apiClient
+      .getTenantUsers({ limit: 100 })
+      .then((r) => {
+        setUsers((r.items || []).map((u) => ({ id: u.id, email: u.email, full_name: u.full_name })));
+      })
+      .catch(() => undefined);
+  }, []);
 
   const applyTpl = async () => {
     setBusy(true);
@@ -403,6 +415,43 @@ export function DGCPPrepPanel({ opportunityId }: { opportunityId: string }) {
     }
   };
 
+  const commitResponsible = async (nextId: string, reassign: boolean) => {
+    setBusy(true);
+    setMsg(null);
+    setConfirmOpen(false);
+    try {
+      const res = await apiClient.setDGCPPrepResponsible(opportunityId, {
+        responsible_user_id: nextId || null,
+        reassign_open_tasks: reassign,
+      });
+      setData(res.checklist);
+      if (reassign) {
+        setMsg(
+          `Responsable actualizado. Reasignados ${res.reassigned_count} pendientes` +
+            (res.notification_sent ? " · notificación enviada" : ""),
+        );
+      } else {
+        setMsg("Responsable actualizado. Asignaciones de tareas mantenidas.");
+      }
+    } catch (e) {
+      setMsg(e instanceof Error ? e.message : "Error al cambiar responsable");
+    } finally {
+      setBusy(false);
+      setPendingResponsibleId(null);
+    }
+  };
+
+  const requestResponsibleChange = (nextId: string) => {
+    if (nextId === (data?.responsible_user_id || "")) return;
+    const openCount = data?.open_tasks_assigned_to_responsible || 0;
+    if (nextId && openCount > 0) {
+      setPendingResponsibleId(nextId);
+      setConfirmOpen(true);
+      return;
+    }
+    void commitResponsible(nextId, false);
+  };
+
   if (loading && !data) {
     return (
       <p className="flex items-center gap-2 text-sm text-slate-500">
@@ -411,15 +460,30 @@ export function DGCPPrepPanel({ opportunityId }: { opportunityId: string }) {
     );
   }
 
+  const openPrev = data?.open_tasks_assigned_to_responsible || 0;
+
   return (
     <div className="space-y-3 rounded-lg border p-4">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <h3 className="font-semibold text-slate-900">Preparación</h3>
-          <p className="text-xs text-slate-500">
-            Responsable: {data?.responsible_name || "Sin asignar"} · Deadline proceso:{" "}
-            {formatDateTime(data?.process_deadline)}
-          </p>
+          <p className="text-xs text-slate-500">Deadline proceso: {formatDateTime(data?.process_deadline)}</p>
+          <div className="mt-2 flex flex-wrap items-center gap-2">
+            <label className="text-xs text-slate-500">Responsable principal</label>
+            <select
+              className="rounded border px-2 py-1 text-sm"
+              disabled={busy}
+              value={data?.responsible_user_id || ""}
+              onChange={(e) => requestResponsibleChange(e.target.value)}
+            >
+              <option value="">Sin asignar</option>
+              {users.map((u) => (
+                <option key={u.id} value={u.id}>
+                  {u.full_name || u.email}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={() => void applyTpl()} disabled={busy}>
@@ -430,6 +494,41 @@ export function DGCPPrepPanel({ opportunityId }: { opportunityId: string }) {
           </Button>
         </div>
       </div>
+
+      {confirmOpen && pendingResponsibleId && (
+        <div className="rounded border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">
+          <p className="font-medium">
+            Hay {openPrev} pendientes abiertos asignados al responsable anterior.
+          </p>
+          <p className="mt-1 text-xs text-amber-800">
+            Solo se reasignan Pendiente / En proceso. Completado y No aplica no se tocan.
+          </p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <Button size="sm" disabled={busy} onClick={() => void commitResponsible(pendingResponsibleId, true)}>
+              Reasignar pendientes abiertos al nuevo responsable
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={busy}
+              onClick={() => void commitResponsible(pendingResponsibleId, false)}
+            >
+              Mantener asignaciones actuales
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              disabled={busy}
+              onClick={() => {
+                setConfirmOpen(false);
+                setPendingResponsibleId(null);
+              }}
+            >
+              Cancelar
+            </Button>
+          </div>
+        </div>
+      )}
 
       {data && (
         <>

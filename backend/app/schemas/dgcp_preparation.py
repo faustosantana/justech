@@ -126,6 +126,7 @@ class PrepChecklistResponse(BaseModel):
     progress: ChecklistProgress
     next_pending: PrepTaskOut | None = None
     items: list[PrepTaskOut]
+    open_tasks_assigned_to_responsible: int = 0
 
 
 class ApplyTemplateRequest(BaseModel):
@@ -169,6 +170,16 @@ class TemplateOut(BaseModel):
 class SetResponsibleRequest(BaseModel):
     responsible_user_id: UUID | None = None
     reassign_open_tasks: bool = False
+
+
+class SetResponsibleResponse(BaseModel):
+    checklist: PrepChecklistResponse
+    previous_responsible_user_id: UUID | None = None
+    new_responsible_user_id: UUID | None = None
+    open_tasks_previous_responsible: int = 0
+    reassigned_count: int = 0
+    reassign_open_tasks: bool = False
+    notification_sent: bool = False
 
 
 class AlertScanResponse(BaseModel):

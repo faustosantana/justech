@@ -1126,7 +1126,7 @@ export const apiClient = {
     opportunityId: string,
     body: { responsible_user_id?: string | null; reassign_open_tasks?: boolean },
   ) =>
-    request<import("./dgcp-my-work").PrepChecklistResponse>(
+    request<import("./dgcp-my-work").SetResponsibleResponse>(
       `/dgcp/my-work/opportunities/${opportunityId}/responsible`,
       { method: "POST", body: JSON.stringify(body) },
       true,

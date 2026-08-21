@@ -20,6 +20,7 @@ from app.schemas.dgcp_preparation import (
     PrepTaskOut,
     PrepTaskUpdate,
     SetResponsibleRequest,
+    SetResponsibleResponse,
     TemplateCreate,
     TemplateOut,
 )
@@ -156,7 +157,7 @@ async def apply_checklist_template(
 
 @router.post(
     "/opportunities/{opportunity_id}/responsible",
-    response_model=PrepChecklistResponse,
+    response_model=SetResponsibleResponse,
     dependencies=DGCP_MUTATE,
 )
 async def set_responsible(
@@ -165,7 +166,7 @@ async def set_responsible(
     db: DbSession,
     user: CurrentUser,
     _: TenantCtx,
-) -> PrepChecklistResponse:
+) -> SetResponsibleResponse:
     try:
         out = await _svc(db, user).set_responsible(
             opportunity_id,

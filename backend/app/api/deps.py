@@ -7,11 +7,10 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.admin_permissions import can_mutate_admin, can_view_admin
-from app.core.auth_trace import record_auth_reject
+from app.core.admin_permissions import can_mutate_admin, can_view_admin, normalize_roles
 from app.core.exceptions import forbidden, unauthorized
 from app.core.permissions import PermissionContext, build_permission_context, evaluate_permission_requirement
-from app.core.security import classify_access_token, verify_access_token
+from app.core.security import verify_access_token
 from app.core.tenant import get_current_role, parse_tenant_header, require_tenant_context, set_tenant_context
 from app.db.session import get_db
 from app.models.tenant import TenantMembership
@@ -25,79 +24,40 @@ DbSession = Annotated[AsyncSession, Depends(get_db)]
 
 
 async def get_current_user_optional(
-    request: Request,
     db: DbSession,
     credentials: HTTPAuthorizationCredentials | None = Depends(security),
 ) -> User | None:
     if not credentials:
-        request.state.auth_reject_reason = "token_missing"
-        request.state.auth_token_present = False
         return None
-    payload, reason = classify_access_token(credentials.credentials)
+    payload = verify_access_token(credentials.credentials)
     if not payload:
-        request.state.auth_reject_reason = reason or "token_malformed"
-        request.state.auth_token_present = True
         return None
     try:
         user_id = uuid.UUID(payload["sub"])
     except (ValueError, TypeError, KeyError):
-        request.state.auth_reject_reason = "subject_missing"
-        request.state.auth_token_present = True
         return None
     result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
-    if user is None:
-        request.state.auth_reject_reason = "user_not_found"
-        request.state.auth_subject = str(user_id)
-        request.state.auth_token_present = True
+    if user is None or not user.is_active:
         return None
-    if not user.is_active:
-        request.state.auth_reject_reason = "user_inactive"
-        request.state.auth_subject = str(user_id)
-        request.state.auth_token_present = True
-        return None
-    # Invalidate access tokens issued before password reset / credential bump.
+    # Invalidate tokens after password reset / deactivate credential bump.
     token_cv = payload.get("cv")
     user_cv = int(getattr(user, "credentials_version", 0) or 0)
     if token_cv is not None:
         try:
             if int(token_cv) != user_cv:
-                request.state.auth_reject_reason = "credentials_stale"
-                request.state.auth_subject = str(user_id)
-                request.state.auth_token_present = True
                 return None
         except (TypeError, ValueError):
-            request.state.auth_reject_reason = "credentials_stale"
-            request.state.auth_subject = str(user_id)
-            request.state.auth_token_present = True
             return None
     elif user_cv > 0:
-        # Tokens without cv issued before this hotfix: reject only after a reset bumped version.
-        request.state.auth_reject_reason = "credentials_stale"
-        request.state.auth_subject = str(user_id)
-        request.state.auth_token_present = True
         return None
-    request.state.auth_reject_reason = None
-    request.state.auth_subject = str(user_id)
-    request.state.auth_token_present = True
     return user
 
 
 async def get_current_user(
-    request: Request,
     user: Annotated[User | None, Depends(get_current_user_optional)],
 ) -> User:
     if not user:
-        reason = getattr(request.state, "auth_reject_reason", None) or "unknown_auth_error"
-        record_auth_reject(
-            reason=reason,
-            path=getattr(request.url, "path", None),
-            correlation_id=request.headers.get("X-Correlation-Id")
-            or request.headers.get("X-Request-Id"),
-            token_present=bool(getattr(request.state, "auth_token_present", False)),
-            subject=getattr(request.state, "auth_subject", None),
-            user_lookup=reason if reason in {"user_not_found", "user_inactive"} else None,
-        )
         raise unauthorized()
     return user
 
@@ -148,28 +108,28 @@ async def resolve_tenant_context(
 TenantCtx = Annotated[None, Depends(resolve_tenant_context)]
 
 
+async def _membership_roles(db: AsyncSession, tenant_id: uuid.UUID | None, user_id: uuid.UUID) -> list[str] | None:
+    if not tenant_id:
+        return None
+    result = await db.execute(
+        select(TenantMembership).where(
+            TenantMembership.tenant_id == tenant_id,
+            TenantMembership.user_id == user_id,
+        )
+    )
+    membership = result.scalar_one_or_none()
+    if not membership:
+        return None
+    return normalize_roles(list(getattr(membership, "roles", None) or []), fallback=membership.role)
+
+
 async def require_admin_viewer(
     user: Annotated[User, Depends(get_current_user)],
     db: DbSession,
     _: TenantCtx,
 ) -> User:
     ctx = require_tenant_context()
-    roles: list[str] | None = None
-    if ctx.tenant_id:
-        result = await db.execute(
-            select(TenantMembership).where(
-                TenantMembership.tenant_id == ctx.tenant_id,
-                TenantMembership.user_id == user.id,
-            )
-        )
-        membership = result.scalar_one_or_none()
-        if membership:
-            from app.core.admin_permissions import normalize_roles
-
-            roles = normalize_roles(
-                list(getattr(membership, "roles", None) or []),
-                fallback=membership.role,
-            )
+    roles = await _membership_roles(db, ctx.tenant_id, user.id)
     if not can_view_admin(get_current_role(), user.is_superadmin, roles=roles):
         raise forbidden("Acceso restringido al Centro de Administración")
     return user
@@ -181,22 +141,7 @@ async def require_admin_mutator(
     _: TenantCtx,
 ) -> User:
     ctx = require_tenant_context()
-    roles: list[str] | None = None
-    if ctx.tenant_id:
-        result = await db.execute(
-            select(TenantMembership).where(
-                TenantMembership.tenant_id == ctx.tenant_id,
-                TenantMembership.user_id == user.id,
-            )
-        )
-        membership = result.scalar_one_or_none()
-        if membership:
-            from app.core.admin_permissions import normalize_roles
-
-            roles = normalize_roles(
-                list(getattr(membership, "roles", None) or []),
-                fallback=membership.role,
-            )
+    roles = await _membership_roles(db, ctx.tenant_id, user.id)
     if not can_mutate_admin(get_current_role(), user.is_superadmin, roles=roles):
         raise forbidden("Permisos insuficientes para modificar administración")
     return user
@@ -214,12 +159,6 @@ def RequirePermission(
     require_all: bool = True,
     company_param: str | None = None,
 ) -> Callable:
-    """Factory de dependencia FastAPI para permisos por acción, módulo y (futuro) empresa.
-
-    - 401: sin usuario autenticado (via ``get_current_user``).
-    - 403: usuario autenticado sin permiso suficiente.
-    """
-
     async def _require_permission(
         request: Request,
         user: Annotated[User, Depends(get_current_user)],
@@ -249,7 +188,6 @@ def RequirePermission(
     return _require_permission
 
 
-# Alias tipados para PR-1.3b (opt-in por router; no aplicados globalmente)
 RequireViewDgcp = Annotated[PermissionContext, Depends(RequirePermission("view_dgcp"))]
 RequireViewOdoo = Annotated[PermissionContext, Depends(RequirePermission("view_odoo"))]
 RequireViewM365 = Annotated[PermissionContext, Depends(RequirePermission("view_m365"))]

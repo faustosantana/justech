@@ -27,6 +27,7 @@ class AdminUserResponse(BaseModel):
     supervisor_id: uuid.UUID | None = None
     supervisor_name: str | None = None
     visible_company_ids: list[int] = Field(default_factory=list)
+    allowed_modules: list[str] | None = None
     odoo_user_id: int | None = None
     m365_prepared: bool = False
     m365_connection_status: str | None = None
@@ -45,11 +46,11 @@ class AdminUserCreateRequest(BaseModel):
     password: str = Field(min_length=8)
     role: str | None = None
     roles: list[str] | None = None
+    is_active: bool = True
     department: str | None = None
     supervisor_id: uuid.UUID | None = None
     visible_company_ids: list[int] = Field(default_factory=list)
     odoo_user_id: int | None = None
-    is_active: bool = True
 
 
 class AdminUserUpdateRequest(BaseModel):
@@ -61,8 +62,11 @@ class AdminUserUpdateRequest(BaseModel):
     department: str | None = None
     supervisor_id: uuid.UUID | None = None
     visible_company_ids: list[int] | None = None
+    allowed_modules: list[str] | None = None
     odoo_user_id: int | None = None
     is_active: bool | None = None
+
+
 
 
 class AdminUserStatusRequest(BaseModel):
@@ -95,6 +99,22 @@ class AdminUserRolesResponse(BaseModel):
     role: str
     roles: list[str]
     message: str
+
+
+class PlatformAccessResponse(BaseModel):
+    role: str
+    permissions: list[str]
+    allowed_modules: list[str] | None = None
+    modules: dict[str, bool]
+    can_view_prices: bool
+    can_view_suppliers: bool
+    can_manage_supplier_integrations: bool
+    can_mutate_admin: bool
+    can_view_admin: bool
+
+
+class UserModulesUpdateRequest(BaseModel):
+    allowed_modules: list[str] | None = None
 
 
 class RoleInfoResponse(BaseModel):

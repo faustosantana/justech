@@ -9,14 +9,7 @@ from typing import Literal
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.admin_permissions import (
-    PERMISSIONS,
-    ROLE_PERMISSIONS,
-    normalize_role,
-    normalize_roles,
-    permissions_for_roles,
-    primary_role,
-)
+from app.core.admin_permissions import PERMISSIONS, ROLE_PERMISSIONS, normalize_role, normalize_roles, permissions_for_roles, primary_role
 from app.core.module_access import MODULE_PRICES, MODULE_SUPPLIERS, get_membership, user_has_module
 from app.core.tenant import require_tenant_context
 from app.models.tenant import TenantMembership
@@ -68,24 +61,15 @@ class PermissionContext:
     user: User
     tenant_id: uuid.UUID
     role: str
-    roles: tuple[str, ...]
     permissions: frozenset[str]
     membership: TenantMembership | None
     is_superadmin: bool
+    roles: tuple[str, ...] = ()
 
 
-def membership_roles(membership: TenantMembership | None) -> list[str]:
-    if not membership:
-        return ["usuario"]
-    stored = getattr(membership, "roles", None) or []
-    return normalize_roles(list(stored) if stored else None, fallback=membership.role)
-
-
-def effective_permissions(role: str | None, *, is_superadmin: bool = False, roles: list[str] | None = None) -> frozenset[str]:
+def effective_permissions(role: str | None, *, is_superadmin: bool = False) -> frozenset[str]:
     if is_superadmin:
         return PERMISSIONS
-    if roles is not None:
-        return permissions_for_roles(roles, is_superadmin=False)
     return ROLE_PERMISSIONS.get(normalize_role(role), ROLE_PERMISSIONS["usuario"])
 
 
@@ -93,10 +77,7 @@ def resolve_effective_role(
     *,
     jwt_role: str | None,
     membership_role: str | None,
-    membership_roles_list: list[str] | None = None,
 ) -> str:
-    if membership_roles_list:
-        return primary_role(membership_roles_list, fallback=membership_role or jwt_role)
     if membership_role:
         return normalize_role(membership_role)
     return normalize_role(jwt_role)
@@ -167,21 +148,27 @@ def check_company_scope(
     return True
 
 
+def membership_roles(membership: TenantMembership | None) -> list[str]:
+    if not membership:
+        return ["usuario"]
+    stored = getattr(membership, "roles", None) or []
+    return normalize_roles(list(stored) if stored else None, fallback=membership.role)
+
+
 async def build_permission_context(db: AsyncSession, user: User) -> PermissionContext:
     tenant_ctx = require_tenant_context()
     membership = await get_membership(db, tenant_ctx.tenant_id, user.id)
     roles = membership_roles(membership)
-    role = resolve_effective_role(
+    role = primary_role(roles) if membership else resolve_effective_role(
         jwt_role=tenant_ctx.role,
-        membership_role=membership.role if membership else None,
-        membership_roles_list=roles,
+        membership_role=None,
     )
     return PermissionContext(
         user=user,
         tenant_id=tenant_ctx.tenant_id,
         role=role,
         roles=tuple(roles),
-        permissions=effective_permissions(role, is_superadmin=user.is_superadmin, roles=roles),
+        permissions=permissions_for_roles(roles, is_superadmin=user.is_superadmin) if not user.is_superadmin else PERMISSIONS,
         membership=membership,
         is_superadmin=user.is_superadmin,
     )

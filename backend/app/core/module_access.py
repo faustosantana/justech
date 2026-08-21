@@ -72,7 +72,8 @@ async def tenant_module_enabled(db: AsyncSession, tenant_id: uuid.UUID, module_k
     )
     row = result.scalar_one_or_none()
     if row is None:
-        return module_key in {MODULE_PRICES, MODULE_SUPPLIERS}
+        # Sin fila: habilitado salvo keys explícitamente "future" en seed histórico.
+        return True
     return bool(row)
 
 

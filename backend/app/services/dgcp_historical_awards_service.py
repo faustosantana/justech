@@ -96,6 +96,7 @@ class DGCPHistoricalAwardsService:
         institution_name: str | None = None,
     ) -> DGCPHistoricalIndexResponse:
         indexer = DGCPHistoricalIndexService(self.db, self.tenant_id)
+        if institution_code and institution_name:
             job = DGCPHistoricalIndexJob(
                 tenant_id=self.tenant_id,
                 status=JOB_RUNNING,

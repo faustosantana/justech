@@ -1,9 +1,9 @@
 "use client";
 
-import { ArrowLeft, ExternalLink, History } from "lucide-react";
+import { History } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { DgcpAnalisisIaTab } from "@/components/dgcp/dgcp-analisis-ia-tab";
 import {
@@ -12,14 +12,11 @@ import {
 } from "@/components/dgcp/dgcp-expediente-context";
 import { DGCPHistoricalAwardsPanel } from "@/components/dgcp/dgcp-historical-awards-panel";
 import { OpportunityBidSection } from "@/components/dgcp/opportunity-bid-section";
-import { DgcpFunnelHeader } from "@/components/dgcp/dgcp-funnel-header";
-import { DgcpOdooSyncCard } from "@/components/dgcp/dgcp-odoo-sync-card";
-import { DgcpOdooProductMatchPanel } from "@/components/dgcp/dgcp-odoo-product-match-panel";
+import { DgcpOpportunitySummaryTab } from "@/components/dgcp/dgcp-opportunity-summary-tab";
+import { DgcpOpportunityWorkspaceHeader } from "@/components/dgcp/dgcp-opportunity-workspace-header";
 import { DgcpTechnicalSheetsPanel } from "@/components/dgcp/dgcp-technical-sheets-panel";
 import { DGCPPrepPanel } from "@/components/modules/licitaciones/licitaciones-my-work-sections";
 import { CreateTaskButton } from "@/components/work/create-task-button";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiClient } from "@/lib/api";
 import { applyDGCPOpportunityAction } from "@/lib/dgcp-apply-action";
@@ -32,10 +29,9 @@ import {
 } from "@/lib/dgcp-detail-tabs";
 import {
   ACTION_LABELS,
-  COMPANY_LABELS,
-  STATUS_LABELS,
   formatDateTime,
   isDGCPOperationalInterest,
+  STATUS_LABELS,
   type DGCPOpportunity,
   type DGCPOpportunityHistory,
   type OpportunityAction,
@@ -52,12 +48,16 @@ type TabId = DgcpDetailTabId;
 
 export function OpportunityDetail({ opportunity: initial }: OpportunityDetailProps) {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const visibleTabs = DGCP_DETAIL_TABS;
   const [opportunity, setOpportunity] = useState(initial);
   const { access } = usePlatformAccess();
   const [history, setHistory] = useState<DGCPOpportunityHistory[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [activeTab, setActiveTab] = useState<TabId>("analisis-ia");
+  const [activeTab, setActiveTab] = useState<TabId>(() =>
+    resolveDgcpDetailTab(searchParams.get("tab")),
+  );
   const [autofillFormTypeHint, setAutofillFormTypeHint] = useState<string | undefined>();
   const [updating, setUpdating] = useState(false);
   const [execBid, setExecBid] = useState<import("@/lib/dgcp").DGCPBidPackage | null>(null);
@@ -66,7 +66,18 @@ export function OpportunityDetail({ opportunity: initial }: OpportunityDetailPro
   const [processUpdatesPending, setProcessUpdatesPending] = useState(0);
   const [analysisJob, setAnalysisJob] = useState<{ status?: string } | null>(null);
   const [flash, setFlash] = useState<string | null>(null);
+  const [prepBadge, setPrepBadge] = useState<string | null>(null);
   const { setContext } = useAssistantContext();
+
+  const selectTab = useCallback(
+    (id: TabId) => {
+      setActiveTab(id);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("tab", id);
+      router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    },
+    [pathname, router, searchParams],
+  );
 
   const refreshAnalysisSnapshot = useCallback(() => {
     if (!isDGCPOperationalInterest(opportunity.status)) return;
@@ -93,6 +104,7 @@ export function OpportunityDetail({ opportunity: initial }: OpportunityDetailPro
       setExecBid(null);
       setExecChecklist(null);
       setExecStatus(null);
+      setPrepBadge(null);
       return;
     }
     void Promise.all([
@@ -102,11 +114,15 @@ export function OpportunityDetail({ opportunity: initial }: OpportunityDetailPro
       dgcpProcessUpdatesEnabled()
         ? apiClient.getDGCPProcessUpdates(opportunity.id).catch(() => null)
         : Promise.resolve(null),
-    ]).then(([bid, checklist, status, updates]) => {
+      apiClient.getDGCPPrepChecklist(opportunity.id).catch(() => null),
+    ]).then(([bid, checklist, status, updates, prep]) => {
       if (bid?.analyzed_at) setExecBid(bid);
       if (checklist?.total) setExecChecklist(checklist);
       if (status?.expediente_status) setExecStatus(status.expediente_status);
       setProcessUpdatesPending(updates?.meta?.pending_count ?? 0);
+      if (prep?.progress) {
+        setPrepBadge(`${prep.progress.completed}/${prep.progress.applicable}`);
+      }
     });
     (apiClient.getDGCPAnalysisStatus
       ? apiClient.getDGCPAnalysisStatus(opportunity.id)
@@ -174,10 +190,15 @@ export function OpportunityDetail({ opportunity: initial }: OpportunityDetailPro
     }
   }, [activeTab, opportunity.id]);
 
-  const bidCenter = (opportunity.full_info as any)?.bid_center as
+  const bidCenter = (opportunity.full_info as Record<string, unknown> | undefined)?.bid_center as
     | { odoo_url?: string; odoo_tender_id?: number; odoo_tender_reference?: string }
     | undefined;
   const odooContinueUrl = bidCenter?.odoo_url;
+
+  const docsCount = useMemo(() => {
+    if (execBid?.found_documents != null) return execBid.found_documents;
+    return null;
+  }, [execBid]);
 
   async function applyAction(action: OpportunityAction) {
     setUpdating(true);
@@ -207,211 +228,225 @@ export function OpportunityDetail({ opportunity: initial }: OpportunityDetailPro
     }
   }
 
+  function tabBadge(id: TabId): string | null {
+    if (id === "documentos" && docsCount != null) return String(docsCount);
+    if (id === "checklist" && execChecklist?.total) {
+      const done = execChecklist.ready_count ?? execChecklist.compliant_count ?? 0;
+      return `${done}/${execChecklist.total}`;
+    }
+    if (id === "tareas" && prepBadge) return prepBadge;
+    if (id === "expediente" && processUpdatesPending > 0) return String(processUpdatesPending);
+    return null;
+  }
+
   return (
     <DgcpExpedienteContextProvider opportunityId={opportunity.id}>
-      <div className="space-y-6">
+      <div className="space-y-3 pb-16 md:pb-8">
         {activeTab === "adjudicaciones" && <ExpedienteContextStatusBanner />}
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/dgcp">
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Volver
-            </Link>
-          </Button>
-          <div className="flex-1 min-w-0">
-            <p className="font-mono text-sm text-primary">{opportunity.code}</p>
-            <h2 className="text-xl font-bold truncate">{opportunity.title}</h2>
-            <p className="text-sm text-muted-foreground">{opportunity.institution}</p>
-          </div>
-          <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
-            <Badge variant="muted">{COMPANY_LABELS[opportunity.company]}</Badge>
-            {opportunity.confidence_score > 0 && (
-              <Badge variant="outline">{opportunity.confidence_score}% confianza</Badge>
-            )}
-            {opportunity.source_url ? (
-              <Button variant="outline" size="sm" asChild>
-                <a href={opportunity.source_url} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="mr-1 h-3.5 w-3.5" />
-                  DGCP
-                </a>
-              </Button>
-            ) : null}
-          </div>
-        </div>
+
+        <DgcpOpportunityWorkspaceHeader
+          opportunity={opportunity}
+          access={access}
+          updating={updating}
+          onAction={(a) => void applyAction(a)}
+        />
 
         {odooContinueUrl ? (
-          <div className="mb-4 flex flex-wrap items-center gap-3 rounded-md border p-3">
-            <span className="text-sm">
-              Expediente en Odoo Bid Center
-              {bidCenter?.odoo_tender_reference ? ` (${bidCenter.odoo_tender_reference})` : ""}.
+          <div className="flex flex-wrap items-center gap-2 rounded-md border px-3 py-1.5 text-xs">
+            <span>
+              Bid Center
+              {bidCenter?.odoo_tender_reference ? ` (${bidCenter.odoo_tender_reference})` : ""}
             </span>
-            <a className="underline font-medium" href={odooContinueUrl} target="_blank" rel="noreferrer">
+            <a className="font-medium underline" href={odooContinueUrl} target="_blank" rel="noreferrer">
               Continuar en Odoo
             </a>
           </div>
         ) : null}
 
-        <DgcpFunnelHeader
-          opportunity={opportunity}
-          access={access}
-          updating={updating}
-          onAction={(a) => void applyAction(a)}
-          variant="card"
-        />
-
-        {isDGCPOperationalInterest(opportunity.status) ? (
-          <div className="mt-3">
-            <DGCPPrepPanel opportunityId={opportunity.id} />
-          </div>
-        ) : null}
-
-        <DgcpOdooSyncCard opportunity={opportunity} onUpdated={setOpportunity} />
-        <div className="mt-3">
-          <DgcpOdooProductMatchPanel opportunityId={opportunity.id} />
-        </div>
-
         {flash && (
           <p
             className={cn(
-              "text-sm rounded-lg border px-3 py-2",
+              "rounded-md border px-3 py-1.5 text-sm",
               flash.includes("No se puede") || flash.includes("Solo puede")
-                ? "text-destructive border-destructive/30"
-                : "text-success border-success/30",
+                ? "border-destructive/30 text-destructive"
+                : "border-success/30 text-success",
             )}
           >
             {flash}
           </p>
         )}
 
-        <div className="flex flex-wrap items-center gap-1 border-b border-border pb-1 overflow-x-auto">
-          {visibleTabs.map(({ id, label, icon: Icon }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => setActiveTab(id)}
-              className={cn(
-                "flex items-center gap-1.5 rounded-t-lg px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap",
-                activeTab === id
-                  ? "bg-primary/10 text-primary border-b-2 border-primary"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/50",
-              )}
-            >
-              <Icon className="h-3.5 w-3.5" />
-              {label}
-              {id === "expediente" && processUpdatesPending > 0 ? (
-                <span className="rounded-full bg-destructive px-1.5 py-0 text-[9px] text-destructive-foreground">
-                  {processUpdatesPending}
-                </span>
-              ) : null}
-            </button>
-          ))}
-        </div>
+        {/* Sticky expediente nav — sticky relative to AppShell <main> scroll */}
+        <nav
+          className={cn(
+            "sticky top-0 z-20 -mx-1 border-b border-border/80 bg-background/95 px-1 backdrop-blur supports-[backdrop-filter]:bg-background/80",
+          )}
+          aria-label="Navegación del expediente"
+        >
+          <div className="flex gap-0.5 overflow-x-auto py-1.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            {visibleTabs.map(({ id, label, icon: Icon }) => {
+              const badge = tabBadge(id);
+              return (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => selectTab(id)}
+                  className={cn(
+                    "flex shrink-0 items-center gap-1.5 rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors sm:text-sm",
+                    activeTab === id
+                      ? "bg-primary/10 text-primary ring-1 ring-primary/25"
+                      : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                  )}
+                >
+                  <Icon className="h-3.5 w-3.5 opacity-80" />
+                  <span className="whitespace-nowrap">{label}</span>
+                  {badge ? (
+                    <span
+                      className={cn(
+                        "rounded-full px-1.5 py-0 text-[10px] tabular-nums",
+                        id === "expediente" && processUpdatesPending > 0
+                          ? "bg-destructive text-destructive-foreground"
+                          : "bg-muted text-muted-foreground",
+                      )}
+                    >
+                      {badge}
+                    </span>
+                  ) : null}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
 
-        {activeTab === "analisis-ia" && (
-          <DgcpAnalisisIaTab
+        <div className="min-h-[40vh] pt-1">
+          {activeTab === "resumen" && (
+            <DgcpOpportunitySummaryTab
+              opportunity={opportunity}
+              onUpdated={setOpportunity}
+              onNavigateTab={selectTab}
+              docsCount={docsCount}
+              checklistDone={execChecklist?.ready_count ?? execChecklist?.compliant_count ?? null}
+              checklistTotal={execChecklist?.total ?? null}
+            />
+          )}
+
+          {activeTab === "analisis-ia" && (
+            <DgcpAnalisisIaTab
+              opportunity={opportunity}
+              execBid={execBid}
+              execChecklist={execChecklist}
+              execStatus={execStatus}
+              onGoDocumentos={() => selectTab("documentos")}
+              onAnalyzed={refreshAnalysisSnapshot}
+            />
+          )}
+
+          <OpportunityBidSection
             opportunity={opportunity}
-            execBid={execBid}
-            execChecklist={execChecklist}
-            execStatus={execStatus}
-            onGoDocumentos={() => setActiveTab("documentos")}
-            onAnalyzed={refreshAnalysisSnapshot}
+            activeTab={activeTab}
+            interested={isDGCPOperationalInterest(opportunity.status)}
+            autofillFormTypeHint={autofillFormTypeHint}
+            onNavigateTab={(tab, opts) => {
+              selectTab(resolveDgcpDetailTab(tab));
+              if (opts?.formType) setAutofillFormTypeHint(opts.formType);
+            }}
+            onOpportunityUpdated={setOpportunity}
+            onAnalysisUpdate={(bid, checklist, status) => {
+              setExecBid(bid);
+              setExecChecklist(checklist);
+              setExecStatus(status);
+            }}
           />
-        )}
 
-        <OpportunityBidSection
-          opportunity={opportunity}
-          activeTab={activeTab}
-          interested={isDGCPOperationalInterest(opportunity.status)}
-          autofillFormTypeHint={autofillFormTypeHint}
-          onNavigateTab={(tab, opts) => {
-            setActiveTab(resolveDgcpDetailTab(tab));
-            if (opts?.formType) setAutofillFormTypeHint(opts.formType);
-          }}
-          onOpportunityUpdated={setOpportunity}
-          onAnalysisUpdate={(bid, checklist, status) => {
-            setExecBid(bid);
-            setExecChecklist(checklist);
-            setExecStatus(status);
-          }}
-        />
+          {activeTab === "fichas" && isDGCPOperationalInterest(opportunity.status) && (
+            <DgcpTechnicalSheetsPanel opportunityId={opportunity.id} />
+          )}
 
-        {activeTab === "fichas" && isDGCPOperationalInterest(opportunity.status) && (
-          <DgcpTechnicalSheetsPanel opportunityId={opportunity.id} />
-        )}
+          {activeTab === "tareas" && isDGCPOperationalInterest(opportunity.status) && (
+            <div className="space-y-4">
+              <DGCPPrepPanel opportunityId={opportunity.id} />
+              <Card>
+                <CardHeader className="flex flex-row items-center justify-between py-3">
+                  <CardTitle className="text-base">Tareas del work hub</CardTitle>
+                  <CreateTaskButton
+                    eventType="licitacion"
+                    title={`Preparar licitación ${opportunity.code}`}
+                    description={opportunity.title}
+                    dgcpProcessId={opportunity.id}
+                    source="dgcp_opportunity"
+                    label="Nueva tarea"
+                  />
+                </CardHeader>
+                <CardContent>
+                  {tasks.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                      No hay tareas del work hub vinculadas a este proceso.
+                    </p>
+                  ) : (
+                    <ul className="divide-y">
+                      {tasks.map((t) => (
+                        <li key={t.id} className="py-2">
+                          <Link
+                            href={`/tasks/${t.id}`}
+                            className="text-sm font-medium text-primary hover:underline"
+                          >
+                            {t.title}
+                          </Link>
+                          <p className="text-xs text-muted-foreground">
+                            {t.status} · {t.priority}
+                          </p>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
+          )}
 
-        {activeTab === "tareas" && isDGCPOperationalInterest(opportunity.status) && (
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-base">Tareas de esta licitación</CardTitle>
-              <CreateTaskButton
-                eventType="licitacion"
-                title={`Preparar licitación ${opportunity.code}`}
-                description={opportunity.title}
-                dgcpProcessId={opportunity.id}
-                source="dgcp_opportunity"
-                label="Nueva tarea"
-              />
-            </CardHeader>
-            <CardContent>
-              {tasks.length === 0 ? (
-                <p className="text-sm text-muted-foreground">No hay tareas vinculadas a este proceso.</p>
-              ) : (
-                <ul className="divide-y">
-                  {tasks.map((t) => (
-                    <li key={t.id} className="py-2">
-                      <Link href={`/tasks/${t.id}`} className="text-sm font-medium text-primary hover:underline">
-                        {t.title}
-                      </Link>
-                      <p className="text-xs text-muted-foreground">
-                        {t.status} · {t.priority}
-                      </p>
+          {activeTab === "adjudicaciones" && (
+            <DGCPHistoricalAwardsPanel opportunity={opportunity} />
+          )}
+
+          {activeTab === "expediente" && history.length > 0 ? (
+            <Card className="mt-4">
+              <CardHeader className="py-3">
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <History className="h-4 w-4 text-primary" />
+                  Registro de acciones
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="max-h-56 space-y-3 overflow-y-auto">
+                  {history.slice(0, 25).map((entry) => (
+                    <li key={entry.id} className="rounded-lg border border-border/50 p-3 text-sm">
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-medium capitalize">
+                          {ACTION_LABELS[entry.action as OpportunityAction] ?? entry.action}
+                        </span>
+                        <span className="text-xs text-muted-foreground">
+                          {formatDateTime(entry.created_at)}
+                        </span>
+                      </div>
+                      {entry.from_status && entry.to_status ? (
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {STATUS_LABELS[entry.from_status as keyof typeof STATUS_LABELS] ??
+                            entry.from_status}
+                          {" → "}
+                          {STATUS_LABELS[entry.to_status as keyof typeof STATUS_LABELS] ??
+                            entry.to_status}
+                        </p>
+                      ) : null}
+                      {entry.notes ? (
+                        <p className="mt-1 text-xs text-muted-foreground">{entry.notes}</p>
+                      ) : null}
                     </li>
                   ))}
                 </ul>
-              )}
-            </CardContent>
-          </Card>
-        )}
-
-        {activeTab === "adjudicaciones" && <DGCPHistoricalAwardsPanel opportunity={opportunity} />}
-
-        {activeTab === "expediente" && history.length > 0 ? (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <History className="h-4 w-4 text-primary" />
-                Registro de acciones
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-3 max-h-56 overflow-y-auto">
-                {history.slice(0, 25).map((entry) => (
-                  <li key={entry.id} className="rounded-lg border border-border/50 p-3 text-sm">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="font-medium capitalize">
-                        {ACTION_LABELS[entry.action as OpportunityAction] ?? entry.action}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {formatDateTime(entry.created_at)}
-                      </span>
-                    </div>
-                    {entry.from_status && entry.to_status ? (
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {STATUS_LABELS[entry.from_status as keyof typeof STATUS_LABELS] ??
-                          entry.from_status}
-                        {" → "}
-                        {STATUS_LABELS[entry.to_status as keyof typeof STATUS_LABELS] ?? entry.to_status}
-                      </p>
-                    ) : null}
-                    {entry.notes ? (
-                      <p className="text-xs text-muted-foreground mt-1">{entry.notes}</p>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        ) : null}
+              </CardContent>
+            </Card>
+          ) : null}
+        </div>
       </div>
     </DgcpExpedienteContextProvider>
   );

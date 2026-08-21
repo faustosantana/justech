@@ -11,9 +11,11 @@ import type { DGCPOpportunity } from "@/lib/dgcp";
 type Props = {
   opportunity: DGCPOpportunity;
   onUpdated?: (opp: DGCPOpportunity) => void;
+  /** Compact strip for Resumen / accordion (same APIs). */
+  compact?: boolean;
 };
 
-export function DgcpOdooSyncCard({ opportunity, onUpdated }: Props) {
+export function DgcpOdooSyncCard({ opportunity, onUpdated, compact }: Props) {
   const sync = ((opportunity as DGCPOpportunity & { full_info?: Record<string, unknown> }).full_info
     ?.odoo_sync || undefined) as Record<string, unknown> | undefined;
   const [busy, setBusy] = useState(false);
@@ -51,6 +53,41 @@ export function DgcpOdooSyncCard({ opportunity, onUpdated }: Props) {
   }
 
   const statusLabel = synced ? "✅ Sincronizado" : pending ? "⚠ Pendiente" : status === "—" ? "—" : "❌ Error";
+
+  if (compact) {
+    return (
+      <div className="space-y-2 rounded-md border border-border/70 bg-muted/20 p-3 text-xs text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <p className="font-medium text-foreground">Odoo CRM / Cotización</p>
+          {(pending || status === "error") && (
+            <Button size="sm" variant="outline" className="h-7" disabled={busy} onClick={() => void retry()}>
+              <RefreshCw className={`mr-1 h-3.5 w-3.5 ${busy ? "animate-spin" : ""}`} />
+              Reintentar
+            </Button>
+          )}
+        </div>
+        <p>
+          CRM: <span className="font-medium text-foreground">{statusLabel}</span>
+          {responsible ? ` · ${responsible}` : ""}
+        </p>
+        <div className="flex flex-wrap gap-2">
+          {crmUrl ? (
+            <a href={crmUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
+              Abrir CRM <ExternalLink className="h-3 w-3" />
+            </a>
+          ) : (
+            <span>Sin CRM vinculado</span>
+          )}
+          {soUrl ? (
+            <a href={soUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
+              Cotización <ExternalLink className="h-3 w-3" />
+            </a>
+          ) : null}
+        </div>
+        {msg ? <p className="text-foreground">{msg}</p> : null}
+      </div>
+    );
+  }
 
   return (
     <Card className="border-primary/20">

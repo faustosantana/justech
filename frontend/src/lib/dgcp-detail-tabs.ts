@@ -1,9 +1,10 @@
-/** Navegación canónica del detalle DGCP (7 pestañas) + aliases legacy. */
+/** Navegación canónica del detalle DGCP (workspace) + aliases legacy. */
 
 import {
   Brain,
   ClipboardList,
   FileStack,
+  LayoutDashboard,
   Landmark,
   ListChecks,
   Package,
@@ -12,20 +13,20 @@ import {
 } from "lucide-react";
 
 export const DGCP_DETAIL_TABS = [
-  { id: "analisis-ia", label: "Análisis IA", icon: Brain },
-  { id: "documentos", label: "Documentos solicitados", icon: FileStack },
-  { id: "checklist", label: "Checklist", icon: ListChecks },
-  { id: "fichas", label: "Fichas técnicas", icon: Wrench },
-  { id: "tareas", label: "Tareas", icon: ClipboardList },
-  { id: "adjudicaciones", label: "Inteligencia histórica", icon: Landmark },
-  { id: "expediente", label: "Expediente", icon: Package },
+  { id: "resumen", label: "Resumen", icon: LayoutDashboard, shortLabel: "Resumen" },
+  { id: "analisis-ia", label: "Análisis IA", icon: Brain, shortLabel: "Análisis" },
+  { id: "documentos", label: "Documentos", icon: FileStack, shortLabel: "Documentos" },
+  { id: "checklist", label: "Checklist", icon: ListChecks, shortLabel: "Checklist" },
+  { id: "fichas", label: "Fichas técnicas", icon: Wrench, shortLabel: "Fichas" },
+  { id: "tareas", label: "Tareas", icon: ClipboardList, shortLabel: "Tareas" },
+  { id: "adjudicaciones", label: "Inteligencia", icon: Landmark, shortLabel: "Inteligencia" },
+  { id: "expediente", label: "Expediente", icon: Package, shortLabel: "Expediente" },
 ] as const;
 
 export type DgcpDetailTabId = (typeof DGCP_DETAIL_TABS)[number]["id"];
 
 /** Rutas antiguas → pestaña canónica (compatibilidad de enlaces). */
 export const DGCP_LEGACY_TAB_ALIASES: Record<string, DgcpDetailTabId> = {
-  resumen: "analisis-ia",
   requisitos: "analisis-ia",
   alertas: "analisis-ia",
   riesgos: "analisis-ia",
@@ -33,23 +34,26 @@ export const DGCP_LEGACY_TAB_ALIASES: Record<string, DgcpDetailTabId> = {
   "documentos-justech": "documentos",
   autollenado: "documentos",
   formularios: "documentos",
+  "documentos-solicitados": "documentos",
   "fichas-tecnicas": "fichas",
   historico: "adjudicaciones",
+  "inteligencia-historica": "adjudicaciones",
   comercial: "expediente",
   historial: "expediente",
   registro: "expediente",
 };
 
 export function resolveDgcpDetailTab(raw: string | null | undefined): DgcpDetailTabId {
-  if (!raw) return "analisis-ia";
+  if (!raw) return "resumen";
   if (DGCP_DETAIL_TABS.some((t) => t.id === raw)) return raw as DgcpDetailTabId;
-  return DGCP_LEGACY_TAB_ALIASES[raw] ?? "analisis-ia";
+  return DGCP_LEGACY_TAB_ALIASES[raw] ?? "resumen";
 }
 
 export type DgcpDetailTabDef = {
   id: DgcpDetailTabId;
   label: string;
   icon: LucideIcon;
+  shortLabel?: string;
 };
 
 /** Filtra recomendaciones/riesgos con ruido técnico interno. */

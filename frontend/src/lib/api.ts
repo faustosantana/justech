@@ -1006,15 +1006,57 @@ export const apiClient = {
     );
   },
 
-  compareDGCPSuppliers: (keys: string[], window_months?: number) =>
+  compareDGCPSuppliers: (keys: string[], window_months?: number, institution_key?: string) =>
     request<import("./dgcp").DGCPSupplierCompareResponse>(
       `/dgcp/intelligence/suppliers/compare`,
       {
         method: "POST",
-        body: JSON.stringify({ keys, window_months: window_months ?? 24 }),
+        body: JSON.stringify({
+          keys,
+          window_months: window_months ?? 24,
+          institution_key: institution_key || undefined,
+        }),
       },
       true,
     ),
+
+  listDGCPPossibleDuplicates: (party_type: "supplier" | "institution" = "supplier", limit = 40) =>
+    request<{
+      party_type: string;
+      items: Record<string, unknown>[];
+      conservation: Record<string, number>;
+      note?: string;
+    }>(
+      `/dgcp/intelligence/data-quality/possible-duplicates?party_type=${party_type}&limit=${limit}`,
+      {},
+      true,
+    ),
+
+  applyDGCPIdentityAction: (body: {
+    party_type: "supplier" | "institution";
+    identity_a: string;
+    identity_b: string;
+    action: "merge" | "keep_separate" | "ignore" | "unmerge";
+    note?: string;
+    criterion?: string;
+    confidence?: string;
+  }) =>
+    request<Record<string, unknown>>(`/dgcp/intelligence/data-quality/identity-action`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }, true),
+
+  getDGCPSourceHealth: () =>
+    request<{
+      source: string;
+      status: string;
+      http_status?: number | null;
+      endpoint?: string | null;
+      checked_at?: string | null;
+      last_successful_sync?: string | null;
+      last_job_status?: string | null;
+      message?: string;
+    }>(`/dgcp/intelligence/source-health`, {}, true),
 
   reindexDGCPHistoricalAwards: (opts?: {
     institution_code?: string | number;

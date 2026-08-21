@@ -22,6 +22,13 @@ from app.schemas.dgcp_historical import (
     DGCPHistoricalSearchFilters,
 )
 from app.services.dgcp_historical_index_service import DGCPHistoricalIndexService
+from app.services.dgcp_historical_job_status import (
+    JOB_RUNNING,
+    JOB_SOURCE_UNAVAILABLE,
+    JOB_SUCCESS,
+    classify_exception,
+    mark_job_complete,
+)
 from app.services.dgcp_historical_similarity_engine import (
     SimilarityMatch,
     build_query_tokens,
@@ -89,26 +96,37 @@ class DGCPHistoricalAwardsService:
         institution_name: str | None = None,
     ) -> DGCPHistoricalIndexResponse:
         indexer = DGCPHistoricalIndexService(self.db, self.tenant_id)
-        if institution_code and institution_name:
-            stats = await indexer.index_for_institution(
-                institution_code=institution_code,
-                institution_name=institution_name,
-                max_pages=max_pages,
-                page_size=page_size,
-            )
             job = DGCPHistoricalIndexJob(
                 tenant_id=self.tenant_id,
-                status="completed",
-                pages_indexed=stats.get("pages_indexed", 0),
-                contracts_indexed=stats.get("contracts_indexed", 0),
-                items_indexed=stats.get("items_indexed", 0),
+                status=JOB_RUNNING,
             )
             self.db.add(job)
+            await self.db.flush()
+            try:
+                stats = await indexer.index_for_institution(
+                    institution_code=institution_code,
+                    institution_name=institution_name,
+                    max_pages=max_pages,
+                    page_size=page_size,
+                )
+                job.pages_indexed = stats.get("pages_indexed", 0)
+                job.contracts_indexed = stats.get("contracts_indexed", 0)
+                job.items_indexed = stats.get("items_indexed", 0)
+                mark_job_complete(job, status=JOB_SUCCESS, source_status="AVAILABLE")
+            except Exception as exc:
+                status = classify_exception(exc)
+                mark_job_complete(
+                    job,
+                    status=status,
+                    error_message=str(exc)[:2000],
+                    source_status="UNAVAILABLE" if status == JOB_SOURCE_UNAVAILABLE else None,
+                )
             await self.db.flush()
             await self.db.refresh(job)
         else:
             job = await indexer.run_index(max_pages=max_pages, page_size=page_size)
         await self.db.commit()
+        ok = job.status in (JOB_SUCCESS, "completed", "success")
         return DGCPHistoricalIndexResponse(
             job_id=job.id,
             status=job.status,
@@ -118,7 +136,7 @@ class DGCPHistoricalAwardsService:
             error_message=job.error_message,
             message=(
                 f"Indexados {job.items_indexed} ítems adjudicados"
-                if job.status == "completed"
+                if ok
                 else job.error_message or "Indexación fallida"
             ),
         )

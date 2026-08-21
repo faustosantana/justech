@@ -40,15 +40,24 @@ from app.schemas.dgcp_historical import (
 )
 from app.schemas.dgcp_historical_intelligence import DGCPHistoricalIntelligenceResponse
 from app.schemas.dgcp_historical_profiles import (
+    DGCPIdentityActionRequest,
     DGCPInstitutionProfileResponse,
+    DGCPSourceHealthResponse,
     DGCPSupplierCompareRequest,
     DGCPSupplierCompareResponse,
     DGCPSupplierProfileResponse,
 )
 from app.services.dgcp_historical_awards_service import DGCPHistoricalAwardsService
+from app.services.dgcp_historical_dedup_service import DGCPHistoricalDedupService
 from app.services.dgcp_historical_intelligence_service import DGCPHistoricalIntelligenceService
 from app.services.dgcp_historical_profile_service import DGCPHistoricalProfileService
 from app.services.dgcp_historical_similar_search_service import DGCPHistoricalSimilarSearchService
+from app.models.dgcp_historical_award import DGCPHistoricalAward, DGCPHistoricalIndexJob
+from sqlalchemy import func, select
+from datetime import UTC, datetime
+import httpx
+from app.config import settings
+from integrations.dgcp.config import DGCPConfig
 from app.services.dgcp_expediente_context_service import DGCPExpedienteContextService
 from app.services.audit_service import AuditService
 from app.schemas.dgcp_intelligence import (
@@ -2665,8 +2674,148 @@ async def compare_suppliers_360(
     __: TenantCtx,
 ) -> DGCPSupplierCompareResponse:
     ctx = require_tenant_context()
-    return await DGCPHistoricalProfileService(db, ctx.tenant_id).compare_suppliers(
-        data.keys, window_months=data.window_months
+    try:
+        return await DGCPHistoricalProfileService(db, ctx.tenant_id).compare_suppliers(
+            data.keys,
+            window_months=data.window_months,
+            institution_key=data.institution_key,
+        )
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@router.get(
+    "/intelligence/data-quality/possible-duplicates",
+    dependencies=DGCP_MUTATE,
+)
+async def list_possible_duplicates(
+    db: DbSession,
+    _: CurrentUser,
+    __: TenantCtx,
+    party_type: str = Query("supplier"),
+    limit: int = Query(40, ge=1, le=100),
+) -> dict:
+    """Admin — posibles duplicados (sin auto-merge por nombre)."""
+    ctx = require_tenant_context()
+    svc = DGCPHistoricalDedupService(db, ctx.tenant_id)
+    snap = await svc.conservation_snapshot()
+    if party_type == "institution":
+        items = await svc.list_possible_institution_duplicates(limit=limit)
+    else:
+        items = await svc.list_possible_supplier_duplicates(limit=limit)
+    return {
+        "party_type": party_type,
+        "items": items,
+        "conservation": snap,
+        "note": "Candidatos por similitud de nombre. Auto-merge solo con RNC/RPE/código exacto.",
+    }
+
+
+@router.post(
+    "/intelligence/data-quality/identity-action",
+    dependencies=DGCP_MUTATE,
+)
+async def apply_identity_action(
+    data: DGCPIdentityActionRequest,
+    db: DbSession,
+    user: CurrentUser,
+    __: TenantCtx,
+) -> dict:
+    ctx = require_tenant_context()
+    before = await DGCPHistoricalDedupService(db, ctx.tenant_id).conservation_snapshot()
+    row = await DGCPHistoricalDedupService(db, ctx.tenant_id).apply_action(
+        party_type=data.party_type,
+        identity_a=data.identity_a,
+        identity_b=data.identity_b,
+        action=data.action,
+        actor_user_id=user.id,
+        note=data.note,
+        criterion=data.criterion,
+        confidence=data.confidence,
+    )
+    await db.commit()
+    after = await DGCPHistoricalDedupService(db, ctx.tenant_id).conservation_snapshot()
+    return {
+        "id": str(row.id),
+        "action": row.action,
+        "canonical_key": row.canonical_key,
+        "status": row.status,
+        "conservation_before": before,
+        "conservation_after": after,
+        "amounts_preserved": before["total_amount"] == after["total_amount"]
+        and before["lines"] == after["lines"],
+    }
+
+
+@router.get(
+    "/intelligence/source-health",
+    response_model=DGCPSourceHealthResponse,
+    dependencies=DGCP_VIEW,
+)
+async def dgcp_source_health(
+    db: DbSession,
+    _: CurrentUser,
+    __: TenantCtx,
+) -> DGCPSourceHealthResponse:
+    """Estado discreto de la API DGCP (admin/monitoring). No inventa datos live."""
+    ctx = require_tenant_context()
+    cfg = DGCPConfig(
+        base_url=settings.dgcp_api_base_url_resolved,
+        api_key=settings.dgcp_api_key,
+        timeout_seconds=6.0,
+    )
+    endpoint = f"{cfg.base_url.rstrip('/')}/contratos"
+    checked_at = datetime.now(UTC).isoformat()
+    http_status: int | None = None
+    status = "UNAVAILABLE"
+    message = "LIVE_SOURCE_UNAVAILABLE"
+
+    last_indexed = await db.scalar(
+        select(func.max(DGCPHistoricalAward.indexed_at)).where(
+            DGCPHistoricalAward.tenant_id == ctx.tenant_id
+        )
+    )
+    last_job = (
+        await db.execute(
+            select(DGCPHistoricalIndexJob)
+            .where(DGCPHistoricalIndexJob.tenant_id == ctx.tenant_id)
+            .order_by(DGCPHistoricalIndexJob.started_at.desc())
+            .limit(1)
+        )
+    ).scalar_one_or_none()
+
+    try:
+        headers: dict[str, str] = {"Accept": "application/json"}
+        if cfg.api_key:
+            headers["X-API-KEY"] = cfg.api_key
+        async with httpx.AsyncClient(timeout=6.0) as client:
+            resp = await client.get(endpoint, params={"page": 1, "limit": 1}, headers=headers)
+            http_status = resp.status_code
+            if resp.status_code == 200:
+                status = "AVAILABLE"
+                message = "DGCP API responde"
+            elif resp.status_code in (429, 408):
+                status = "DEGRADED"
+                message = f"DGCP degradada HTTP {resp.status_code}"
+            else:
+                status = "UNAVAILABLE"
+                message = f"LIVE_SOURCE_UNAVAILABLE HTTP {resp.status_code}"
+    except httpx.TimeoutException:
+        http_status = None
+        status = "DEGRADED"
+        message = "DGCP timeout (degradada)"
+    except Exception as exc:  # noqa: BLE001
+        message = f"LIVE_SOURCE_UNAVAILABLE: {exc}"[:300]
+
+    return DGCPSourceHealthResponse(
+        source="DGCP",
+        status=status,  # type: ignore[arg-type]
+        http_status=http_status,
+        endpoint=endpoint,
+        checked_at=checked_at,
+        last_successful_sync=last_indexed.isoformat() if last_indexed else None,
+        last_job_status=last_job.status if last_job else None,
+        message=message,
     )
 
 

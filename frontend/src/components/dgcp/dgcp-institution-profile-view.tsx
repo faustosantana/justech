@@ -35,6 +35,7 @@ export function DGCPInstitutionProfileView({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [data, setData] = useState<Awaited<ReturnType<typeof apiClient.getDGCPInstitutionProfile>> | null>(null);
+  const [compareKeys, setCompareKeys] = useState<string[]>([]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -217,38 +218,67 @@ export function DGCPInstitutionProfileView({
           )}
 
           {tab === "proveedores" && (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm">
-                <thead>
-                  <tr className="border-b text-left text-slate-500">
-                    <th className="py-2 pr-3">Proveedor</th>
-                    <th className="py-2 pr-3">RPE</th>
-                    <th className="py-2 pr-3">Adj.</th>
-                    <th className="py-2 pr-3">Monto</th>
-                    <th className="py-2 pr-3">Última</th>
-                    <th className="py-2">%</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(data.suppliers || []).map((s) => (
-                    <tr key={s.stable_key} className="border-b border-slate-100">
-                      <td className="py-2 pr-3">
-                        <Link
-                          href={`/dgcp/intelligence/supplier/${encodeURIComponent(s.stable_key)}?window_months=${windowMonths}&institution_key=${encodeURIComponent(data.identity.stable_key)}`}
-                          className="text-sky-700 hover:underline"
-                        >
-                          {s.name}
-                        </Link>
-                      </td>
-                      <td className="py-2 pr-3">{s.rpe || "—"}</td>
-                      <td className="py-2 pr-3">{s.awards_count}</td>
-                      <td className="py-2 pr-3">{formatCurrency(Number(s.total_amount), s.currency)}</td>
-                      <td className="py-2 pr-3">{formatDate(s.last_award_date)}</td>
-                      <td className="py-2">{s.share_pct}%</td>
+            <div className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                <Button size="sm" disabled={compareKeys.length < 1 || compareKeys.length > 3} asChild={compareKeys.length >= 1}>
+                  {compareKeys.length >= 1 && compareKeys.length <= 3 ? (
+                    <Link
+                      href={`/dgcp/intelligence/compare?keys=${compareKeys.map(encodeURIComponent).join(",")}&window_months=${windowMonths}&institution_key=${encodeURIComponent(data.identity.stable_key)}`}
+                    >
+                      Comparar en esta institución ({compareKeys.length}/3)
+                    </Link>
+                  ) : (
+                    <span>Comparar en esta institución</span>
+                  )}
+                </Button>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm">
+                  <thead>
+                    <tr className="border-b text-left text-slate-500">
+                      <th className="py-2 pr-2 w-8" />
+                      <th className="py-2 pr-3">Proveedor</th>
+                      <th className="py-2 pr-3">RPE</th>
+                      <th className="py-2 pr-3">Adj.</th>
+                      <th className="py-2 pr-3">Monto</th>
+                      <th className="py-2 pr-3">Última</th>
+                      <th className="py-2">%</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {(data.suppliers || []).map((s) => {
+                      const checked = compareKeys.includes(s.stable_key);
+                      return (
+                        <tr key={s.stable_key} className="border-b border-slate-100">
+                          <td className="py-2 pr-2">
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => {
+                                if (checked) setCompareKeys(compareKeys.filter((k) => k !== s.stable_key));
+                                else if (compareKeys.length < 3) setCompareKeys([...compareKeys, s.stable_key]);
+                              }}
+                            />
+                          </td>
+                          <td className="py-2 pr-3">
+                            <Link
+                              href={`/dgcp/intelligence/supplier/${encodeURIComponent(s.stable_key)}?window_months=${windowMonths}&institution_key=${encodeURIComponent(data.identity.stable_key)}`}
+                              className="text-sky-700 hover:underline"
+                            >
+                              {s.name}
+                            </Link>
+                          </td>
+                          <td className="py-2 pr-3">{s.rpe || "—"}</td>
+                          <td className="py-2 pr-3">{s.awards_count}</td>
+                          <td className="py-2 pr-3">{formatCurrency(Number(s.total_amount), s.currency)}</td>
+                          <td className="py-2 pr-3">{formatDate(s.last_award_date)}</td>
+                          <td className="py-2">{s.share_pct}%</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
 

@@ -25,6 +25,7 @@ import {
 import {
   institutionProfileHref,
   supplierProfileHref,
+  supplierStableKey,
 } from "@/lib/dgcp-historical-keys";
 import { cn } from "@/lib/utils";
 
@@ -71,6 +72,7 @@ export function DGCPHistoricalAwardsPanel({ opportunity }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [windowMonths, setWindowMonths] = useState(24);
   const [tab, setTab] = useState<IntelTab>("resumen");
+  const [compareKeys, setCompareKeys] = useState<string[]>([]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -332,50 +334,90 @@ export function DGCPHistoricalAwardsPanel({ opportunity }: Props) {
           )}
 
           {tab === "proveedores" && (
-            <div className="overflow-x-auto">
-              <table className="min-w-full text-sm">
-                <thead>
-                  <tr className="border-b text-left text-slate-500">
-                    <th className="py-2 pr-3">Proveedor</th>
-                    <th className="py-2 pr-3">RPE</th>
-                    <th className="py-2 pr-3">Adjudicaciones</th>
-                    <th className="py-2 pr-3">Monto total</th>
-                    <th className="py-2 pr-3">Última</th>
-                    <th className="py-2">Participación</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(data.suppliers_ranking || []).map((s) => (
-                    <tr key={s.supplier_name} className="border-b border-slate-100">
-                      <td className="py-2 pr-3 font-medium">
-                        <Link
-                          href={`${supplierProfileHref({
-                            name: s.supplier_name,
-                            rpe: s.supplier_rpe,
-                            windowMonths,
-                          })}&from=${encodeURIComponent(pathname || "/dgcp")}`}
-                          className="text-sky-700 hover:underline"
-                        >
-                          {s.supplier_name}
-                        </Link>
-                      </td>
-                      <td className="py-2 pr-3">{s.supplier_rpe || "—"}</td>
-                      <td className="py-2 pr-3">{s.awards_count}</td>
-                      <td className="py-2 pr-3">{formatCurrency(Number(s.total_amount), s.currency)}</td>
-                      <td className="py-2 pr-3">{formatDate(s.last_award_date)}</td>
-                      <td className="py-2">
-                        <span className="inline-flex items-center gap-1">
-                          {s.share_pct}%
-                          {s === data.suppliers_ranking?.[0] && <Trophy className="h-3.5 w-3.5 text-amber-500" />}
-                        </span>
-                      </td>
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <Button
+                  size="sm"
+                  disabled={compareKeys.length < 1 || compareKeys.length > 3}
+                  asChild={compareKeys.length >= 1 && compareKeys.length <= 3}
+                >
+                  {compareKeys.length >= 1 && compareKeys.length <= 3 ? (
+                    <Link
+                      href={`/dgcp/intelligence/compare?keys=${compareKeys.map(encodeURIComponent).join(",")}&window_months=${windowMonths}`}
+                    >
+                      Comparar seleccionados ({compareKeys.length}/3)
+                    </Link>
+                  ) : (
+                    <span>Comparar seleccionados (0–3)</span>
+                  )}
+                </Button>
+                {compareKeys.length > 0 && (
+                  <Button size="sm" variant="ghost" onClick={() => setCompareKeys([])}>
+                    Limpiar
+                  </Button>
+                )}
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full text-sm">
+                  <thead>
+                    <tr className="border-b text-left text-slate-500">
+                      <th className="py-2 pr-2 w-8" />
+                      <th className="py-2 pr-3">Proveedor</th>
+                      <th className="py-2 pr-3">RPE</th>
+                      <th className="py-2 pr-3">Adjudicaciones</th>
+                      <th className="py-2 pr-3">Monto total</th>
+                      <th className="py-2 pr-3">Última</th>
+                      <th className="py-2">Participación</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-              {!data.suppliers_ranking?.length && (
-                <p className="text-sm text-slate-500">Sin proveedores en la ventana.</p>
-              )}
+                  </thead>
+                  <tbody>
+                    {(data.suppliers_ranking || []).map((s) => {
+                      const key = supplierStableKey({ name: s.supplier_name, rpe: s.supplier_rpe });
+                      const checked = compareKeys.includes(key);
+                      return (
+                        <tr key={s.supplier_name} className="border-b border-slate-100">
+                          <td className="py-2 pr-2">
+                            <input
+                              type="checkbox"
+                              checked={checked}
+                              onChange={() => {
+                                if (checked) setCompareKeys(compareKeys.filter((k) => k !== key));
+                                else if (compareKeys.length < 3) setCompareKeys([...compareKeys, key]);
+                              }}
+                              aria-label={`Seleccionar ${s.supplier_name}`}
+                            />
+                          </td>
+                          <td className="py-2 pr-3 font-medium">
+                            <Link
+                              href={`${supplierProfileHref({
+                                name: s.supplier_name,
+                                rpe: s.supplier_rpe,
+                                windowMonths,
+                              })}&from=${encodeURIComponent(pathname || "/dgcp")}`}
+                              className="text-sky-700 hover:underline"
+                            >
+                              {s.supplier_name}
+                            </Link>
+                          </td>
+                          <td className="py-2 pr-3">{s.supplier_rpe || "—"}</td>
+                          <td className="py-2 pr-3">{s.awards_count}</td>
+                          <td className="py-2 pr-3">{formatCurrency(Number(s.total_amount), s.currency)}</td>
+                          <td className="py-2 pr-3">{formatDate(s.last_award_date)}</td>
+                          <td className="py-2">
+                            <span className="inline-flex items-center gap-1">
+                              {s.share_pct}%
+                              {s === data.suppliers_ranking?.[0] && <Trophy className="h-3.5 w-3.5 text-amber-500" />}
+                            </span>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+                {!data.suppliers_ranking?.length && (
+                  <p className="text-sm text-slate-500">Sin proveedores en la ventana.</p>
+                )}
+              </div>
             </div>
           )}
 

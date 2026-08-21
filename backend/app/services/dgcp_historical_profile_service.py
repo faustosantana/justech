@@ -40,6 +40,7 @@ from app.schemas.dgcp_historical_profiles import (
 )
 from app.services.dgcp_historical_identity import (
     extract_rnc_from_payload,
+    extract_rnc_with_source,
     identity_confidence,
     institution_stable_key,
     normalize_party_name,
@@ -115,6 +116,12 @@ def _cache_set(key: str, val: Any) -> None:
             _CACHE.pop(k, None)
 
 
+def _cache_clear_prefix(prefix: str) -> None:
+    for k in list(_CACHE.keys()):
+        if prefix in k:
+            _CACHE.pop(k, None)
+
+
 class DGCPHistoricalProfileService:
     def __init__(self, db: AsyncSession, tenant_id):
         self.db = db
@@ -157,17 +164,24 @@ class DGCPHistoricalProfileService:
 
         display = awards[0].supplier_name or key
         rpe = next((a.supplier_rpe for a in awards if a.supplier_rpe), None)
-        rnc = next((extract_rnc_from_payload(a.raw_payload) for a in awards if extract_rnc_from_payload(a.raw_payload)), None)
+        rnc = None
+        rnc_source = "NONE"
+        for a in awards:
+            rnc, rnc_source = extract_rnc_with_source(a.raw_payload)
+            if rnc:
+                break
         stable = supplier_stable_key(rpe=rpe, name=display, rnc=rnc)
         identity = ProfileIdentity(
             stable_key=stable,
             display_name=display,
+            display_name_original=display,
             identity_kind=str(parsed.get("kind") or "name"),
             identity_confidence=identity_confidence(str(parsed.get("kind") or "name")),
             rnc=rnc,
             rpe=rpe,
             rnc_available=bool(rnc),
             rpe_available=bool(rpe),
+            rnc_source=rnc_source if rnc else "NONE",
             note=None
             if rnc or rpe
             else "RNC/RPE no disponible en la fuente; identidad por nombre normalizado (confianza sugerida).",
@@ -255,11 +269,29 @@ class DGCPHistoricalProfileService:
         return resp
 
     async def compare_suppliers(
-        self, keys: list[str], *, window_months: int | None = 24
+        self,
+        keys: list[str],
+        *,
+        window_months: int | None = 24,
+        institution_key: str | None = None,
     ) -> DGCPSupplierCompareResponse:
+        if len(keys) > 3:
+            raise ValueError("Máximo 3 proveedores en la comparación")
         rows: list[DGCPSupplierCompareRow] = []
+        recent: dict[str, list] = {}
         for key in keys[:3]:
-            profile = await self.get_supplier_profile(key, window_months=window_months, limit=20)
+            profile = await self.get_supplier_profile(
+                key,
+                window_months=window_months,
+                institution_key=institution_key,
+                limit=20,
+            )
+            # last 24m amount when window is broader / all
+            profile_24 = profile
+            if window_months is None or window_months > 24:
+                profile_24 = await self.get_supplier_profile(
+                    key, window_months=24, institution_key=institution_key, limit=5
+                )
             total = profile.totals_by_currency[0].amount if profile.totals_by_currency else None
             currency = profile.totals_by_currency[0].currency if profile.totals_by_currency else "DOP"
             rows.append(
@@ -272,9 +304,24 @@ class DGCPHistoricalProfileService:
                     institutions_count=profile.institutions_count,
                     categories_count=profile.categories_count,
                     last_12m_amount=profile.last_12m_amount,
+                    last_24m_amount=profile_24.totals_by_currency[0].amount
+                    if profile_24.totals_by_currency
+                    else None,
+                    primary_institution=profile.institutions[0].name if profile.institutions else None,
+                    primary_category=profile.primary_category,
+                    institution_context=institution_key,
+                    institution_awards=profile.pair.awards_count if profile.pair else None,
+                    institution_amount=profile.pair.total_amount if profile.pair else None,
+                    institution_last_award=profile.pair.last_award_date if profile.pair else None,
                 )
             )
-        return DGCPSupplierCompareResponse(window_months=window_months, rows=rows)
+            recent[key] = profile.awards[:5] if profile.awards else []
+        return DGCPSupplierCompareResponse(
+            window_months=window_months,
+            institution_key=institution_key,
+            rows=rows,
+            recent_awards=recent,
+        )
 
     async def _load_supplier_awards(
         self, parsed: dict[str, str | None], *, window_months: int | None

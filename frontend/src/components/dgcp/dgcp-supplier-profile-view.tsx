@@ -98,6 +98,19 @@ export function DGCPSupplierProfileView({
           {data?.identity.note && <p className="mt-1 text-xs text-amber-700">{data.identity.note}</p>}
         </div>
         <div className="flex flex-wrap gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            asChild
+          >
+            <Link
+              href={`/dgcp/intelligence/compare?keys=${encodeURIComponent(supplierKey)}${
+                institutionKey ? `&institution_key=${encodeURIComponent(institutionKey)}` : ""
+              }&window_months=${windowMonths}`}
+            >
+              Comparar
+            </Link>
+          </Button>
           {WINDOWS.map((w) => (
             <Button key={w.value} size="sm" variant={windowMonths === w.value ? "default" : "outline"} onClick={() => setWindowMonths(w.value)}>
               {w.label}

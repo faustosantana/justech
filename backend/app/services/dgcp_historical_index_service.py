@@ -11,6 +11,14 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import settings
 from app.models.dgcp_historical_award import DGCPHistoricalAward, DGCPHistoricalIndexJob
+from app.services.dgcp_historical_job_status import (
+    JOB_RUNNING,
+    JOB_SOURCE_UNAVAILABLE,
+    JOB_SUCCESS,
+    classify_exception,
+    mark_job_complete,
+    should_auto_retry,
+)
 from app.models.dgcp_opportunity import DGCPOpportunity
 from app.services.dgcp_historical_similarity_engine import institution_matches_strict, normalize_text
 from integrations.dgcp.client import DGCPClient
@@ -42,7 +50,7 @@ class DGCPHistoricalIndexService:
         page_size: int = 100,
         trigger: str = "manual",
     ) -> DGCPHistoricalIndexJob:
-        job = DGCPHistoricalIndexJob(tenant_id=self.tenant_id, status="running")
+        job = DGCPHistoricalIndexJob(tenant_id=self.tenant_id, status=JOB_RUNNING)
         self.db.add(job)
         await self.db.flush()
 
@@ -63,13 +71,24 @@ class DGCPHistoricalIndexService:
                             job.items_indexed += 1
                 if page >= response.pages:
                     break
-            job.status = "completed"
-            job.completed_at = datetime.now(UTC)
+            mark_job_complete(
+                job,
+                status=JOB_SUCCESS,
+                source_status="AVAILABLE",
+                result_meta={"trigger": trigger},
+            )
+            # Flush completion marker before return so a late shell timeout cannot invent FAILED
+            await self.db.flush()
         except Exception as exc:
-            job.status = "failed"
-            job.error_message = str(exc)
-            job.completed_at = datetime.now(UTC)
-        await self.db.flush()
+            status = classify_exception(exc)
+            mark_job_complete(
+                job,
+                status=status,
+                error_message=str(exc)[:2000],
+                source_status="UNAVAILABLE" if status == JOB_SOURCE_UNAVAILABLE else None,
+                result_meta={"trigger": trigger},
+            )
+            await self.db.flush()
         await self.db.refresh(job)
         return job
 

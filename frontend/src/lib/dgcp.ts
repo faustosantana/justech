@@ -1032,6 +1032,7 @@ export interface DGCPInstitutionProfile {
 
 export interface DGCPSupplierCompareResponse {
   window_months?: number | null;
+  institution_key?: string | null;
   rows: Array<{
     identity: DGCPSupplierProfile["identity"];
     awards_count: number;
@@ -1041,7 +1042,15 @@ export interface DGCPSupplierCompareResponse {
     institutions_count: number;
     categories_count: number;
     last_12m_amount?: number | string | null;
+    last_24m_amount?: number | string | null;
+    primary_institution?: string | null;
+    primary_category?: string | null;
+    institution_context?: string | null;
+    institution_awards?: number | null;
+    institution_amount?: number | string | null;
+    institution_last_award?: string | null;
   }>;
+  recent_awards?: Record<string, Array<Record<string, unknown>>>;
   note?: string;
 }
 

@@ -25,6 +25,7 @@ Diversification = Literal["DIVERSIFICADO", "MODERADO", "CONCENTRADO", "INSUFICIE
 class ProfileIdentity(BaseModel):
     stable_key: str
     display_name: str
+    display_name_original: str | None = None
     identity_kind: str  # rnc|rpe|code|name
     identity_confidence: str  # alta|sugerida|baja
     rnc: str | None = None
@@ -32,6 +33,7 @@ class ProfileIdentity(BaseModel):
     institution_code: str | None = None
     rnc_available: bool = False
     rpe_available: bool = False
+    rnc_source: str | None = None  # DGCP_CONTRACT | DGCP_SUPPLIER | DGCP_RPE | OTHER_OFFICIAL | NONE
     note: str | None = None
 
 
@@ -177,6 +179,7 @@ class DGCPInstitutionProfileResponse(BaseModel):
 class DGCPSupplierCompareRequest(BaseModel):
     keys: list[str] = Field(min_length=1, max_length=3)
     window_months: int | None = 24
+    institution_key: str | None = None
 
 
 class DGCPSupplierCompareRow(BaseModel):
@@ -188,9 +191,39 @@ class DGCPSupplierCompareRow(BaseModel):
     institutions_count: int = 0
     categories_count: int = 0
     last_12m_amount: Decimal | None = None
+    last_24m_amount: Decimal | None = None
+    primary_institution: str | None = None
+    primary_category: str | None = None
+    institution_context: str | None = None
+    institution_awards: int | None = None
+    institution_amount: Decimal | None = None
+    institution_last_award: str | None = None
 
 
 class DGCPSupplierCompareResponse(BaseModel):
     window_months: int | None = None
+    institution_key: str | None = None
     rows: list[DGCPSupplierCompareRow] = Field(default_factory=list)
+    recent_awards: dict[str, list[Any]] = Field(default_factory=dict)
     note: str = "Comparación descriptiva; no es un ranking de calidad ni recomendación."
+
+
+class DGCPIdentityActionRequest(BaseModel):
+    party_type: Literal["supplier", "institution"] = "supplier"
+    identity_a: str
+    identity_b: str
+    action: Literal["merge", "keep_separate", "ignore", "unmerge"]
+    note: str | None = None
+    criterion: str | None = None
+    confidence: str | None = None
+
+
+class DGCPSourceHealthResponse(BaseModel):
+    source: str = "DGCP"
+    status: Literal["AVAILABLE", "DEGRADED", "UNAVAILABLE"] = "UNAVAILABLE"
+    http_status: int | None = None
+    endpoint: str | None = None
+    checked_at: str | None = None
+    last_successful_sync: str | None = None
+    last_job_status: str | None = None
+    message: str = ""

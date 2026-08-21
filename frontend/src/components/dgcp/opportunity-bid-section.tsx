@@ -8,6 +8,9 @@ import { DocumentPreviewModal } from "@/components/dgcp/document-preview-modal";
 import { AuthenticatedFileViewer } from "@/components/documents/authenticated-file-viewer";
 import { ExpedienteDashboard } from "@/components/dgcp/expediente-dashboard";
 import { DgcpDocumentosOperativosTab } from "@/components/dgcp/dgcp-documentos-operativos-tab";
+import { DgcpExpedienteTechnicalIntelligencePanel } from "@/components/dgcp/dgcp-expediente-technical-intelligence-panel";
+import { DgcpOfferPreparationCenter } from "@/components/dgcp/dgcp-offer-preparation-center";
+import { DgcpProcessUpdatesPanel } from "@/components/dgcp/dgcp-process-updates-panel";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -18,6 +21,11 @@ import {
   userFacingApiError,
   type ExpedienteReadiness,
 } from "@/lib/dgcp-expediente-ux";
+import {
+  dgcpExpedienteTechnicalIntelligenceEnabled,
+  dgcpOfferPreparationCenterEnabled,
+  dgcpProcessUpdatesEnabled,
+} from "@/lib/dgcp-feature-flags";
 import {
   CHECKLIST_STATUS_LABELS,
   COMPLIANCE_STATUS_LABELS,
@@ -618,6 +626,7 @@ export function OpportunityBidSection({
               opportunityId={opportunity.id}
               opportunityCode={opportunity.code}
               companyKey={opportunity.company || "justech"}
+              formTypeHint={autofillFormTypeHint || selectedFormType}
             />
           )}
 
@@ -640,6 +649,11 @@ export function OpportunityBidSection({
                 }}
                 onAssociate={setAssociateItemId}
                 onMarkNoAplica={handleMarkNoAplica}
+                onAutofill={(formType) => {
+                  setSelectedFormType(formType);
+                  onNavigateTab?.("documentos", { formType });
+                  void handlePreviewSncc(formType);
+                }}
               />
             ) : (
               <EmptyAnalysisHint />
@@ -1021,6 +1035,7 @@ function RequirementActions({
   onCreateTask,
   onAssociate,
   onMarkNoAplica,
+  onAutofill,
 }: {
   item: DGCPChecklistItem;
   taskBusy?: boolean;
@@ -1030,6 +1045,7 @@ function RequirementActions({
   onCreateTask: () => void;
   onAssociate: () => void;
   onMarkNoAplica: () => void;
+  onAutofill?: (formType: string) => void;
 }) {
   const hasDoc = Boolean(
     item.document_id || item.document_title || item.knowledge_asset_id || item.process_document_id,
@@ -1071,8 +1087,13 @@ function RequirementActions({
         </Button>
       )}
       {item.completable && item.form_type && (
-        <Button size="sm" variant="ghost" asChild>
-          <span className="text-xs">Autollenado</span>
+        <Button
+          size="sm"
+          variant="ghost"
+          className="text-xs"
+          onClick={() => onAutofill?.(item.form_type!)}
+        >
+          Autollenado
         </Button>
       )}
     </div>
@@ -1262,6 +1283,7 @@ function ChecklistTab({
   onAddNote,
   onAssociate,
   onMarkNoAplica,
+  onAutofill,
 }: {
   opportunityId: string;
   checklist: DGCPChecklist;
@@ -1273,6 +1295,7 @@ function ChecklistTab({
   onAddNote: (itemId: string) => void;
   onAssociate: (itemId: string) => void;
   onMarkNoAplica: (itemId: string) => void;
+  onAutofill?: (formType: string) => void;
 }) {
   return (
     <Card>
@@ -1326,6 +1349,7 @@ function ChecklistTab({
                 onCreateTask={() => void onCreateTask(item.id)}
                 onAssociate={() => onAssociate(item.id)}
                 onMarkNoAplica={() => void onMarkNoAplica(item.id)}
+                onAutofill={onAutofill}
               />
             </div>
           </div>
@@ -1436,6 +1460,24 @@ function ExpedienteTab({
           refreshKey={refreshKey}
           onChanged={onWorkspaceChanged}
         />
+
+        {dgcpProcessUpdatesEnabled() ? (
+          <DgcpProcessUpdatesPanel opportunityId={opportunityId} />
+        ) : null}
+
+        {dgcpOfferPreparationCenterEnabled() ? (
+          <DgcpOfferPreparationCenter
+            opportunityId={opportunityId}
+            onRefreshExpediente={onWorkspaceChanged}
+            onGoToAutofill={(formType) => onNavigateTab?.("documentos", { formType })}
+            onGoToOfferTechnical={() => onNavigateTab?.("fichas")}
+            onGoToFichas={() => onNavigateTab?.("fichas")}
+          />
+        ) : null}
+
+        {dgcpExpedienteTechnicalIntelligenceEnabled() ? (
+          <DgcpExpedienteTechnicalIntelligencePanel opportunityId={opportunityId} embedded />
+        ) : null}
 
         <div className="grid gap-2 text-sm sm:grid-cols-3 lg:grid-cols-6">
           <Metric label="Total requisitos" value={bidPackage.total_requirements ?? 0} />

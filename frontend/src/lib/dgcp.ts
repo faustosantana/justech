@@ -152,21 +152,39 @@ export interface DGCPProcessUpdateItem {
   [key: string]: unknown;
 }
 
+/** Registro auditado de cambio portal (contrato vigente process-updates). */
+export interface DGCPProcessUpdateRecord {
+  id: string;
+  detected_at: string;
+  change_type: string;
+  description: string;
+  impact: string;
+  affected_document?: string | null;
+  recommended_action: string;
+  review_status: "pendiente" | "revisado" | "aplicado" | string;
+  suggestions?: string[];
+  requires_reanalysis?: boolean;
+  source?: string;
+  diff?: Record<string, unknown>;
+}
+
+export interface DGCPProcessUpdatesMeta {
+  pending_count: number;
+  critical_count: number;
+  requires_reanalysis: boolean;
+  last_checked_at?: string | null;
+  last_change_at?: string | null;
+  notification_hook_ready?: boolean;
+}
+
 export interface DGCPProcessUpdatesResponse {
   opportunity_id: string;
   enabled?: boolean;
   items?: DGCPProcessUpdateItem[];
-  updates?: DGCPProcessUpdateItem[];
+  updates?: DGCPProcessUpdateRecord[];
   total?: number;
   snapshot?: Record<string, unknown> | null;
-  meta?: {
-    pending_count?: number;
-    critical_count?: number;
-    requires_reanalysis?: boolean;
-    last_checked_at?: string | null;
-    last_change_at?: string | null;
-    notification_hook_ready?: boolean;
-  };
+  meta?: DGCPProcessUpdatesMeta;
 }
 
 
@@ -472,11 +490,21 @@ export interface DGCPDocumentMatches {
 }
 
 export interface DGCPFormPreviewField {
+  key?: string;
   label: string;
   value: string | null;
   status: string;
   confidence: number;
   source?: string | null;
+}
+
+export interface DGCPFormPreviewAliasField {
+  alias: string;
+  alias_normalized: string;
+  canonical?: string | null;
+  value?: string | null;
+  status?: string;
+  [key: string]: unknown;
 }
 
 export interface DGCPFormPreview {
@@ -489,6 +517,16 @@ export interface DGCPFormPreview {
   overall_confidence: number;
   note: string;
   generate_enabled: boolean;
+  completion_status?: string;
+  alias_fields?: DGCPFormPreviewAliasField[];
+  alias_summary?: {
+    total?: number;
+    completed?: number;
+    critical_pending?: number;
+    non_critical_pending?: number;
+  };
+  critical_pending_aliases?: string[];
+  draft_enabled?: boolean;
 }
 
 export interface DGCPProcessDocument {
@@ -1525,6 +1563,284 @@ export interface DGCPTechSheetsResponse {
   enabled: boolean;
   summary: DGCPTechSheetSummary;
   items: DGCPTechSheetItem[];
+}
+
+/* ── Autollenado / formularios ─────────────────────────────────────── */
+
+export interface DGCPMissingFieldItem {
+  key: string;
+  label: string;
+  status: string;
+  suggested_source?: string | null;
+  can_infer?: boolean;
+  inferred_value?: string | null;
+  inference_confidence?: number | null;
+  persist_targets: string[];
+}
+
+export interface DGCPAutofillFieldStatus {
+  key: string;
+  label: string;
+  value?: string | null;
+  source?: string | null;
+  status?: string;
+  confidence?: number | null;
+}
+
+export interface DGCPMissingFieldsResponse {
+  opportunity_id: string;
+  form_type: string;
+  company: string;
+  fields: DGCPMissingFieldItem[];
+  completed_fields?: DGCPAutofillFieldStatus[];
+  complete_count?: number;
+  pending_count?: number;
+}
+
+export interface DGCPRequiredFormItem {
+  form_type: string;
+  label: string;
+  requirement_key?: string | null;
+  status?: string;
+  source?: string;
+}
+
+export interface DGCPAutofillTemplate {
+  form_type: string;
+  label?: string;
+  template_key?: string;
+  [key: string]: unknown;
+}
+
+export interface DGCPRequiredFormsResponse {
+  opportunity_id: string;
+  required_forms: DGCPRequiredFormItem[];
+  library_forms: DGCPAutofillTemplate[];
+}
+
+export interface DGCPResolveMissingFieldPayload {
+  key: string;
+  value: string;
+  persist_to_profile?: boolean;
+  persist_to_expediente?: boolean;
+}
+
+export interface DGCPResolveMissingFieldResponse {
+  opportunity_id: string;
+  key: string;
+  value: string;
+  persisted_profile?: boolean;
+  persisted_expediente?: boolean;
+  missing_fields: DGCPMissingFieldsResponse;
+}
+
+export function formatCompletionStatus(status?: string | null): string {
+  if (!status) return "—";
+  const map: Record<string, string> = {
+    completo: "Completo",
+    parcial: "Parcial",
+    pendiente: "Pendiente",
+    borrador: "Borrador",
+  };
+  return map[status] ?? status;
+}
+
+export function formatFormStatus(status?: string | null): string {
+  if (!status) return "—";
+  const map: Record<string, string> = {
+    pendiente: "Pendiente",
+    completo: "Completo",
+    parcial: "Parcial",
+    generado: "Generado",
+  };
+  return map[status] ?? status;
+}
+
+/* ── Product intelligence / offer preparation ──────────────────────── */
+
+export interface DGCPComplianceMatrixRow {
+  requisito: string;
+  valor_requerido?: string | null;
+  valor_producto?: string | null;
+  cumple?: string;
+  evidencia?: string | null;
+  fuente?: string | null;
+  pagina?: string | null;
+  fragmento?: string | null;
+  observacion?: string | null;
+  confianza?: number;
+}
+
+export interface DGCPProductRequirementItem {
+  id: string;
+  nombre: string;
+  categoria?: string | null;
+  cantidad?: number | null;
+  unidad?: string | null;
+  technical_requirements?: Array<Record<string, unknown>>;
+  functional_requirements?: Array<Record<string, unknown>>;
+  status?: string;
+  source_fragment?: string | null;
+  confidence?: number;
+}
+
+export interface DGCPProductCandidate {
+  id: string;
+  manufacturer?: string | null;
+  model?: string | null;
+  sku?: string | null;
+  name: string;
+  datasheet_url?: string | null;
+  datasheet_path?: string | null;
+  source: string;
+  source_type: string;
+  confidence?: number;
+  is_technical_source?: boolean;
+  notes?: string | null;
+}
+
+export interface DGCPProductIntelligenceItem {
+  requirement: DGCPProductRequirementItem;
+  candidates: DGCPProductCandidate[];
+  selected_candidate_id?: string | null;
+  compliance_matrix: DGCPComplianceMatrixRow[];
+  compliance_pct?: number | null;
+  commercial?: Record<string, unknown> | null;
+  recommended?: boolean;
+  technical_sheet_id?: string | null;
+  status?: string;
+}
+
+export interface DGCPProductIntelligenceSummary {
+  requirements_count?: number;
+  candidates_count?: number;
+  approved_count?: number;
+  fichas_generadas?: number;
+  avg_compliance_pct?: number | null;
+  recommended_product?: string | null;
+  message?: string | null;
+}
+
+export interface DGCPProductIntelligenceResponse {
+  opportunity_id: string;
+  enabled: boolean;
+  summary: DGCPProductIntelligenceSummary;
+  items: DGCPProductIntelligenceItem[];
+}
+
+export interface DGCPProductIntelligenceRunResponse {
+  opportunity_id: string;
+  requirements_count: number;
+  candidates_count: number;
+  summary: DGCPProductIntelligenceSummary;
+  items: DGCPProductIntelligenceItem[];
+  message: string;
+}
+
+export interface DGCPProductIntelligenceActionResponse {
+  ok: boolean;
+  item: DGCPProductIntelligenceItem;
+  message?: string | null;
+}
+
+export interface DGCPOfferPreparationAutoAction {
+  id: string;
+  label: string;
+  action_type: string;
+  area: string;
+  enabled?: boolean;
+  reason?: string | null;
+  payload?: Record<string, unknown>;
+}
+
+export interface DGCPOfferPreparationCenterResponse {
+  opportunity_id: string;
+  enabled: boolean;
+  analyzed: boolean;
+  executive_summary: {
+    institution: string;
+    process_code: string;
+    title: string;
+    modalidad?: string | null;
+    deadline?: string | null;
+    estimated_amount?: number | null;
+    currency?: string;
+    guarantee_amount?: string | null;
+    participating_company: string;
+    interest_status: string;
+    interest_status_label: string;
+    overall_preparation_pct: number;
+    expediente_status?: string | null;
+  };
+  areas: Array<{
+    key: string;
+    label: string;
+    preparation_pct?: number | null;
+    status: string;
+    detail?: string | null;
+  }>;
+  critical_pending: Array<{
+    id: string;
+    label: string;
+    area: string;
+    severity: string;
+    reason?: string | null;
+    checklist_item_id?: string | null;
+    action_hint?: string | null;
+  }>;
+  minor_pending: Array<{
+    id: string;
+    label: string;
+    area: string;
+    severity: string;
+    reason?: string | null;
+  }>;
+  auto_actions: DGCPOfferPreparationAutoAction[];
+  human_decisions: Array<Record<string, unknown>>;
+  risks: Array<{
+    nivel: string;
+    descripcion: string;
+    fuente?: string | null;
+    evidencia?: string | null;
+    documento_origen?: string | null;
+  }>;
+  branding_status: Array<{
+    asset_type: string;
+    label: string;
+    status: string;
+    source?: string | null;
+  }>;
+  consolidated_offer: {
+    status: string;
+    generated_at?: string | null;
+    filename?: string | null;
+    sections?: string[];
+    preview_excerpt?: string | null;
+  };
+}
+
+export interface DGCPOfferPreparationConsolidatedGenerateResponse {
+  opportunity_id: string;
+  status: string;
+  filename: string;
+  content: string;
+  sections: string[];
+  message: string;
+}
+
+export interface DGCPOpportunityCreatePayload {
+  code: string;
+  institution: string;
+  title: string;
+  amount: string | number;
+  currency?: string;
+  deadline: string;
+  description?: string;
+  modalidad?: string;
+  source?: string;
+  source_url?: string;
+  company?: OpportunityCompany;
+  status?: OpportunityStatus;
 }
 
 

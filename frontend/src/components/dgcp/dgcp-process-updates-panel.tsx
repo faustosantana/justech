@@ -71,7 +71,7 @@ export function DgcpProcessUpdatesPanel({ opportunityId, onPendingCountChange }:
     try {
       const res = await apiClient.getDGCPProcessUpdates(opportunityId);
       setData(res);
-      onPendingCountChange?.(res.meta.pending_count);
+      onPendingCountChange?.(res.meta?.pending_count ?? 0);
     } catch (e) {
       setError(e instanceof Error ? e.message : "No se pudieron cargar las actualizaciones.");
     } finally {
@@ -88,7 +88,7 @@ export function DgcpProcessUpdatesPanel({ opportunityId, onPendingCountChange }:
     try {
       const res = await apiClient.checkDGCPProcessUpdates(opportunityId);
       setData(res);
-      onPendingCountChange?.(res.meta.pending_count);
+      onPendingCountChange?.(res.meta?.pending_count ?? 0);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Error al verificar portal.");
     } finally {

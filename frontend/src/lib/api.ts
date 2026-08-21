@@ -770,14 +770,32 @@ export const apiClient = {
   getDGCPAlerts: (id: string) =>
     request<import("@/lib/dgcp").DGCPBidAlerts>(`/dgcp/opportunities/${id}/alerts`, {}, true),
 
-  autofillDGCPForm: (opportunityId: string, formType = "SNCC.F042", company = "justech") =>
+  autofillDGCPForm: (
+    opportunityId: string,
+    formType = "SNCC.F042",
+    company = "justech",
+    fieldOverrides?: Record<string, string>,
+  ) =>
     request<import("@/lib/dgcp").DGCPFormPreview>(
       `/dgcp/opportunities/${opportunityId}/forms/autofill-preview`,
-      { method: "POST", body: JSON.stringify({ form_type: formType, company }) },
+      {
+        method: "POST",
+        body: JSON.stringify({
+          form_type: formType,
+          company,
+          field_overrides: fieldOverrides ?? {},
+        }),
+      },
       true,
     ),
 
-  generateDGCPForm: (opportunityId: string, formType = "SNCC.F042", company = "justech") =>
+  generateDGCPForm: (
+    opportunityId: string,
+    formType = "SNCC.F042",
+    company = "justech",
+    fieldOverrides?: Record<string, string>,
+    draft = false,
+  ) =>
     request<{
       opportunity_id: string;
       form_type: string;
@@ -786,9 +804,18 @@ export const apiClient = {
       fields_completed: number;
       fields_pending: number;
       overall_confidence: number;
+      is_draft?: boolean;
     }>(
       `/dgcp/opportunities/${opportunityId}/forms/generate`,
-      { method: "POST", body: JSON.stringify({ form_type: formType, company }) },
+      {
+        method: "POST",
+        body: JSON.stringify({
+          form_type: formType,
+          company,
+          field_overrides: fieldOverrides ?? {},
+          draft,
+        }),
+      },
       true,
     ),
 
@@ -1061,6 +1088,238 @@ export const apiClient = {
     request<import("@/lib/dgcp").DGCPProcessUpdatesResponse>(
       `/dgcp/opportunities/${opportunityId}/process-updates`,
       {},
+      true,
+    ),
+
+  checkDGCPProcessUpdates: (opportunityId: string) =>
+    request<import("@/lib/dgcp").DGCPProcessUpdatesResponse>(
+      `/dgcp/opportunities/${opportunityId}/process-updates/check`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  markDGCPProcessUpdateReviewed: (opportunityId: string, updateId: string, note?: string) =>
+    request<{ ok?: boolean }>(
+      `/dgcp/opportunities/${opportunityId}/process-updates/${updateId}/review`,
+      { method: "POST", body: JSON.stringify({ note: note ?? null }) },
+      true,
+    ),
+
+  markDGCPProcessUpdateApplied: (opportunityId: string, updateId: string, note?: string) =>
+    request<{ ok?: boolean }>(
+      `/dgcp/opportunities/${opportunityId}/process-updates/${updateId}/apply`,
+      { method: "POST", body: JSON.stringify({ note: note ?? null }) },
+      true,
+    ),
+
+  createDGCPOpportunity: (data: import("@/lib/dgcp").DGCPOpportunityCreatePayload) =>
+    request<import("@/lib/dgcp").DGCPOpportunity>("/dgcp/opportunities", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }, true),
+
+  getDGCPRequiredForms: (opportunityId: string, company = "justech") =>
+    request<import("@/lib/dgcp").DGCPRequiredFormsResponse>(
+      `/dgcp/opportunities/${opportunityId}/forms/required${buildQuery({ company })}`,
+      {},
+      true,
+    ),
+
+  getDGCPMissingFields: (opportunityId: string, formType = "SNCC.F042", company = "justech") =>
+    request<import("@/lib/dgcp").DGCPMissingFieldsResponse>(
+      `/dgcp/opportunities/${opportunityId}/forms/missing-fields${buildQuery({
+        form_type: formType,
+        company,
+      })}`,
+      {},
+      true,
+    ),
+
+  resolveDGCPMissingField: (
+    opportunityId: string,
+    data: import("@/lib/dgcp").DGCPResolveMissingFieldPayload,
+    formType = "SNCC.F042",
+    company = "justech",
+  ) =>
+    request<import("@/lib/dgcp").DGCPResolveMissingFieldResponse>(
+      `/dgcp/opportunities/${opportunityId}/forms/resolve-missing-field${buildQuery({
+        form_type: formType,
+        company,
+      })}`,
+      { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
+
+  getDGCPAutofillTemplates: () =>
+    request<{ items: import("@/lib/dgcp").DGCPAutofillTemplate[]; total: number }>(
+      "/dgcp/autofill-templates",
+      {},
+      true,
+    ),
+
+  getDGCPAutofillCanonicalFields: () =>
+    request<{ items: Array<{ key: string; label: string }> }>(
+      "/dgcp/autofill-canonical-fields",
+      {},
+      true,
+    ),
+
+  saveDGCPAliasMapping: (data: Record<string, unknown>) =>
+    request<Record<string, unknown>>("/dgcp/autofill-alias-mappings", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }, true),
+
+  downloadDGCPAutofillPdf: async (
+    opportunityId: string,
+    formType = "SNCC.F042",
+    company = "justech",
+    fieldOverrides?: Record<string, string>,
+  ) => {
+    const { fetchAuthenticatedFile, downloadAuthenticatedBlob } = await import(
+      "@/lib/authenticated-file"
+    );
+    const payload = await fetchAuthenticatedFile(
+      `/dgcp/opportunities/${opportunityId}/forms/document-preview`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          form_type: formType,
+          company,
+          field_overrides: fieldOverrides ?? {},
+        }),
+      },
+    );
+    downloadAuthenticatedBlob(payload.blob, payload.filename || `${formType}.pdf`);
+  },
+
+  linkDGCPChecklistM365: (
+    opportunityId: string,
+    itemId: string,
+    data: {
+      item_id: string;
+      drive_id?: string;
+      source_type?: string;
+      site_id?: string;
+      name?: string;
+      web_url?: string;
+      path?: string;
+    },
+  ) =>
+    request<{
+      document_title?: string | null;
+      checklist: import("@/lib/dgcp").DGCPChecklist;
+      bid_package: import("@/lib/dgcp").DGCPBidPackage;
+      expediente_status: string;
+    }>(
+      `/dgcp/opportunities/${opportunityId}/checklist/${itemId}/link-m365`,
+      { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
+
+  importDGCPChecklistM365: (
+    opportunityId: string,
+    itemId: string,
+    data: {
+      item_id: string;
+      drive_id?: string;
+      source_type?: string;
+      site_id?: string;
+      name?: string;
+      web_url?: string;
+      path?: string;
+    },
+  ) =>
+    request<{
+      document_title?: string | null;
+      checklist: import("@/lib/dgcp").DGCPChecklist;
+      bid_package: import("@/lib/dgcp").DGCPBidPackage;
+      expediente_status: string;
+    }>(
+      `/dgcp/opportunities/${opportunityId}/checklist/${itemId}/import-m365`,
+      { method: "POST", body: JSON.stringify(data) },
+      true,
+    ),
+
+  getDGCPProductIntelligence: (opportunityId: string) =>
+    request<import("@/lib/dgcp").DGCPProductIntelligenceResponse>(
+      `/dgcp/opportunities/${opportunityId}/product-intelligence`,
+      {},
+      true,
+    ),
+
+  runDGCPProductIntelligence: (opportunityId: string, force = false) =>
+    request<import("@/lib/dgcp").DGCPProductIntelligenceRunResponse>(
+      `/dgcp/opportunities/${opportunityId}/product-intelligence/run${buildQuery({
+        force: force ? "true" : undefined,
+      })}`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  searchDGCPProductCandidates: (
+    opportunityId: string,
+    requirementId: string,
+    opts?: { include_internet?: boolean; include_repository?: boolean; include_commercial?: boolean },
+  ) =>
+    request<import("@/lib/dgcp").DGCPProductIntelligenceActionResponse>(
+      `/dgcp/opportunities/${opportunityId}/product-intelligence/${encodeURIComponent(requirementId)}/search-candidates`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          requirement_id: requirementId,
+          include_internet: opts?.include_internet ?? true,
+          include_repository: opts?.include_repository ?? true,
+          include_commercial: opts?.include_commercial ?? true,
+        }),
+      },
+      true,
+    ),
+
+  buildDGCPComplianceMatrix: (opportunityId: string, requirementId: string, candidateId: string) =>
+    request<import("@/lib/dgcp").DGCPProductIntelligenceActionResponse>(
+      `/dgcp/opportunities/${opportunityId}/product-intelligence/${encodeURIComponent(requirementId)}/compliance-matrix`,
+      {
+        method: "POST",
+        body: JSON.stringify({ requirement_id: requirementId, candidate_id: candidateId }),
+      },
+      true,
+    ),
+
+  approveDGCPProductIntelligence: (
+    opportunityId: string,
+    requirementId: string,
+    candidateId: string,
+    regenerateSheet = true,
+  ) =>
+    request<import("@/lib/dgcp").DGCPProductIntelligenceActionResponse>(
+      `/dgcp/opportunities/${opportunityId}/product-intelligence/${encodeURIComponent(requirementId)}/approve`,
+      {
+        method: "POST",
+        body: JSON.stringify({ candidate_id: candidateId, regenerate_sheet: regenerateSheet }),
+      },
+      true,
+    ),
+
+  rejectDGCPProductIntelligence: (opportunityId: string, requirementId: string) =>
+    request<import("@/lib/dgcp").DGCPProductIntelligenceActionResponse>(
+      `/dgcp/opportunities/${opportunityId}/product-intelligence/${encodeURIComponent(requirementId)}/reject`,
+      { method: "POST", body: "{}" },
+      true,
+    ),
+
+  getDGCPOfferPreparationCenter: (opportunityId: string) =>
+    request<import("@/lib/dgcp").DGCPOfferPreparationCenterResponse>(
+      `/dgcp/opportunities/${opportunityId}/offer-preparation-center`,
+      {},
+      true,
+    ),
+
+  generateDGCPConsolidatedTechnicalOffer: (opportunityId: string) =>
+    request<import("@/lib/dgcp").DGCPOfferPreparationConsolidatedGenerateResponse>(
+      `/dgcp/opportunities/${opportunityId}/offer-preparation-center/consolidated-offer`,
+      { method: "POST", body: "{}" },
       true,
     ),
 

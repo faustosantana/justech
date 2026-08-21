@@ -71,14 +71,23 @@ PERMISSIONS = frozenset({
     "create_tasks",
     "reassign_tasks",
     "view_odoo",
+    "mutate_odoo",
     "view_dgcp",
+    "mutate_dgcp",
     "view_m365",
+    "mutate_m365",
     # Restored: FE ModuleAccessGuard for empresas-grupo/documentos requires this key.
     # Dropped accidentally in lottery admin merge (dd19094). Scope: view_documents only.
     "view_documents",
+    "mutate_documents",
     "admin_users",
     "admin_settings",
 }) | LOTTERY_PERMISSIONS
+
+_DGCP_OPS = frozenset({"view_dgcp", "mutate_dgcp"})
+_ODOO_OPS = frozenset({"view_odoo", "mutate_odoo"})
+_M365_OPS = frozenset({"view_m365", "mutate_m365"})
+_DOCS_OPS = frozenset({"view_documents", "mutate_documents"})
 
 ROLE_PERMISSIONS: dict[str, frozenset[str]] = {
     "owner": PERMISSIONS,
@@ -86,39 +95,53 @@ ROLE_PERMISSIONS: dict[str, frozenset[str]] = {
     "admin": PERMISSIONS,
     "gerencia": frozenset({
         "view_modules", "create_tasks", "reassign_tasks",
-        "view_odoo", "view_dgcp", "view_m365", "view_documents",
-    }) | LOTTERY_CLIENT_PERMISSIONS,
+    }) | _ODOO_OPS | _DGCP_OPS | _M365_OPS | _DOCS_OPS | LOTTERY_CLIENT_PERMISSIONS,
     "ventas": frozenset({
-        "view_modules", "create_tasks", "view_odoo", "view_dgcp", "view_m365", "view_documents",
-    }),
+        "view_modules", "create_tasks",
+    }) | _ODOO_OPS | _DGCP_OPS | _M365_OPS | _DOCS_OPS,
     "facturacion": frozenset({
-        "view_modules", "create_tasks", "view_odoo", "view_m365", "view_documents",
-    }),
+        "view_modules", "create_tasks",
+    }) | _ODOO_OPS | _M365_OPS | _DOCS_OPS,
     "finanzas": frozenset({
-        "view_modules", "create_tasks", "view_odoo", "view_m365", "view_documents",
-    }),
+        "view_modules", "create_tasks",
+    }) | _ODOO_OPS | _M365_OPS | _DOCS_OPS,
     "compras": frozenset({
-        "view_modules", "create_tasks", "view_odoo", "view_documents",
-    }),
+        "view_modules", "create_tasks",
+    }) | _ODOO_OPS | _DOCS_OPS,
     "soporte": frozenset({
-        "view_modules", "create_tasks", "reassign_tasks", "view_odoo", "view_m365", "view_documents",
-    }),
+        "view_modules", "create_tasks", "reassign_tasks",
+    }) | _ODOO_OPS | _M365_OPS | _DOCS_OPS,
     "operaciones": frozenset({
         "view_modules", "create_tasks", "reassign_tasks",
-        "view_odoo", "view_dgcp", "view_m365", "view_documents",
-    }),
+    }) | _ODOO_OPS | _DGCP_OPS | _M365_OPS | _DOCS_OPS,
     "licitaciones": frozenset({
-        "view_modules", "create_tasks", "view_dgcp", "view_m365", "view_documents",
-    }),
+        "view_modules", "create_tasks",
+    }) | _DGCP_OPS | _M365_OPS | _DOCS_OPS,
     "usuario": frozenset({
-        "view_modules", "create_tasks", "view_odoo", "view_dgcp", "view_m365", "view_documents",
-    }),
+        "view_modules", "create_tasks",
+    }) | _ODOO_OPS | _DGCP_OPS | _M365_OPS | _DOCS_OPS,
     "member": frozenset({
-        "view_modules", "create_tasks", "view_odoo", "view_dgcp", "view_m365", "view_documents",
-    }),
+        "view_modules", "create_tasks",
+    }) | _ODOO_OPS | _DGCP_OPS | _M365_OPS | _DOCS_OPS,
     # Lottery-only: must not gain empresas-grupo / documentos.
     "lottery_client": LOTTERY_CLIENT_PERMISSIONS,
 }
+
+# Privilege order for primary JWT/admin role (highest first).
+ROLE_PRIORITY: tuple[str, ...] = (
+    "owner",
+    "admin",
+    "gerencia",
+    "operaciones",
+    "licitaciones",
+    "ventas",
+    "finanzas",
+    "facturacion",
+    "compras",
+    "soporte",
+    "usuario",
+    "lottery_client",
+)
 
 DEFAULT_MODULES = [
     ("dashboard", "Panel Principal", False),
@@ -228,16 +251,57 @@ def normalize_role(role: str | None) -> str:
     return "usuario" if role == "member" else role
 
 
-def can_view_admin(role: str | None, is_superadmin: bool = False) -> bool:
-    if is_superadmin:
-        return True
-    return normalize_role(role) in ADMIN_VIEW_ROLES
+def normalize_roles(roles: list[str] | tuple[str, ...] | set[str] | None, *, fallback: str | None = None) -> list[str]:
+    """Deduplicate and normalize role keys; always returns ≥1 role."""
+    raw = list(roles or [])
+    if not raw and fallback:
+        raw = [fallback]
+    out: list[str] = []
+    seen: set[str] = set()
+    for r in raw:
+        nr = normalize_role(r)
+        if nr not in VALID_ROLES or nr == "member":
+            nr = "usuario" if nr == "member" else nr
+        if nr not in VALID_ROLES:
+            continue
+        if nr in seen:
+            continue
+        seen.add(nr)
+        out.append(nr)
+    if not out:
+        out = [normalize_role(fallback) if fallback else "usuario"]
+        if out[0] not in VALID_ROLES:
+            out = ["usuario"]
+    return out
 
 
-def can_mutate_admin(role: str | None, is_superadmin: bool = False) -> bool:
+def primary_role(roles: list[str] | None, *, fallback: str | None = None) -> str:
+    normalized = normalize_roles(roles, fallback=fallback)
+    priority = {r: i for i, r in enumerate(ROLE_PRIORITY)}
+    return sorted(normalized, key=lambda r: priority.get(r, 999))[0]
+
+
+def permissions_for_roles(roles: list[str] | None, *, is_superadmin: bool = False) -> frozenset[str]:
+    if is_superadmin:
+        return PERMISSIONS
+    union: set[str] = set()
+    for role in normalize_roles(roles):
+        union |= set(ROLE_PERMISSIONS.get(role, ROLE_PERMISSIONS["usuario"]))
+    return frozenset(union)
+
+
+def can_view_admin(role: str | None, is_superadmin: bool = False, roles: list[str] | None = None) -> bool:
     if is_superadmin:
         return True
-    return normalize_role(role) in ADMIN_MUTATE_ROLES
+    check = normalize_roles(roles, fallback=role)
+    return any(r in ADMIN_VIEW_ROLES for r in check)
+
+
+def can_mutate_admin(role: str | None, is_superadmin: bool = False, roles: list[str] | None = None) -> bool:
+    if is_superadmin:
+        return True
+    check = normalize_roles(roles, fallback=role)
+    return any(r in ADMIN_MUTATE_ROLES for r in check)
 
 
 def permissions_for_role(role: str | None) -> list[str]:
@@ -246,3 +310,25 @@ def permissions_for_role(role: str | None) -> list[str]:
 
 def role_has_permission(role: str | None, permission: str) -> bool:
     return permission in ROLE_PERMISSIONS.get(normalize_role(role), ROLE_PERMISSIONS["usuario"])
+
+
+def roles_have_permission(roles: list[str] | None, permission: str, *, is_superadmin: bool = False) -> bool:
+    return permission in permissions_for_roles(roles, is_superadmin=is_superadmin)
+
+
+def actor_can_assign_roles(
+    *,
+    actor_roles: list[str],
+    actor_is_superadmin: bool,
+    requested_roles: list[str],
+) -> tuple[bool, str | None]:
+    """Prevent privilege escalation: only owner/superadmin may grant owner."""
+    if actor_is_superadmin:
+        return True, None
+    actor = normalize_roles(actor_roles)
+    requested = normalize_roles(requested_roles)
+    if "owner" in requested and "owner" not in actor:
+        return False, "Solo un propietario puede asignar el rol Propietario"
+    if not can_mutate_admin(None, roles=actor):
+        return False, "Sin permiso para administrar roles"
+    return True, None

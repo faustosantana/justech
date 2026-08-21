@@ -26,6 +26,7 @@ export interface AdminUser {
   full_name: string;
   is_active: boolean;
   role: string;
+  roles?: string[];
   department: string | null;
   supervisor_id: string | null;
   supervisor_name: string | null;
@@ -33,6 +34,12 @@ export interface AdminUser {
   odoo_user_id: number | null;
   m365_prepared: boolean;
   m365_connection_status: string | null;
+  open_tasks_count?: number;
+}
+
+export function adminUserRoles(user: AdminUser): string[] {
+  if (user.roles && user.roles.length > 0) return user.roles;
+  return user.role ? [user.role] : [];
 }
 
 export interface TenantModule {

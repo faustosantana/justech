@@ -3431,6 +3431,27 @@ export const apiClient = {
   disableAdminUser: (id: string) =>
     request<void>(`/admin/users/${id}/disable`, { method: "POST" }, true),
 
+  setAdminUserStatus: (id: string, is_active: boolean) =>
+    request<{ id: string; is_active: boolean; open_tasks_count: number; message: string }>(
+      `/admin/users/${id}/status`,
+      { method: "PATCH", body: JSON.stringify({ is_active }) },
+      true,
+    ),
+
+  setAdminUserRoles: (id: string, roles: string[]) =>
+    request<{ id: string; role: string; roles: string[]; message: string }>(
+      `/admin/users/${id}/roles`,
+      { method: "PUT", body: JSON.stringify({ roles }) },
+      true,
+    ),
+
+  resetAdminUserPassword: (id: string, password: string, confirm_password: string) =>
+    request<{ id: string; message: string }>(
+      `/admin/users/${id}/reset-password`,
+      { method: "POST", body: JSON.stringify({ password, confirm_password }) },
+      true,
+    ),
+
   getAdminModules: () =>
     request<{ items: import("@/lib/admin").TenantModule[] }>("/admin/modules", {}, true),
 

@@ -22,6 +22,7 @@ class AdminUserResponse(BaseModel):
     full_name: str
     is_active: bool
     role: str
+    roles: list[str] = Field(default_factory=list)
     department: str | None = None
     supervisor_id: uuid.UUID | None = None
     supervisor_name: str | None = None
@@ -29,6 +30,7 @@ class AdminUserResponse(BaseModel):
     odoo_user_id: int | None = None
     m365_prepared: bool = False
     m365_connection_status: str | None = None
+    open_tasks_count: int = 0
     created_at: datetime | None = None
 
 
@@ -41,11 +43,13 @@ class AdminUserCreateRequest(BaseModel):
     email: EmailStr
     full_name: str
     password: str = Field(min_length=8)
-    role: str = "usuario"
+    role: str | None = None
+    roles: list[str] | None = None
     department: str | None = None
     supervisor_id: uuid.UUID | None = None
     visible_company_ids: list[int] = Field(default_factory=list)
     odoo_user_id: int | None = None
+    is_active: bool = True
 
 
 class AdminUserUpdateRequest(BaseModel):
@@ -53,11 +57,44 @@ class AdminUserUpdateRequest(BaseModel):
     full_name: str | None = None
     password: str | None = Field(default=None, min_length=8)
     role: str | None = None
+    roles: list[str] | None = None
     department: str | None = None
     supervisor_id: uuid.UUID | None = None
     visible_company_ids: list[int] | None = None
     odoo_user_id: int | None = None
     is_active: bool | None = None
+
+
+class AdminUserStatusRequest(BaseModel):
+    is_active: bool
+
+
+class AdminUserStatusResponse(BaseModel):
+    id: uuid.UUID
+    is_active: bool
+    open_tasks_count: int = 0
+    message: str
+
+
+class AdminResetPasswordRequest(BaseModel):
+    password: str = Field(min_length=8)
+    confirm_password: str = Field(min_length=8)
+
+
+class AdminResetPasswordResponse(BaseModel):
+    id: uuid.UUID
+    message: str
+
+
+class AdminUserRolesRequest(BaseModel):
+    roles: list[str] = Field(min_length=1)
+
+
+class AdminUserRolesResponse(BaseModel):
+    id: uuid.UUID
+    role: str
+    roles: list[str]
+    message: str
 
 
 class RoleInfoResponse(BaseModel):

@@ -51,13 +51,23 @@ class AuthService:
 
         membership = await self._resolve_membership(user, data.tenant_slug)
         tenant_id = membership.tenant_id if membership else None
-        role = membership.role if membership else None
+        from app.core.admin_permissions import normalize_roles, primary_role
+
+        roles = normalize_roles(
+            list(getattr(membership, "roles", None) or []) if membership else None,
+            fallback=membership.role if membership else None,
+        )
+        role = primary_role(roles) if membership else None
 
         user.last_login_at = datetime.now(UTC)
         access = create_access_token(
             subject=str(user.id),
             tenant_id=tenant_id,
             role=role,
+            extra_claims={
+                "cv": int(getattr(user, "credentials_version", 0) or 0),
+                "roles": roles,
+            },
         )
 
         refresh_value = create_refresh_token_value()
@@ -92,6 +102,12 @@ class AuthService:
             raise AuthenticationError("Invalid or expired refresh token")
 
         role: str | None = None
+        roles: list[str] = []
+        user_result = await self.db.execute(select(User).where(User.id == stored.user_id))
+        user = user_result.scalar_one_or_none()
+        if not user or not user.is_active:
+            raise AuthenticationError("Invalid or expired refresh token")
+
         if stored.tenant_id:
             mem = await self.db.execute(
                 select(TenantMembership).where(
@@ -100,12 +116,23 @@ class AuthService:
                 )
             )
             membership = mem.scalar_one_or_none()
-            role = membership.role if membership else None
+            if membership:
+                from app.core.admin_permissions import normalize_roles, primary_role
+
+                roles = normalize_roles(
+                    list(getattr(membership, "roles", None) or []),
+                    fallback=membership.role,
+                )
+                role = primary_role(roles)
 
         access = create_access_token(
             subject=str(stored.user_id),
             tenant_id=stored.tenant_id,
             role=role,
+            extra_claims={
+                "cv": int(getattr(user, "credentials_version", 0) or 0),
+                "roles": roles,
+            },
         )
         return TokenResponse(
             access_token=access,

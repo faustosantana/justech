@@ -56,6 +56,27 @@ async def get_current_user_optional(
         request.state.auth_subject = str(user_id)
         request.state.auth_token_present = True
         return None
+    # Invalidate access tokens issued before password reset / credential bump.
+    token_cv = payload.get("cv")
+    user_cv = int(getattr(user, "credentials_version", 0) or 0)
+    if token_cv is not None:
+        try:
+            if int(token_cv) != user_cv:
+                request.state.auth_reject_reason = "credentials_stale"
+                request.state.auth_subject = str(user_id)
+                request.state.auth_token_present = True
+                return None
+        except (TypeError, ValueError):
+            request.state.auth_reject_reason = "credentials_stale"
+            request.state.auth_subject = str(user_id)
+            request.state.auth_token_present = True
+            return None
+    elif user_cv > 0:
+        # Tokens without cv issued before this hotfix: reject only after a reset bumped version.
+        request.state.auth_reject_reason = "credentials_stale"
+        request.state.auth_subject = str(user_id)
+        request.state.auth_token_present = True
+        return None
     request.state.auth_reject_reason = None
     request.state.auth_subject = str(user_id)
     request.state.auth_token_present = True
@@ -129,18 +150,54 @@ TenantCtx = Annotated[None, Depends(resolve_tenant_context)]
 
 async def require_admin_viewer(
     user: Annotated[User, Depends(get_current_user)],
+    db: DbSession,
     _: TenantCtx,
 ) -> User:
-    if not can_view_admin(get_current_role(), user.is_superadmin):
+    ctx = require_tenant_context()
+    roles: list[str] | None = None
+    if ctx.tenant_id:
+        result = await db.execute(
+            select(TenantMembership).where(
+                TenantMembership.tenant_id == ctx.tenant_id,
+                TenantMembership.user_id == user.id,
+            )
+        )
+        membership = result.scalar_one_or_none()
+        if membership:
+            from app.core.admin_permissions import normalize_roles
+
+            roles = normalize_roles(
+                list(getattr(membership, "roles", None) or []),
+                fallback=membership.role,
+            )
+    if not can_view_admin(get_current_role(), user.is_superadmin, roles=roles):
         raise forbidden("Acceso restringido al Centro de Administración")
     return user
 
 
 async def require_admin_mutator(
     user: Annotated[User, Depends(get_current_user)],
+    db: DbSession,
     _: TenantCtx,
 ) -> User:
-    if not can_mutate_admin(get_current_role(), user.is_superadmin):
+    ctx = require_tenant_context()
+    roles: list[str] | None = None
+    if ctx.tenant_id:
+        result = await db.execute(
+            select(TenantMembership).where(
+                TenantMembership.tenant_id == ctx.tenant_id,
+                TenantMembership.user_id == user.id,
+            )
+        )
+        membership = result.scalar_one_or_none()
+        if membership:
+            from app.core.admin_permissions import normalize_roles
+
+            roles = normalize_roles(
+                list(getattr(membership, "roles", None) or []),
+                fallback=membership.role,
+            )
+    if not can_mutate_admin(get_current_role(), user.is_superadmin, roles=roles):
         raise forbidden("Permisos insuficientes para modificar administración")
     return user
 

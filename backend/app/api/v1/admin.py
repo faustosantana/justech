@@ -10,9 +10,15 @@ from app.api.deps import AdminMutator, AdminViewer, CurrentUser, DbSession, Tena
 from app.core.tenant import require_tenant_context
 from app.schemas.admin import (
     AdminAccessResponse,
+    AdminResetPasswordRequest,
+    AdminResetPasswordResponse,
     AdminUserCreateRequest,
     AdminUserListResponse,
     AdminUserResponse,
+    AdminUserRolesRequest,
+    AdminUserRolesResponse,
+    AdminUserStatusRequest,
+    AdminUserStatusResponse,
     AdminUserUpdateRequest,
     DepartmentCreateRequest,
     DepartmentListResponse,
@@ -69,7 +75,10 @@ async def update_admin_user(
     user_id: uuid.UUID,
     payload: AdminUserUpdateRequest,
 ) -> AdminUserResponse:
-    updated = await _svc(db, user).update_user(user_id, payload)
+    try:
+        updated = await _svc(db, user).update_user(user_id, payload)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
     if not updated:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
     return updated
@@ -79,8 +88,62 @@ async def update_admin_user(
 async def disable_admin_user(
     db: DbSession, user: AdminMutator, _: TenantCtx, user_id: uuid.UUID
 ) -> None:
-    if not await _svc(db, user).disable_user(user_id):
+    try:
+        if not await _svc(db, user).disable_user(user_id):
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+
+
+@router.patch("/users/{user_id}/status", response_model=AdminUserStatusResponse)
+async def set_admin_user_status(
+    db: DbSession,
+    user: AdminMutator,
+    _: TenantCtx,
+    user_id: uuid.UUID,
+    payload: AdminUserStatusRequest,
+) -> AdminUserStatusResponse:
+    try:
+        resp = await _svc(db, user).set_user_status(user_id, payload)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    if not resp:
         raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return resp
+
+
+@router.put("/users/{user_id}/roles", response_model=AdminUserRolesResponse)
+async def set_admin_user_roles(
+    db: DbSession,
+    user: AdminMutator,
+    _: TenantCtx,
+    user_id: uuid.UUID,
+    payload: AdminUserRolesRequest,
+) -> AdminUserRolesResponse:
+    try:
+        resp = await _svc(db, user).set_user_roles(user_id, payload)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    if not resp:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return resp
+
+
+@router.post("/users/{user_id}/reset-password", response_model=AdminResetPasswordResponse)
+async def reset_admin_user_password(
+    db: DbSession,
+    user: AdminMutator,
+    _: TenantCtx,
+    user_id: uuid.UUID,
+    payload: AdminResetPasswordRequest,
+) -> AdminResetPasswordResponse:
+    try:
+        resp = await _svc(db, user).reset_password(user_id, payload)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    if not resp:
+        raise HTTPException(status_code=404, detail="Usuario no encontrado")
+    return resp
 
 
 @router.get("/users/{user_id}/companies", response_model=UserCompaniesAdminResponse)

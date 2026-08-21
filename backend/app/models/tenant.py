@@ -38,6 +38,8 @@ class TenantMembership(UUIDPrimaryKeyMixin, TimestampMixin, Base):
         UUID(as_uuid=True), ForeignKey("users.id", ondelete="CASCADE"), nullable=False
     )
     role: Mapped[str] = mapped_column(String(32), default="usuario", nullable=False)
+    # Multirol (unión de permisos). `role` se mantiene como rol primario (JWT/legacy).
+    roles: Mapped[list] = mapped_column(JSONB, default=list, nullable=False)
     is_default: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
     department: Mapped[str | None] = mapped_column(String(64))
     supervisor_id: Mapped[uuid.UUID | None] = mapped_column(

@@ -67,7 +67,10 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
   const [rpeFilter, setRpeFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState(urlQuery);
   const [institutionFilter, setInstitutionFilter] = useState("");
+  const [institutionQuery, setInstitutionQuery] = useState("");
+  const [institutionMenuOpen, setInstitutionMenuOpen] = useState(false);
   const [institutions, setInstitutions] = useState<string[]>([]);
+  const [altInstitutionTotal, setAltInstitutionTotal] = useState<number | null>(null);
   const [openState, setOpenState] = useState<"open" | "closed" | "all">("open");
   const [deadlineFrom, setDeadlineFrom] = useState("");
   const [deadlineTo, setDeadlineTo] = useState("");
@@ -184,18 +187,21 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
         }
       }
 
+      // Búsqueda libre: incluir vencidos (comportamiento histórico), salvo que el usuario
+      // elija explícitamente solo Abiertas o solo Cerradas vía vigencia.
+      const searching = q.length >= 2;
+      const effectiveOpenState: "open" | "closed" | "all" = searching && openState === "open" ? "all" : openState;
+
       const filters = {
         status: statusFilter || undefined,
         funnel_stage: funnelFilter || undefined,
         company,
-        search: q.length >= 2 ? q : undefined,
+        search: searching ? q : undefined,
         institution: institutionFilter.trim().length >= 2 ? institutionFilter.trim() : undefined,
-        open_state: openState,
+        open_state: effectiveOpenState,
         deadline_from: from,
         deadline_to: to,
-        // Búsqueda libre sigue incluyendo vencidos salvo que el usuario fije "Abiertas".
-        include_expired: q.length >= 2 && openState === "open" ? undefined : undefined,
-        limit: q.length >= 2 || institutionFilter ? 100 : 150,
+        limit: searching || institutionFilter ? 100 : 150,
       };
 
       const listResult = await apiClient.getDGCPOpportunities(filters).then(
@@ -236,6 +242,29 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
         });
       }
       setItems(rows);
+
+      // Si filtro institución + abiertas queda vacío, informar cuántas hay en total/cerradas.
+      if (
+        rows.length === 0 &&
+        institutionFilter.trim().length >= 2 &&
+        effectiveOpenState === "open" &&
+        !searching
+      ) {
+        try {
+          const alt = await apiClient.getDGCPOpportunities({
+            institution: institutionFilter.trim(),
+            open_state: "all",
+            company,
+            limit: 1,
+          });
+          setAltInstitutionTotal(alt.total ?? 0);
+        } catch {
+          setAltInstitutionTotal(null);
+        }
+      } else {
+        setAltInstitutionTotal(null);
+      }
+
       if (dashResult.ok) {
         setSummary(dashResult.dash);
       } else {
@@ -275,11 +304,25 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
       )
         ? effectiveCompany
         : undefined;
-    apiClient
-      .getDGCPInstitutions({ company, limit: 300 })
-      .then((r) => setInstitutions(r.items ?? []))
-      .catch(() => setInstitutions([]));
-  }, [effectiveCompany]);
+    const q = institutionQuery.trim();
+    const handle = window.setTimeout(() => {
+      apiClient
+        .getDGCPInstitutions({
+          company,
+          search: q.length >= 2 ? q : undefined,
+          limit: 500,
+        })
+        .then((r) => setInstitutions(r.items ?? []))
+        .catch(() => setInstitutions([]));
+    }, q.length >= 2 ? 250 : 0);
+    return () => window.clearTimeout(handle);
+  }, [effectiveCompany, institutionQuery]);
+
+  const institutionOptions = useMemo(() => {
+    const q = institutionQuery.trim().toLowerCase();
+    if (!q) return institutions.slice(0, 80);
+    return institutions.filter((n) => n.toLowerCase().includes(q)).slice(0, 80);
+  }, [institutions, institutionQuery]);
 
   async function sync() {
     setSyncing(true);
@@ -432,22 +475,84 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
       <FunnelStageTabs active={funnelFilter} onChange={setFunnelFilter} counts={funnelCounts} />
 
       <div className="flex flex-wrap items-end gap-2">
-        <label className="flex flex-col gap-1 text-xs text-muted-foreground">
-          Institución
-          <select
-            className="min-w-[220px] rounded-lg border border-input bg-background px-2 py-1.5 text-sm text-foreground"
-            value={institutionFilter}
-            onChange={(e) => setInstitutionFilter(e.target.value)}
-            data-testid="dgcp-filter-institution"
-          >
-            <option value="">Todas las instituciones</option>
-            {institutions.map((name) => (
-              <option key={name} value={name}>
-                {name}
-              </option>
-            ))}
-          </select>
-        </label>
+        <div className="relative flex flex-col gap-1 text-xs text-muted-foreground">
+          <span>Institución</span>
+          <div className="relative min-w-[280px]">
+            <Search className="pointer-events-none absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
+            <input
+              type="search"
+              className="h-9 w-full rounded-lg border border-input bg-background pl-8 pr-8 text-sm text-foreground outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10"
+              placeholder="Escribe para buscar institución…"
+              value={institutionFilter ? institutionFilter : institutionQuery}
+              data-testid="dgcp-filter-institution"
+              onFocus={() => setInstitutionMenuOpen(true)}
+              onBlur={() => window.setTimeout(() => setInstitutionMenuOpen(false), 150)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  const typed = institutionQuery.trim();
+                  if (typed.length >= 2) {
+                    setInstitutionFilter(typed);
+                    setInstitutionQuery("");
+                    setInstitutionMenuOpen(false);
+                  }
+                }
+              }}
+              onChange={(e) => {
+                const v = e.target.value;
+                setInstitutionFilter("");
+                setInstitutionQuery(v);
+                setInstitutionMenuOpen(true);
+              }}
+            />
+            {(institutionFilter || institutionQuery) && (
+              <button
+                type="button"
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 rounded p-1 text-muted-foreground hover:bg-muted"
+                aria-label="Limpiar institución"
+                onClick={() => {
+                  setInstitutionFilter("");
+                  setInstitutionQuery("");
+                  setInstitutionMenuOpen(false);
+                  setAltInstitutionTotal(null);
+                }}
+              >
+                <X className="h-3.5 w-3.5" />
+              </button>
+            )}
+            {institutionMenuOpen && (
+              <ul
+                className="absolute z-40 mt-1 max-h-64 w-full overflow-y-auto rounded-lg border bg-background py-1 shadow-lg"
+                data-testid="dgcp-filter-institution-menu"
+              >
+                {institutionOptions.length === 0 ? (
+                  <li className="px-3 py-2 text-sm text-muted-foreground">
+                    {institutionQuery.trim().length < 2
+                      ? "Escribe al menos 2 letras para buscar…"
+                      : "Sin coincidencias"}
+                  </li>
+                ) : (
+                  institutionOptions.map((name) => (
+                    <li key={name}>
+                      <button
+                        type="button"
+                        className="block w-full px-3 py-1.5 text-left text-sm text-foreground hover:bg-muted"
+                        onMouseDown={(e) => e.preventDefault()}
+                        onClick={() => {
+                          setInstitutionFilter(name);
+                          setInstitutionQuery("");
+                          setInstitutionMenuOpen(false);
+                        }}
+                      >
+                        {name}
+                      </button>
+                    </li>
+                  ))
+                )}
+              </ul>
+            )}
+          </div>
+        </div>
 
         <label className="flex flex-col gap-1 text-xs text-muted-foreground">
           Vigencia
@@ -534,17 +639,41 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
             variant="outline"
             onClick={() => {
               setInstitutionFilter("");
+              setInstitutionQuery("");
               setOpenState("open");
               setDeadlinePreset("");
               setDeadlineFrom("");
               setDeadlineTo("");
               setStatusFilter("");
+              setAltInstitutionTotal(null);
             }}
           >
             Limpiar filtros
           </Button>
         )}
       </div>
+
+      {!loading && items.length === 0 && institutionFilter && openState === "open" && (altInstitutionTotal ?? 0) > 0 && (
+        <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-900 dark:text-amber-100">
+          No hay procesos <strong>abiertos</strong> para «{institutionFilter}».
+          Hay <strong>{altInstitutionTotal}</strong> proceso(s) en total (ya cerrados o vencidos).{" "}
+          <button
+            type="button"
+            className="font-medium underline underline-offset-2"
+            onClick={() => setOpenState("all")}
+          >
+            Ver todas
+          </button>
+          {" · "}
+          <button
+            type="button"
+            className="font-medium underline underline-offset-2"
+            onClick={() => setOpenState("closed")}
+          >
+            Ver cerradas
+          </button>
+        </div>
+      )}
 
       {mode === "kanban" && (
         <div className="flex gap-3 overflow-x-auto pb-2">

@@ -60,6 +60,70 @@ class DGCPService:
         )
 
     @staticmethod
+    def open_state_filters(open_state: str | None):
+        """
+        open   → plazo vigente y no cerrado en embudo
+        closed → vencido o estado terminal
+        all / None → sin filtro de vigencia (el caller decide include_expired)
+        """
+        if not open_state or open_state == "all":
+            return ()
+        today = date.today()
+        closed = tuple(DGCPService.CLOSED_STATUSES)
+        if open_state == "open":
+            return (
+                DGCPOpportunity.deadline >= today,
+                DGCPOpportunity.status.notin_(closed),
+            )
+        if open_state == "closed":
+            return (
+                or_(
+                    DGCPOpportunity.deadline < today,
+                    DGCPOpportunity.status.in_(closed),
+                ),
+            )
+        return ()
+
+    async def list_institutions(
+        self,
+        tenant_id: uuid.UUID,
+        *,
+        user_id: uuid.UUID | None = None,
+        company: OpportunityCompany | None = None,
+        search: str | None = None,
+        limit: int = 200,
+    ) -> list[str]:
+        """Instituciones compradoras distintas (unidad_compra) para filtros."""
+        base = DGCPOpportunity.tenant_id == tenant_id
+        if user_id:
+            from app.services.company_scope_filter import CompanyScopeFilter
+
+            scope = CompanyScopeFilter(self.db, tenant_id, user_id)
+            selected_keys = await scope.dgcp_company_keys()
+            allowed_keys = await scope.allowed_dgcp_company_keys()
+            if company:
+                if allowed_keys and company.value not in allowed_keys and company.value != "unclassified":
+                    return []
+                base = base & (DGCPOpportunity.company == company.value)
+            elif selected_keys:
+                base = base & DGCPOpportunity.company.in_(selected_keys)
+        elif company:
+            base = base & (DGCPOpportunity.company == company.value)
+
+        q = (search or "").strip()
+        if len(q) >= 2:
+            base = base & DGCPOpportunity.institution.ilike(f"%{q}%")
+
+        result = await self.db.execute(
+            select(DGCPOpportunity.institution)
+            .where(base, DGCPOpportunity.institution.is_not(None), DGCPOpportunity.institution != "")
+            .distinct()
+            .order_by(DGCPOpportunity.institution.asc())
+            .limit(limit)
+        )
+        return [str(r[0]) for r in result.all() if r[0]]
+
+    @staticmethod
     def build_search_filter(search: str | None):
         """Búsqueda por código, título, institución, UUID parcial y tokens de código."""
         q = (search or "").strip()
@@ -153,6 +217,10 @@ class DGCPService:
         company: OpportunityCompany | None = None,
         priority: OpportunityPriority | None = None,
         search: str | None = None,
+        institution: str | None = None,
+        open_state: str | None = None,
+        deadline_from: date | None = None,
+        deadline_to: date | None = None,
         skip: int = 0,
         limit: int = 100,
         include_expired: bool = False,
@@ -166,11 +234,32 @@ class DGCPService:
             FunnelStage.DESCARTADAS,
         ):
             include_expired = True
+
+        # open_state overrides default vigente filter when set.
+        open_state_norm = (open_state or "").strip().lower() or None
+        if open_state_norm in {"open", "closed", "all"}:
+            include_expired = True  # apply open_state_filters instead of vigente
+
         base_filter = DGCPOpportunity.tenant_id == tenant_id
-        for clause in self.vigente_filters(include_expired=include_expired):
-            base_filter = base_filter & clause
+        if open_state_norm in {"open", "closed"}:
+            for clause in self.open_state_filters(open_state_norm):
+                base_filter = base_filter & clause
+        else:
+            for clause in self.vigente_filters(include_expired=include_expired):
+                base_filter = base_filter & clause
+
         if search_clause is not None:
             base_filter = base_filter & search_clause
+
+        inst = (institution or "").strip()
+        if inst:
+            base_filter = base_filter & DGCPOpportunity.institution.ilike(f"%{inst}%")
+
+        if deadline_from is not None:
+            base_filter = base_filter & (DGCPOpportunity.deadline >= deadline_from)
+        if deadline_to is not None:
+            base_filter = base_filter & (DGCPOpportunity.deadline <= deadline_to)
+
         query = (
             select(DGCPOpportunity)
             .where(base_filter)
@@ -222,7 +311,7 @@ class DGCPService:
         summary = await self.compute_dashboard(
             tenant_id,
             user_id=user_id,
-            include_expired=include_expired,
+            include_expired=include_expired or open_state_norm in {"closed", "all"},
             company=company,
         )
         # Listado liviano: la inteligencia completa se carga en el detalle.

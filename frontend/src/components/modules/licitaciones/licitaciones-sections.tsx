@@ -66,6 +66,12 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
   const [companyFilter, setCompanyFilter] = useState<OpportunityCompany | "">("");
   const [rpeFilter, setRpeFilter] = useState("");
   const [searchQuery, setSearchQuery] = useState(urlQuery);
+  const [institutionFilter, setInstitutionFilter] = useState("");
+  const [institutions, setInstitutions] = useState<string[]>([]);
+  const [openState, setOpenState] = useState<"open" | "closed" | "all">("open");
+  const [deadlineFrom, setDeadlineFrom] = useState("");
+  const [deadlineTo, setDeadlineTo] = useState("");
+  const [deadlinePreset, setDeadlinePreset] = useState<"" | "today" | "3d" | "7d" | "30d">("");
   const [profiles, setProfiles] = useState<CompanyProfile[]>([]);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [processUpdatesDash, setProcessUpdatesDash] = useState<DGCPProcessUpdateDashboardResponse | null>(null);
@@ -156,13 +162,40 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
         )
           ? effectiveCompany
           : undefined;
+
+      let from = deadlineFrom || undefined;
+      let to = deadlineTo || undefined;
+      if (deadlinePreset) {
+        const today = new Date();
+        const iso = (d: Date) => d.toISOString().slice(0, 10);
+        from = iso(today);
+        const end = new Date(today);
+        if (deadlinePreset === "today") {
+          to = from;
+        } else if (deadlinePreset === "3d") {
+          end.setDate(end.getDate() + 3);
+          to = iso(end);
+        } else if (deadlinePreset === "7d") {
+          end.setDate(end.getDate() + 7);
+          to = iso(end);
+        } else if (deadlinePreset === "30d") {
+          end.setDate(end.getDate() + 30);
+          to = iso(end);
+        }
+      }
+
       const filters = {
         status: statusFilter || undefined,
         funnel_stage: funnelFilter || undefined,
         company,
         search: q.length >= 2 ? q : undefined,
-        include_expired: q.length >= 2 ? true : undefined,
-        limit: q.length >= 2 ? 50 : 150,
+        institution: institutionFilter.trim().length >= 2 ? institutionFilter.trim() : undefined,
+        open_state: openState,
+        deadline_from: from,
+        deadline_to: to,
+        // Búsqueda libre sigue incluyendo vencidos salvo que el usuario fije "Abiertas".
+        include_expired: q.length >= 2 && openState === "open" ? undefined : undefined,
+        limit: q.length >= 2 || institutionFilter ? 100 : 150,
       };
 
       const listResult = await apiClient.getDGCPOpportunities(filters).then(
@@ -217,11 +250,36 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
     } finally {
       setLoading(false);
     }
-  }, [statusFilter, funnelFilter, effectiveCompany, mode, searchQuery]);
+  }, [
+    statusFilter,
+    funnelFilter,
+    effectiveCompany,
+    mode,
+    searchQuery,
+    institutionFilter,
+    openState,
+    deadlineFrom,
+    deadlineTo,
+    deadlinePreset,
+  ]);
 
   useEffect(() => {
     void load();
   }, [load]);
+
+  useEffect(() => {
+    const company =
+      effectiveCompany &&
+      (["justech", "just_office", "mf_plug_safe", "omni_solutions", "unclassified"] as const).includes(
+        effectiveCompany,
+      )
+        ? effectiveCompany
+        : undefined;
+    apiClient
+      .getDGCPInstitutions({ company, limit: 300 })
+      .then((r) => setInstitutions(r.items ?? []))
+      .catch(() => setInstitutions([]));
+  }, [effectiveCompany]);
 
   async function sync() {
     setSyncing(true);
@@ -373,18 +431,120 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
 
       <FunnelStageTabs active={funnelFilter} onChange={setFunnelFilter} counts={funnelCounts} />
 
-      <select
-        className="rounded-lg border border-input bg-background px-2 py-1.5 text-sm"
-        value={statusFilter}
-        onChange={(e) => setStatusFilter(e.target.value as OpportunityStatus | "")}
-      >
-        <option value="">Estado detallado (todos)</option>
-        {PIPELINE_STATUSES.map((s) => (
-          <option key={s} value={s}>
-            {STATUS_LABELS[s]}
-          </option>
-        ))}
-      </select>
+      <div className="flex flex-wrap items-end gap-2">
+        <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+          Institución
+          <select
+            className="min-w-[220px] rounded-lg border border-input bg-background px-2 py-1.5 text-sm text-foreground"
+            value={institutionFilter}
+            onChange={(e) => setInstitutionFilter(e.target.value)}
+            data-testid="dgcp-filter-institution"
+          >
+            <option value="">Todas las instituciones</option>
+            {institutions.map((name) => (
+              <option key={name} value={name}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+          Vigencia
+          <select
+            className="rounded-lg border border-input bg-background px-2 py-1.5 text-sm text-foreground"
+            value={openState}
+            onChange={(e) => setOpenState(e.target.value as "open" | "closed" | "all")}
+            data-testid="dgcp-filter-open-state"
+          >
+            <option value="open">Abiertas (plazo vigente)</option>
+            <option value="closed">Cerradas / vencidas</option>
+            <option value="all">Todas</option>
+          </select>
+        </label>
+
+        <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+          Cierra en
+          <select
+            className="rounded-lg border border-input bg-background px-2 py-1.5 text-sm text-foreground"
+            value={deadlinePreset}
+            onChange={(e) => {
+              const v = e.target.value as "" | "today" | "3d" | "7d" | "30d";
+              setDeadlinePreset(v);
+              if (v) {
+                setDeadlineFrom("");
+                setDeadlineTo("");
+              }
+            }}
+            data-testid="dgcp-filter-deadline-preset"
+          >
+            <option value="">Cualquier fecha</option>
+            <option value="today">Hoy</option>
+            <option value="3d">Próximos 3 días</option>
+            <option value="7d">Próximos 7 días</option>
+            <option value="30d">Próximos 30 días</option>
+          </select>
+        </label>
+
+        <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+          Cierra desde
+          <input
+            type="date"
+            className="rounded-lg border border-input bg-background px-2 py-1.5 text-sm text-foreground"
+            value={deadlineFrom}
+            onChange={(e) => {
+              setDeadlineFrom(e.target.value);
+              setDeadlinePreset("");
+            }}
+            data-testid="dgcp-filter-deadline-from"
+          />
+        </label>
+
+        <label className="flex flex-col gap-1 text-xs text-muted-foreground">
+          Cierra hasta
+          <input
+            type="date"
+            className="rounded-lg border border-input bg-background px-2 py-1.5 text-sm text-foreground"
+            value={deadlineTo}
+            onChange={(e) => {
+              setDeadlineTo(e.target.value);
+              setDeadlinePreset("");
+            }}
+            data-testid="dgcp-filter-deadline-to"
+          />
+        </label>
+
+        <select
+          className="rounded-lg border border-input bg-background px-2 py-1.5 text-sm"
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value as OpportunityStatus | "")}
+        >
+          <option value="">Estado detallado (todos)</option>
+          {PIPELINE_STATUSES.map((s) => (
+            <option key={s} value={s}>
+              {STATUS_LABELS[s]}
+            </option>
+          ))}
+        </select>
+
+        {(institutionFilter || openState !== "open" || deadlinePreset || deadlineFrom || deadlineTo || statusFilter) && (
+          <Button
+            type="button"
+            size="sm"
+            variant="outline"
+            onClick={() => {
+              setInstitutionFilter("");
+              setOpenState("open");
+              setDeadlinePreset("");
+              setDeadlineFrom("");
+              setDeadlineTo("");
+              setStatusFilter("");
+            }}
+          >
+            Limpiar filtros
+          </Button>
+        )}
+      </div>
 
       {mode === "kanban" && (
         <div className="flex gap-3 overflow-x-auto pb-2">

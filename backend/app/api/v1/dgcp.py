@@ -216,6 +216,16 @@ async def list_opportunities(
     company: Annotated[OpportunityCompany | None, Query()] = None,
     priority: Annotated[OpportunityPriority | None, Query()] = None,
     search: Annotated[str | None, Query(min_length=2, description="Código, título, institución o UUID")] = None,
+    institution: Annotated[
+        str | None,
+        Query(min_length=2, description="Filtrar por institución compradora (unidad_compra)"),
+    ] = None,
+    open_state: Annotated[
+        str | None,
+        Query(description="Vigencia del proceso: open | closed | all", pattern=r"^(open|closed|all)$"),
+    ] = None,
+    deadline_from: Annotated[date | None, Query(description="Cierra desde (YYYY-MM-DD)")] = None,
+    deadline_to: Annotated[date | None, Query(description="Cierra hasta (YYYY-MM-DD)")] = None,
     skip: Annotated[int, Query(ge=0)] = 0,
     limit: Annotated[int, Query(ge=1, le=200)] = 100,
     include_expired: Annotated[bool, Query()] = False,
@@ -230,10 +240,36 @@ async def list_opportunities(
         company=company,
         priority=priority,
         search=search,
+        institution=institution,
+        open_state=open_state,
+        deadline_from=deadline_from,
+        deadline_to=deadline_to,
         skip=skip,
         limit=limit,
         include_expired=include_expired,
     )
+
+
+@router.get("/institutions", dependencies=DGCP_VIEW)
+async def list_institutions(
+    db: DbSession,
+    user: CurrentUser,
+    _: TenantCtx,
+    company: Annotated[OpportunityCompany | None, Query()] = None,
+    search: Annotated[str | None, Query(min_length=2)] = None,
+    limit: Annotated[int, Query(ge=1, le=500)] = 200,
+) -> dict:
+    """Catálogo de instituciones compradoras para filtros de Procesos."""
+    ctx = require_tenant_context()
+    service = DGCPService(db)
+    items = await service.list_institutions(
+        ctx.tenant_id,
+        user_id=user.id,
+        company=company,
+        search=search,
+        limit=limit,
+    )
+    return {"items": items, "total": len(items)}
 
 
 @router.post("/opportunities", response_model=DGCPOpportunityResponse, status_code=201, dependencies=DGCP_MUTATE)

@@ -507,6 +507,10 @@ export const apiClient = {
     priority?: OpportunityPriority;
     funnel_stage?: string;
     search?: string;
+    institution?: string;
+    open_state?: "open" | "closed" | "all";
+    deadline_from?: string;
+    deadline_to?: string;
     include_expired?: boolean;
     skip?: number;
     limit?: number;
@@ -514,6 +518,13 @@ export const apiClient = {
     request<DGCPOpportunityListResponse>(
       `/dgcp/opportunities${buildQuery(filters ?? {})}`,
       { timeoutMs: LONG_REQUEST_TIMEOUT_MS },
+      true,
+    ),
+
+  getDGCPInstitutions: (filters?: { company?: OpportunityCompany; search?: string; limit?: number }) =>
+    request<{ items: string[]; total: number }>(
+      `/dgcp/institutions${buildQuery(filters ?? {})}`,
+      {},
       true,
     ),
 

@@ -99,14 +99,19 @@ class DGCPService:
             from app.services.company_scope_filter import CompanyScopeFilter
 
             scope = CompanyScopeFilter(self.db, tenant_id, user_id)
-            selected_keys = await scope.dgcp_company_keys()
             allowed_keys = await scope.allowed_dgcp_company_keys()
             if company:
                 if allowed_keys and company.value not in allowed_keys and company.value != "unclassified":
                     return []
                 base = base & (DGCPOpportunity.company == company.value)
-            elif selected_keys:
-                base = base & DGCPOpportunity.company.in_(selected_keys)
+            elif allowed_keys:
+                from sqlalchemy import or_ as sql_or
+
+                base = base & sql_or(
+                    DGCPOpportunity.company.in_(tuple(allowed_keys)),
+                    DGCPOpportunity.company == "unclassified",
+                    DGCPOpportunity.company.is_(None),
+                )
         elif company:
             base = base & (DGCPOpportunity.company == company.value)
 
@@ -269,9 +274,9 @@ class DGCPService:
         )
         if user_id:
             from app.services.company_scope_filter import CompanyScopeFilter
+            from sqlalchemy import or_ as sql_or
 
             scope = CompanyScopeFilter(self.db, tenant_id, user_id)
-            selected_keys = await scope.dgcp_company_keys()
             allowed_keys = await scope.allowed_dgcp_company_keys()
             if company:
                 # Filtro explícito Empresa/RPE: no cruzar con el header (Just Office vs Justech).
@@ -281,9 +286,17 @@ class DGCPService:
                 else:
                     query = query.where(DGCPOpportunity.company == company.value)
                     base_filter = base_filter & (DGCPOpportunity.company == company.value)
-            elif selected_keys:
-                query = query.where(DGCPOpportunity.company.in_(selected_keys))
-                base_filter = base_filter & DGCPOpportunity.company.in_(selected_keys)
+            elif allowed_keys:
+                # Sin filtro Empresa/RPE ("Todas"): mostrar TODAS las empresas que el usuario
+                # puede ver — no restringir al company activo del header multiempresa.
+                # Así el discovery de procesos abiertos del portal no se pierde por RPE.
+                company_clause = sql_or(
+                    DGCPOpportunity.company.in_(tuple(allowed_keys)),
+                    DGCPOpportunity.company == "unclassified",
+                    DGCPOpportunity.company.is_(None),
+                )
+                query = query.where(company_clause)
+                base_filter = base_filter & company_clause
         elif company:
             query = query.where(DGCPOpportunity.company == company.value)
             base_filter = base_filter & (DGCPOpportunity.company == company.value)

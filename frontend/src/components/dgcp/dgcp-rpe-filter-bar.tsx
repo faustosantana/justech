@@ -160,6 +160,11 @@ export function DgcpRpeFilterBar({
         <Building2 className="h-4 w-4 text-primary" />
         <p className="text-sm font-medium">Empresa del grupo y RPE</p>
       </div>
+      <p className="text-xs text-muted-foreground">
+        Usa <strong>Todas las empresas</strong> / <strong>Todos los RPE</strong> para ver procesos
+        abiertos del portal sin restringir por un solo RPE. Luego filtra por empresa si quieres
+        ver solo las que encajan con un RPE concreto.
+      </p>
 
       <div className="flex flex-wrap items-end gap-3">
         <div className="space-y-1 min-w-[200px]">

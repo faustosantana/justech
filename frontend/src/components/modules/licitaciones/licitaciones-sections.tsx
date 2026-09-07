@@ -243,7 +243,7 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
       }
       setItems(rows);
 
-      // Si filtro institución + abiertas queda vacío, informar cuántas hay en total/cerradas.
+      // Si filtro institución + abiertas queda vacío, informar cuántas hay sin filtro de empresa.
       if (
         rows.length === 0 &&
         institutionFilter.trim().length >= 2 &&
@@ -253,11 +253,16 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
         try {
           const alt = await apiClient.getDGCPOpportunities({
             institution: institutionFilter.trim(),
-            open_state: "all",
-            company,
+            open_state: "open",
+            // Sin company: cuenta real de abiertas en todos los RPE visibles.
             limit: 1,
           });
-          setAltInstitutionTotal(alt.total ?? 0);
+          const altAll = await apiClient.getDGCPOpportunities({
+            institution: institutionFilter.trim(),
+            open_state: "all",
+            limit: 1,
+          });
+          setAltInstitutionTotal(Math.max(alt.total ?? 0, altAll.total ?? 0));
         } catch {
           setAltInstitutionTotal(null);
         }
@@ -655,8 +660,34 @@ export function LicitacionesProcesosSection({ mode = "list" }: { mode?: Mode }) 
 
       {!loading && items.length === 0 && institutionFilter && openState === "open" && (altInstitutionTotal ?? 0) > 0 && (
         <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-sm text-amber-900 dark:text-amber-100">
-          No hay procesos <strong>abiertos</strong> para «{institutionFilter}».
-          Hay <strong>{altInstitutionTotal}</strong> proceso(s) en total (ya cerrados o vencidos).{" "}
+          No hay procesos <strong>abiertos</strong> para «{institutionFilter}»
+          {effectiveCompany ? (
+            <>
+              {" "}
+              con empresa <strong>{effectiveCompany}</strong>. Prueba{" "}
+              <button
+                type="button"
+                className="font-medium underline underline-offset-2"
+                onClick={() => {
+                  setCompanyFilter("");
+                  setRpeFilter("");
+                  if (typeof window !== "undefined") {
+                    localStorage.removeItem("jaios_dgcp_company_filter");
+                    localStorage.removeItem("jaios_dgcp_rpe_filter");
+                  }
+                  void syncGlobalCompany("");
+                }}
+              >
+                Todas las empresas / Todos los RPE
+              </button>
+              {" · "}
+            </>
+          ) : (
+            <>
+              . Hay <strong>{altInstitutionTotal}</strong> proceso(s) en total (cerrados o de otra
+              vigencia).{" "}
+            </>
+          )}
           <button
             type="button"
             className="font-medium underline underline-offset-2"

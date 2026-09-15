@@ -160,15 +160,13 @@ FortiOS 7.0.15 no se declara comprometido “por versión”. El patrón de much
 | 3 Entrega evidencia | Este informe + CSV |
 | 4 Backup maestro | **CHG-001 completado** (privado, no git). Ver `BACKUP_MANIFEST.md` |
 | 5 Validar backup | **OK** — 649162 bytes, SHA-256 en manifiesto |
-| 6–8 Usuario `justech_cursor_audit` | Pendiente de backup + autorización CHG-002 + contraseña tuya |
-| 9 Remediación | **No iniciada** |
+| 6–8 Usuario `justech_cursor_audit` | **CHG-002 CANCELADO POR DECISIÓN OPERATIVA** — no creado |
+| 9 Remediación | **CHG-003 propuesto, no ejecutado** (solo disconnect SSH `support_fortinet`) |
 
 ---
 
 ## Primer cambio recomendado
 
-**CHG-001: backup maestro privado** (no Git, no secretos en el repo).  
-Después: CHG-002 cuenta READ-ONLY, **sin** cerrar `admin`.  
-Contención de `support_fortinet`: solo tras tu `AUTORIZO CHG-xxx` y un plan de no perder el Camino A.
+**CHG-001 completado.** CHG-002 cancelado. Siguiente propuesto: **CHG-003** desconectar sesiones SSH de `support_fortinet` (cuenta intacta).
 
 **No se eliminó ni deshabilitó ninguna cuenta.**

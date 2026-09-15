@@ -56,3 +56,7 @@ logs/
 *.pem
 *.key
 credentials.json
+
+# FortiGate device backups (PSK/ENC/hashes). Never commit.
+CAPITAL_PRECHANGE*.conf
+CAPITAL_7-0_*.conf

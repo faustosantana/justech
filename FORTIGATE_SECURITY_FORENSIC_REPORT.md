@@ -158,8 +158,8 @@ FortiOS 7.0.15 no se declara comprometido “por versión”. El patrón de much
 | 1 Reauth manual | Hecho por el propietario |
 | 2 Forense 42 admins + support_fortinet | **Hecho READ-ONLY** |
 | 3 Entrega evidencia | Este informe + CSV |
-| 4 Backup maestro | **No ejecutado — se solicita autorización CHG-001** |
-| 5 Validar backup | Pendiente de 4 |
+| 4 Backup maestro | **CHG-001 completado** (privado, no git). Ver `BACKUP_MANIFEST.md` |
+| 5 Validar backup | **OK** — 649162 bytes, SHA-256 en manifiesto |
 | 6–8 Usuario `justech_cursor_audit` | Pendiente de backup + autorización CHG-002 + contraseña tuya |
 | 9 Remediación | **No iniciada** |
 

@@ -9,7 +9,7 @@ Prioridad remota: no perder HTTPS WAN ni la cuenta `admin`.
 
 ---
 
-## CHG-001 — Backup maestro (siguiente)
+## CHG-001 — Backup maestro (**COMPLETADO** 2026-09-15 20:43 UTC)
 
 **PROBLEMA:** no hay copia recuperable controlada antes de cualquier cambio.
 
@@ -39,7 +39,9 @@ Prioridad remota: no perder HTTPS WAN ni la cuenta `admin`.
 
 **CRITERIO DE ROLLBACK:** N/A
 
-`¿AUTORIZAS CHG-001?`
+**Ejecutado.** Manifiesto: `BACKUP_MANIFEST.md`. Fichero `.conf` **no** está en git. No se pulsó Save.
+
+`CHG-002` **no** se pide ni se ejecuta en este paso.
 
 ---
 

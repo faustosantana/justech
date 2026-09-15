@@ -1,0 +1,21 @@
+ID,Categoria,Hallazgo,Evidencia_clase,Evidencia,Impacto,Clasificacion,Accion
+IOC-001,Cuentas admin,42 super_admin locales,CONFIRMADO,cmdb/system/admin count=42 todos accprofile=super_admin,Persistencia / higiene nula,D/C mixto,No borrar; inventario owner KEEP/DISABLE
+IOC-002,Trusted Hosts abiertos,0.0.0.0/0 y ::/0 en las 42 cuentas,CONFIRMADO,trusthost1=0.0.0.0 0.0.0.0 ip6-trusthost1=::/0,Cualquier Internet puede intentar login,D,No restringir admin actual en remoto
+IOC-003,MFA ausente,Solo admin y justech con two-factor=fortitoken,CONFIRMADO,cmdb admin two-factor,Password spraying viable,D,No mover tokens de admin
+IOC-004,Nombres que imitan Fortinet,"fortinet-* sufijo aleatorio, Forti_Support, fgtsupport, support_fortinet, fortinet-tech",CONFIRMADO nombres; CREATOR UNKNOWN,lista admin,Patron de persistencia post-explotacion O cuentas de integradores,D,INVESTIGATE
+IOC-005,support_fortinet SSH activo,SSH wan1+wan2 desde 94.198.50.189 SmartApe RU; IDs de sesion cambiaron 18:12->20:15 (reconexion),CONFIRMADO sesion e IP; compromiso NO confirmado,current-admins dos muestras; RDAP SmartApe Moscow,Acceso privilegiado persistente no atribuido a Fortinet ASN,D SOSPECHOSA,No cortar automaticamente
+IOC-006,API users super_admin,"apiuser y rest-admin, trusthost vacio, api-key presente",CONFIRMADO,cmdb/system/api-user,Bypass GUI/MFA si la key filtra,D,INVESTIGATE; no rotar key sin plan
+IOC-007,SSL-VPN any:19543 TLS1.1,status=enable source-interface=any,CONFIRMADO,vpn.ssl.settings,Vector historico FortiOS; portal publico,C/D,No cerrar aun (rescate); plan CHG posterior
+IOC-008,HTTPS+SSH en WAN,wan1/wan2 allowaccess ping https ssh,CONFIRMADO re-verificado 20:15,cmdb interface,Admin en Internet,D exposicion,CAMINO A - no quitar
+IOC-009,Syslog deshabilitado,syslogd 1-4 status=disable server vacio,CONFIRMADO (corrige inferencia previa de '4 syslog activos'),cmdb log.syslogd*.setting,No hay rastro de creador/IP,N/A,Habilitar syslog es cambio futuro
+IOC-010,Event log local inutilizable,GUI System/User Events No results; log/memory/event 404; disk not_available,CONFIRMADO,GUI + API,Forense ciego,N/A,FortiCloud event API 404 aunque device.forticloud.is_enabled=true
+IOC-011,Config revision sin altas de admin,Solo 4 revisiones 2021 y 2024 upgrade daemon_admin,CONFIRMADO,monitor/system/config-revision,No prueba quien creo las 42 cuentas,CREATOR UNKNOWN,No inventar
+IOC-012,current_config_unsaved=true,Revision actual marca unsaved,CONFIRMADO flag; causa NO VERIFICADA,config-revision,Otra sesion admin 170.244.42.35 pudo dejar cambios GUI sin aplicar,C,NO pulsar Save
+IOC-013,VIP WAN exposicion,GP 8443->10.0.0.12:80; 443 y 48620 a .12; Cam 8000->10.0.0.51,CONFIRMADO,cmdb firewall vip,Superficie adicional,C,No cambiar ahora
+IOC-014,FortiGate Cloud push firmware enable,central-management allow-push-firmware/configuration enable; FMG status up fortigatecloud.fort,CONFIRMADO,central-management + fortimanager/status,Alguien con cuenta FortiCloud podria empujar firmware,C,No deshabilitar ahora
+IOC-015,CSF/automation,CSF disable; stitches default + 'Seguridad clasificacion' enable email,CONFIRMADO,cmdb csf / automation-stitch,No webhook persistente obvio,C,Revisar correo stitch luego
+IOC-016,SNMP,snmp sysinfo status=disable; 0 communities,CONFIRMADO,system.snmp,No backdoor SNMP visto,OK,N/A
+IOC-017,45 usuarios locales SSL/portal,"user/local password local, casi todos enable, MFA disable",CONFIRMADO,cmdb user/local,No son administradores; riesgo VPN si portal abierto,C,Separado de admins
+IOC-018,LDAP/RADIUS admin,listas vacias; remote-auth disable en las 42,CONFIRMADO,user/ldap [] user/radius [],Admins 100% locales,OK,N/A
+IOC-019,Alertemail no registra logins admin,admin-login-logs=disable ssh-logs=disable configuration-changes-logs=disable,CONFIRMADO,alertemail setting,No alerta de abuso admin,D higiene,Cambio futuro
+IOC-020,Scripts auto,system.auto-script GET 405/no listado util,NO VERIFICADO completo,API 405,Scripts persistentes desconocidos,NO VERIFICADO,Revisar CLI get system auto-script en sesion futura READ-ONLY

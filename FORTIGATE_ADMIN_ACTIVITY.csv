@@ -1,0 +1,48 @@
+Username,Sample,Session_ID,Method,Interface,Source_IP,Login_time_field_UTC,Is_current,Other_notes,Classification
+admin,2026-09-15 18:12 UTC,367478,https,wan1,16.58.190.11,2026-09-15 18:03:33 UTC,True,,A — LEGÍTIMA CONFIRMADA
+support_fortinet,2026-09-15 18:12 UTC,20705,ssh,wan1,94.198.50.189,2026-09-15 18:11:50 UTC,False,,D — SOSPECHOSA
+support_fortinet,2026-09-15 18:12 UTC,20717,ssh,wan2,94.198.50.189,2026-09-15 18:12:15 UTC,False,,D — SOSPECHOSA
+admin,2026-09-15 20:15 UTC,369090,https,wan1,170.244.42.35,2026-09-15 19:53:04 UTC,False,,A — LEGÍTIMA CONFIRMADA
+admin,2026-09-15 20:15 UTC,369203,https,wan1,3.151.173.70,2026-09-15 20:01:24 UTC,True,,A — LEGÍTIMA CONFIRMADA
+support_fortinet,2026-09-15 20:15 UTC,22122,ssh,wan1,94.198.50.189,2026-09-15 20:12:15 UTC,False,session id changed vs prior sample,D — SOSPECHOSA
+support_fortinet,2026-09-15 20:15 UTC,22127,ssh,wan2,94.198.50.189,2026-09-15 20:12:33 UTC,False,session id changed vs prior sample,D — SOSPECHOSA
+AdminLocalTechF0rti,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+Forti_Support,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+IT-SUPPORT,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",C — DESCONOCIDA
+IT_Admin,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",C — DESCONOCIDA
+Soporte,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",C — DESCONOCIDA
+admin-fortigate-acc,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+admin-vpn-access,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+admin2,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+adminforti,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+admini,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+data_noc,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",C — DESCONOCIDA
+djohn,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",C — DESCONOCIDA
+emad,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",C — DESCONOCIDA
+fgtsupport,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+forti-autosync,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+forti-autoupdate,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortics,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortigate,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortinet-exdyb,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortinet-gebtq,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortinet-itzfo,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortinet-knhhe,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortinet-mkoqd,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortinet-rxext,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortinet-support,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortinet-tech,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortinet-untqm,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortinet-wgnud,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fortivpnadmin,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+fsantana,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",B — PROBABLEMENTE LEGÍTIMA
+ipsecsvc,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+justech,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",B — PROBABLEMENTE LEGÍTIMA
+ldap,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+mgmt,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+oldadmin,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+safeguardadmin,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+support_forti,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+system,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+usevpn_admin,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA
+vpnforti_sup,no session in available snapshots,,,,,,,"Sin login observado en muestras 18:12 y 20:15 UTC. Historial largo NO VERIFICADO (logs locales vacios, syslog disable, FAZ disable, API event 404).",D — SOSPECHOSA

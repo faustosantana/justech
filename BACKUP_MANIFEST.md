@@ -55,4 +55,4 @@ El `.conf` contiene secretos de dispositivo (hashes ENC, PSK, claves). No se rep
 
 ## Post-CHG-001 (no ejecutado)
 
-CHG-002 cancelado. CHG-003 disconnect + CHG-004 lock remoto `support_fortinet` (cuenta no borrada). Fase 5: `ssh` fuera de wan1/wan2. RF/DHCP/DNS: pendientes o 500.
+CHG-002 cancelado. CHG-003 disconnect + CHG-004 lock remoto `support_fortinet` (cuenta no borrada). Fase 5: `ssh` fuera de wan1/wan2. RF PUT 500 revertido. DHCP/DNS/11k/v/SD-WAN SLA: no aplicados (sesión expiró 23:05 UTC).

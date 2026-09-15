@@ -111,7 +111,7 @@ Ver `FORTIGATE_IOC_REVIEW.csv`. Resumen:
 
 1. **API users** `apiuser` y `rest-admin`, ambos `super_admin`, trusthost vacío, api-key presente (redactada). CONFIRMADO.  
 2. **SSL-VPN** enable, puerto 19543, `source-interface=any`, TLS 1.1, 0 sesiones ahora. CONFIRMADO.  
-3. **HTTPS+SSH en wan1 y wan2.** Re-verificado. CONFIRMADO.  
+3. **HTTPS en wan1 y wan2; SSH WAN removido (Fase 5, 22:29 UTC).** Re-verificado en GET post-cambio. CONFIRMADO.  
 4. **Syslog off** — la auditoría Wi-Fi anterior **no** debe usarse como “hay 4 syslog”. CONFIRMADO disable.  
 5. **VIP WAN:** 8443/443/48620 → 10.0.0.12; 8000 → 10.0.0.51 (cámaras). CONFIRMADO. No se toca.  
 6. **45 user/local** (VPN/portal), no son `system.admin`. LDAP/RADIUS vacíos. CONFIRMADO.  
@@ -162,11 +162,26 @@ FortiOS 7.0.15 no se declara comprometido “por versión”. El patrón de much
 | 5 Validar backup | **OK** — 649162 bytes, SHA-256 en manifiesto |
 | 6–8 Usuario `justech_cursor_audit` | **CHG-002 CANCELADO POR DECISIÓN OPERATIVA** — no creado |
 | 9 Remediación | **CHG-003** disconnect; **CHG-004** trusthost lock `support_fortinet` (7.0 sin `status`); **Fase 5** `ssh` quitado de wan1/wan2, HTTPS conservado |
+| 10 Continuación A–K | **STOP 23:05 UTC** — sesión `admin` expiró (API 401). 0 writes. Mapping Wi-Fi en `FORTIGATE_WIFI_SETTING_MAP.md` |
+
+---
+
+## Cuentas admin — disposición (sin cambios hoy)
+
+`support_fortinet` permanece **bloqueado por Trusted Hosts** (TEST-NET-1 / `::1`). No borrar. No cambiar password (preservar evidencia).
+
+| Acción | Cuentas |
+|---|---|
+| **KEEP** | `admin` (MFA FortiToken, operativa), `justech` (MFA), `fsantana` |
+| **INVESTIGATE** | `IT-SUPPORT`, `IT_Admin`, `Soporte`, `data_noc`, `djohn`, `emad`; API users `apiuser` y `rest-admin` (super_admin, trusthost vacío, key presente; **uso no demostrado** → no tocar) |
+| **DISABLE LATER** | `support_fortinet` (ya lock remoto); `Forti_Support`, `fgtsupport`; `fortinet-exdyb/gebtq/itzfo/knhhe/mkoqd/rxext/untqm/wgnud`; `oldadmin`, `admin2`, `system`, `ldap`, `forti-autosync`; extras VPN-named de clase D |
+
+Nadie se borra en esta sesión.
 
 ---
 
 ## Primer cambio recomendado
 
-**CHG-001–005 parcial:** backup hecho; CHG-002 cancelado; CHG-003 disconnect; CHG-004 lock remoto `support_fortinet` (cuenta no borrada); Fase 5 sin SSH en WAN. Pendiente: RF 2.4 (PUT 500), DHCP 8 h, DNS 1.1.1.1, 802.11k/v. **No firmware. No password `admin`.**
+**CHG-001–005 parcial:** backup hecho; CHG-002 cancelado; CHG-003 disconnect; CHG-004 lock remoto `support_fortinet` (cuenta no borrada); Fase 5 sin SSH en WAN. Pendiente: reauth; current-admins fresco; SD-WAN SLA si WAN1 degradada en varias muestras; DHCP 8 h; DNS 1.1.1.1; 802.11k/v por VAP. RF 2.4: no reintentar el PUT que dio 500. **No firmware. No password `admin`.**
 
 **No se eliminó ni deshabilitó ninguna cuenta.**

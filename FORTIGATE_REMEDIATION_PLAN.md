@@ -103,6 +103,16 @@ GET 22:33 UTC TRICOM_HC: wan1 ~23 ms / jitter 2.7 / loss 2 %; wan2 ~26 ms / jitt
 
 PUT per-AP `override-channel` en `FP221E5520099ACV` → HTTP 500. Rollback 200. AP siguió en ch 6/132, 6 AP online. No se tocó el perfil compartido FORALL.
 
+**No reintentar el mismo PUT.** El schema 7.0.15 en WTP es `radio-1.override-channel=enable` + `radio-1.channel=[{chan:"11"}]`, no un entero suelto. Ver `FORTIGATE_WIFI_SETTING_MAP.md`.
+
+---
+
+## Continuación A–K (2026-09-15 22:47 UTC) — **STOP reauth**
+
+Sesión GUI `admin` viva a las 22:53. A las 23:05 la API sin cookie responde **401**. FortiGate HTTPS **sigue arriba**. No se ejecutaron writes de SD-WAN, DHCP, DNS, 802.11k/v ni background scan.
+
+Tras reauth manual, retomar en este orden: A (current-admins fresco) → C (5 muestras WAN) → D/E (lease 8h + DNS 1.1.1.1 por scope) → G (11k/v en VAP `Empleados` primero) → J (delta FortiLink). No RF hasta mapping + datos nuevos + rollback por AP.
+
 ---
 
 ## Prohibido hasta Camino B probado

@@ -12,8 +12,10 @@
 | 2026-09-15 22:29 | Fase 5 | Quitar `ssh` WAN de uno en uno; conservar HTTPS | wan1 `ping https ssh`; wan2 `ping https ssh fabric` | PUT wan1 `{allowaccess:"ping https"}` HTTP 200; validar HTTPS; PUT wan2 `{allowaccess:"ping https fabric"}` HTTP 200 | HTTPS `admin` sigue; `ssh` ya no está en allowaccess WAN | GET: wan1 `ping https`; wan2 `ping https fabric`; 3× admin HTTPS; WAN1/2 UP; port14 UP; 6 AP; 6 SW | PUT allowaccess previo de esa WAN | **Hecho**. IPs/rutas/SD-WAN/FortiLink no tocados |
 | 2026-09-15 22:33 | Fase 6 | SLA solo si Tricom peor | SD-WAN 50/50 TRICOM_HC | GET fresco health-check | **No se cambió SD-WAN** | wan1 latency ~23 ms jitter ~2.7 loss **2 %**; wan2 latency ~26 ms jitter ~0.08 loss **0 %**. Tricom no es peor en latencia; sí en loss. No justifica preferir Liberty aún | No aplica | Sin cambio de rutas/SLA |
 | 2026-09-15 22:35 | Fase 8 | 2.4 GHz 1 AP (ACV ch6→11) | ACV override-channel disable; perfil FORALL | PUT wtp `FP221E5520099ACV` radio-1 override-channel 11 | HTTP **500**; rollback PUT 200 | AP sigue connected; oper_chan 6/132; 6 AP; ~39 clientes | Ya revertido (override disable) | **Sin cambio RF persistente** |
+| 2026-09-15 22:47–23:05 | A–K continuación | Validar post-bloqueo + SD-WAN/DHCP/DNS/11k/v | Sesión `admin` viva ~22:53 (GUI 403 + nombre admin) | GET/PUT planificados vía consola | **STOP:** cookie de sesión expiró (~23:05). `GET /api/v2/monitor/system/status` sin cookie = HTTP **401**. FortiGate HTTPS sigue respondiendo (GET `/` = 405). **0 writes** en esta continuación | No hay `current-admins` fresco post-22:35. No se reintentó el PUT RF 500 | No aplica (nada aplicado) | Equipo en el estado de 22:35. Requiere reauth manual `admin`+FortiToken |
 
 Configuraciones modificadas: **CHG-004** (trusthost `support_fortinet` únicamente) + **Fase 5** (allowaccess wan1 y wan2, `ssh` quitado, HTTPS conservado)  
 Cuentas borradas: **0**. Password cambiados: **0**. Firmware: **0**. Reinicios: **0**  
 Backup maestro: **CHG-001** (privado, no GitHub)  
-CHG-002: **CANCELADO POR DECISIÓN OPERATIVA**
+CHG-002: **CANCELADO POR DECISIÓN OPERATIVA**  
+Esta continuación (22:47–23:05): **ningún cambio de dispositivo**. Mapping Wi-Fi GET-only en `FORTIGATE_WIFI_SETTING_MAP.md`.

@@ -1,20 +1,19 @@
 # Registro de cambios — FortiGate CAPITAL
 
-Configuración persistente del FortiGate: **sin cambios de allowaccess / cuentas / WAN / Wi-Fi**. CHG-003 desconectó sesiones SSH (no es cambio de config).
-
 | Fecha/hora UTC | CHANGE-ID | Autorización | Estado previo | Acción | Resultado | Pruebas | Rollback | Estado final |
 |---|---|---|---|---|---|---|---|---|
 | 2026-09-15 20:15 | — | Investigación forense READ-ONLY | 42 admin, sesión support_fortinet SSH activa | GET API / GUI logs | Completado; compromiso INCONCLUSO | Sesión admin HTTPS viva; 0 Apply/Save | No aplica | Sin cambios en el FortiGate |
 | 2026-09-15 20:43 | CHG-001 | AUTORIZO CHG-001 ÚNICAMENTE | Sin backup maestro controlado; `current_config_unsaved=true` | GET `/api/v2/monitor/system/config/backup?scope=global` (sesión `admin`) | Backup privado 649162 bytes SHA-256 `8573a6e43632a5582c7bfab44aa339687b4ebbd4902742a45aaf1b8166e2f2e6` | Cabecera FG100E 7.0.15 build0632 hostname CAPITAL serial FG100ETK19012927; no HTML; no Save | No aplica (solo archivo local) | Equipo sin cambios; `.conf` fuera de git |
 | 2026-09-15 21:13 | CHG-002 | CANCELADO POR DECISIÓN OPERATIVA | Usuario RO no creado | Ninguna | Cancelado; `admin` permanece cuenta operativa | No se pulsó Create/POST | No aplica | 0 cambios; no `justech_cursor_audit` |
-| 2026-09-15 22:02 | CHG-003 | Plan 23 fases (disconnect SSH `support_fortinet` únicamente) | SSH dual-WAN ids 23515 (wan1) y 23530 (wan2) desde `94.198.50.189` | POST `/api/v2/monitor/system/disconnect-admins/select` body `admins:[{id,method:ssh}]` header `X-CSRFTOKEN` **sin comillas** | HTTP 200 success. Token con comillas → 403 (no aplicado). Cuenta **no** deshabilitada | Tras POST: 3 sesiones `admin` HTTPS (ids 369090 / 370912 / 370829); 0 `support_fortinet`. WAN1/WAN2 link True 1G; port14 UP 1G; port11 link False; 6 AP connected + 1 discovered; 6 switch Connected + 1 Idle; 70 clientes Wi-Fi | N/A (sesión; la cuenta puede reconectar) | Cuenta intacta; SSH de esa IP cortado en ese instante |
-| 2026-09-15 22:08 | — | Fase 0 | Reauth para continuar Fase 5 (quitar `ssh` de wan1/wan2 `allowaccess`) | Inspección Chrome VM | **STOP.** GUI = Login / 401. JSON `current-admins` en pestañas es **caché vieja**, no sesión viva. No se escribió usuario ni password | No PUT / no Save | No aplica | Fase 5 **no iniciada**. Esperando login `admin` en **este** Chrome |
+| 2026-09-15 22:02 | CHG-003 | Plan 23 fases (disconnect SSH `support_fortinet` únicamente) | SSH dual-WAN ids 23515 (wan1) y 23530 (wan2) desde `94.198.50.189` | POST `/api/v2/monitor/system/disconnect-admins/select` | HTTP 200. Cuenta **no** deshabilitada | 3 sesiones `admin` HTTPS; 0 `support_fortinet` en ese instante. WAN/port14 UP | N/A (sesión) | Cuenta intacta; reconectó después |
+| 2026-09-15 22:20 | — | Reauth manual `admin` + FortiToken en este Chrome | GUI Login | Propietario autenticó | Sesión viva: `admin` arriba a la derecha; tab `FortiGate - CAPITAL` | No se escribió usuario/password/MFA | No aplica | GET fresco autorizado |
+| 2026-09-15 22:20 | GET fresco | — | — | GET `/api/v2/monitor/system/current-admins` (pestaña **nueva**, no caché) | `support_fortinet` **reconectó** | wan1 SSH id **23846** y wan2 SSH id **23848** desde `94.198.50.189`. `admin` HTTPS: 369090 `170.244.42.35`, 370829 `3.15.75.171`, 371244 `3.20.157.220` is_current | — | CHG-004 aplica |
+| 2026-09-15 22:29 | CHG-004 | Si reconecta desde `94.198.50.189` → deshabilitar **solo** esa cuenta | SSH 23846/23848; FortiOS 7.0.15 **no** tiene campo `status` en `system.admin` | 1) POST disconnect ids 23846/23848 HTTP 200. 2) PUT `status=disable` HTTP 200 **ignorado** (atributo inexistente; trusthost seguía 0.0.0.0). 3) PUT `ip6-trusthost1=::1/128` HTTP 200. 4) PUT `trusthost1=192.0.2.1 255.255.255.0` (TEST-NET-1 RFC5737) HTTP 200. **No** borrar. **No** password. **No** otras cuentas | Cuenta intacta; login remoto IPv4/IPv6 desde Internet **bloqueado** | GET fresco post-cambio: 0 sesiones `support_fortinet`; 3× `admin` HTTPS; WAN1/WAN2 link True 1G; port14 True 1G; port11 False; 6 AP connected; 6 switch Connected + 1 Idle | Restaurar `trusthost1=0.0.0.0 0.0.0.0` y `ip6-trusthost1=::/0` | CHG-004 **efectivo** (equivalente 7.0 a disable) |
+| 2026-09-15 22:29 | Fase 5 | Quitar `ssh` WAN de uno en uno; conservar HTTPS | wan1 `ping https ssh`; wan2 `ping https ssh fabric` | PUT wan1 `{allowaccess:"ping https"}` HTTP 200; validar HTTPS; PUT wan2 `{allowaccess:"ping https fabric"}` HTTP 200 | HTTPS `admin` sigue; `ssh` ya no está en allowaccess WAN | GET: wan1 `ping https`; wan2 `ping https fabric`; 3× admin HTTPS; WAN1/2 UP; port14 UP; 6 AP; 6 SW | PUT allowaccess previo de esa WAN | **Hecho**. IPs/rutas/SD-WAN/FortiLink no tocados |
+| 2026-09-15 22:33 | Fase 6 | SLA solo si Tricom peor | SD-WAN 50/50 TRICOM_HC | GET fresco health-check | **No se cambió SD-WAN** | wan1 latency ~23 ms jitter ~2.7 loss **2 %**; wan2 latency ~26 ms jitter ~0.08 loss **0 %**. Tricom no es peor en latencia; sí en loss. No justifica preferir Liberty aún | No aplica | Sin cambio de rutas/SLA |
+| 2026-09-15 22:35 | Fase 8 | 2.4 GHz 1 AP (ACV ch6→11) | ACV override-channel disable; perfil FORALL | PUT wtp `FP221E5520099ACV` radio-1 override-channel 11 | HTTP **500**; rollback PUT 200 | AP sigue connected; oper_chan 6/132; 6 AP; ~39 clientes | Ya revertido (override disable) | **Sin cambio RF persistente** |
 
-Configuraciones modificadas (flash/CMDB): **0**  
-Sesiones desconectadas: **CHG-003** (2× SSH `support_fortinet`)  
-Equipos reiniciados: **0**  
-Cuentas creadas/borradas/deshabilitadas: **0**  
-Backup maestro: **CHG-001 completado** (archivo privado, no GitHub)  
-CHG-002: **CANCELADO POR DECISIÓN OPERATIVA**  
-CHG-004 (disable cuenta si reconecta): **no ejecutado** — falta GET fresco  
-Fase 5 (quitar SSH WAN): **bloqueada** — sesión GUI caducada
+Configuraciones modificadas: **CHG-004** (trusthost `support_fortinet` únicamente) + **Fase 5** (allowaccess wan1 y wan2, `ssh` quitado, HTTPS conservado)  
+Cuentas borradas: **0**. Password cambiados: **0**. Firmware: **0**. Reinicios: **0**  
+Backup maestro: **CHG-001** (privado, no GitHub)  
+CHG-002: **CANCELADO POR DECISIÓN OPERATIVA**

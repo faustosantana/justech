@@ -65,19 +65,43 @@ Prioridad remota: no perder HTTPS WAN ni la cuenta `admin`.
 
 **ROLLBACK:** no aplica a config; la cuenta puede volver a autenticarse (si reconecta desde `94.198.50.189` u otra IP desconocida → **CHG-004** disable **solo** esa cuenta).
 
-**Re-verificación 22:08 UTC:** **NO VERIFICADA** — Chrome VM otra vez en Login/401. Las pestañas JSON de `current-admins` son caché, no GET vivo.
+**Re-verificación 22:20 UTC (GET fresco, pestaña nueva):** reconectó. Ver CHG-004.
 
 ---
 
-## CHG-004 — Disable `support_fortinet` si reconecta (**NO EJECUTADO**)
+## CHG-004 — Bloquear login remoto de `support_fortinet` (**EJECUTADO** 2026-09-15 22:29 UTC)
 
-Solo si GET fresco muestra esa cuenta SSH/HTTPS desde `94.198.50.189` o IP no reconocida. No tocar `admin` / `justech` / `fsantana`. No borrar. No masivo de 42 admins.
+**EVIDENCIA FRESCA 22:20 UTC:** SSH wan1 id **23846** y wan2 id **23848**, origen `94.198.50.189`. No es TAC Fortinet.
+
+**FortiOS 7.0.15:** `GET system.admin` **no** incluye campo `status`. PUT `{status:disable}` devolvió 200 pero **no persistió** (trusthost seguía abierto). No se borró la cuenta. No se cambió password.
+
+**ACCIÓN EFECTIVA:** PUT solo sobre `support_fortinet`:
+- `ip6-trusthost1` = `::1/128`
+- `trusthost1` = `192.0.2.1 255.255.255.0` (TEST-NET-1; máscara /32 host fue rechazada por el parser 7.0)
+
+**VALIDACIÓN:** GET fresco `current-admins` = 3× `admin` HTTPS, **0** `support_fortinet`. WAN1/WAN2/port14 UP; 6 AP; 6 switch Connected. `admin` / `justech` / `fsantana` no tocados.
+
+**ROLLBACK:** PUT `trusthost1=0.0.0.0 0.0.0.0` y `ip6-trusthost1=::/0` en esa cuenta únicamente.
 
 ---
 
-## Fase 5 — Quitar `ssh` de wan1 luego wan2 (**NO EJECUTADO** — STOP Fase 0)
+## Fase 5 — Quitar `ssh` de wan1 luego wan2 (**EJECUTADO** 2026-09-15 22:29 UTC)
 
-Prior allowaccess confirmado en GET 22:00: wan1 `ping https ssh` → objetivo `ping https`. wan2 `ping https ssh fabric` → objetivo `ping https fabric`. HTTPS se conserva. IPs/gateway/rutas **no** se tocan. Requiere sesión `admin` viva en este Chrome.
+**Hecho de uno en uno.** wan1 `ping https ssh` → `ping https` (PUT 200, HTTPS validado). Luego wan2 `ping https ssh fabric` → `ping https fabric` (PUT 200). IPs, gateways, rutas, SD-WAN, FortiLink, HTTPS: **no tocados**.
+
+**ROLLBACK por WAN:** restaurar el `allowaccess` previo de esa interfaz.
+
+---
+
+## Fase 6 — Muestra WAN (**sin cambio de SLA**)
+
+GET 22:33 UTC TRICOM_HC: wan1 ~23 ms / jitter 2.7 / loss 2 %; wan2 ~26 ms / jitter 0.08 / loss 0 %. No se cambió SD-WAN.
+
+---
+
+## Fase 8 — Canal 2.4 ACV (**NO APLICADO**)
+
+PUT per-AP `override-channel` en `FP221E5520099ACV` → HTTP 500. Rollback 200. AP siguió en ch 6/132, 6 AP online. No se tocó el perfil compartido FORALL.
 
 ---
 

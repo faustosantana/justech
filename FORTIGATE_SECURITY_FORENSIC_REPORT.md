@@ -51,7 +51,7 @@ No es **COMPROMISO CONFIRMADO** (no hay log de acciones).
 
 | Pregunta | Hallazgo | Clase |
 |---|---|---|
-| ¿Sesión todavía existe? | 20:15 UTC sí (ids 22122/22127). **22:02 UTC desconectada (CHG-003)** ids 23515/23530. Reconexión 22:08: **NO VERIFICADA** (GUI Login) | CONFIRMADO disconnect; reconexión NO VERIFICADA |
+| ¿Sesión todavía existe? | 22:20 UTC **sí, reconectó** (ids 23846/23848). **22:29 UTC CHG-004** lock trusthost; GET fresco **0 sesiones** | CONFIRMADO |
 | Protocolo / interfaz | SSH / wan1 **y** wan2 | CONFIRMADO |
 | IP | `94.198.50.189` en ambas | CONFIRMADO |
 | ¿Misma sesión desde las 18:12? | **No.** A las 18:12 ids 20705/20717; a las 20:15 ids 22122/22127 → reconexión | CONFIRMADO |
@@ -161,12 +161,12 @@ FortiOS 7.0.15 no se declara comprometido “por versión”. El patrón de much
 | 4 Backup maestro | **CHG-001 completado** (privado, no git). Ver `BACKUP_MANIFEST.md` |
 | 5 Validar backup | **OK** — 649162 bytes, SHA-256 en manifiesto |
 | 6–8 Usuario `justech_cursor_audit` | **CHG-002 CANCELADO POR DECISIÓN OPERATIVA** — no creado |
-| 9 Remediación | **CHG-003 ejecutado** (disconnect SSH `support_fortinet`; cuenta intacta). CHG-004 / Fase 5 pendientes; GUI Login 22:08 UTC |
+| 9 Remediación | **CHG-003** disconnect; **CHG-004** trusthost lock `support_fortinet` (7.0 sin `status`); **Fase 5** `ssh` quitado de wan1/wan2, HTTPS conservado |
 
 ---
 
 ## Primer cambio recomendado
 
-**CHG-001 completado.** CHG-002 cancelado. **CHG-003 ejecutado** (disconnect SSH; cuenta intacta). Siguiente: reauth `admin` en este Chrome → GET fresco → CHG-004 solo si reconectó → Fase 5 quitar `ssh` WAN de uno en uno.
+**CHG-001–005 parcial:** backup hecho; CHG-002 cancelado; CHG-003 disconnect; CHG-004 lock remoto `support_fortinet` (cuenta no borrada); Fase 5 sin SSH en WAN. Pendiente: RF 2.4 (PUT 500), DHCP 8 h, DNS 1.1.1.1, 802.11k/v. **No firmware. No password `admin`.**
 
 **No se eliminó ni deshabilitó ninguna cuenta.**

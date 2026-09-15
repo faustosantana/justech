@@ -51,7 +51,7 @@ No es **COMPROMISO CONFIRMADO** (no hay log de acciones).
 
 | Pregunta | Hallazgo | Clase |
 |---|---|---|
-| ¿Sesión todavía existe? | Sí. Dos SSH concurrentes, wan1 id 22122 y wan2 id 22127 | CONFIRMADO 20:15 UTC |
+| ¿Sesión todavía existe? | 20:15 UTC sí (ids 22122/22127). **22:02 UTC desconectada (CHG-003)** ids 23515/23530. Reconexión 22:08: **NO VERIFICADA** (GUI Login) | CONFIRMADO disconnect; reconexión NO VERIFICADA |
 | Protocolo / interfaz | SSH / wan1 **y** wan2 | CONFIRMADO |
 | IP | `94.198.50.189` en ambas | CONFIRMADO |
 | ¿Misma sesión desde las 18:12? | **No.** A las 18:12 ids 20705/20717; a las 20:15 ids 22122/22127 → reconexión | CONFIRMADO |
@@ -63,7 +63,7 @@ No es **COMPROMISO CONFIRMADO** (no hay log de acciones).
 | RDAP IP | bloque 94.198.50.0/24 **SmartApe**, país **RU**, abuse smartape.ru | CONFIRMADO whois; **no prueba** por sí sola de ataque |
 | ¿Es TAC Fortinet? | **PROBABLE que no** (hosting comercial RU, no rango Fortinet documentado aquí) | PROBABLE |
 
-**No se desconectó la sesión. No se deshabilitó la cuenta.**
+**CHG-003 (22:02 UTC):** se desconectaron las sesiones SSH ids 23515/23530. **No se deshabilitó la cuenta.** Reconexión posterior: **NO VERIFICADA** (GUI Login 22:08 UTC).
 
 ---
 
@@ -161,12 +161,12 @@ FortiOS 7.0.15 no se declara comprometido “por versión”. El patrón de much
 | 4 Backup maestro | **CHG-001 completado** (privado, no git). Ver `BACKUP_MANIFEST.md` |
 | 5 Validar backup | **OK** — 649162 bytes, SHA-256 en manifiesto |
 | 6–8 Usuario `justech_cursor_audit` | **CHG-002 CANCELADO POR DECISIÓN OPERATIVA** — no creado |
-| 9 Remediación | **CHG-003 propuesto, no ejecutado** (solo disconnect SSH `support_fortinet`) |
+| 9 Remediación | **CHG-003 ejecutado** (disconnect SSH `support_fortinet`; cuenta intacta). CHG-004 / Fase 5 pendientes; GUI Login 22:08 UTC |
 
 ---
 
 ## Primer cambio recomendado
 
-**CHG-001 completado.** CHG-002 cancelado. Siguiente propuesto: **CHG-003** desconectar sesiones SSH de `support_fortinet` (cuenta intacta).
+**CHG-001 completado.** CHG-002 cancelado. **CHG-003 ejecutado** (disconnect SSH; cuenta intacta). Siguiente: reauth `admin` en este Chrome → GET fresco → CHG-004 solo si reconectó → Fase 5 quitar `ssh` WAN de uno en uno.
 
 **No se eliminó ni deshabilitó ninguna cuenta.**

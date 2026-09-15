@@ -55,4 +55,4 @@ El `.conf` contiene secretos de dispositivo (hashes ENC, PSK, claves). No se rep
 
 ## Post-CHG-001 (no ejecutado)
 
-CHG-002, cuenta `justech_cursor_audit`, desconexión de `support_fortinet`, disable de admins, MFA, Trusted Hosts, WAN, SD-WAN, Wi-Fi, FortiLink, DHCP, DNS y firewall: **no iniciados**. Esperan un `AUTORIZO CHG-XXX` nuevo.
+CHG-002 cancelado. **CHG-003 ejecutado** (disconnect SSH; cuenta intacta). Disable de admins, MFA, Trusted Hosts, WAN allowaccess, SD-WAN, Wi-Fi, FortiLink, DHCP, DNS y firewall: **no iniciados** o bloqueados por sesión Login.

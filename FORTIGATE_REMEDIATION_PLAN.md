@@ -51,23 +51,33 @@ Prioridad remota: no perder HTTPS WAN ni la cuenta `admin`.
 
 ---
 
-## CHG-003 — Desconectar sesiones SSH de `support_fortinet` (**NO EJECUTADO**)
+## CHG-003 — Desconectar sesiones SSH de `support_fortinet` (**EJECUTADO** 2026-09-15 22:02 UTC)
 
 **PROBLEMA:** Sesiones SSH activas de una cuenta `super_admin` cuya legitimidad no está demostrada.
 
-**EVIDENCIA (última API, 2026-09-15 20:52 UTC):** dos SSH `support_fortinet` desde `94.198.50.189` (wan1 id 22685, wan2 id 22690). Cuenta: MFA `disable`, Trusted Hosts `0.0.0.0/0` y `::/0`, perfil `super_admin`. RDAP SmartApe RU; no es ASN Fortinet TAC. No hay log de acciones. **No se reautenticó** en este paso para refrescar (GUI en login).
+**EVIDENCIA PRE-CAMBIO (GET `current-admins` ~22:00 UTC):** dos SSH `support_fortinet` desde `94.198.50.189` (wan1 id **23515**, wan2 id **23530**). (IDs anteriores en la misma investigación: 22685/22690, 23443/23453 — la cuenta **reconectaba**.) MFA `disable`, Trusted Hosts `0.0.0.0/0` y `::/0`, perfil `super_admin`. RDAP SmartApe RU; no es ASN Fortinet TAC.
 
-**CAMBIO PROPUESTO:** finalizar **únicamente** las sesiones activas de `support_fortinet` (API disconnect por session id, tras un GET fresco de `current-admins`). La cuenta permanece.
+**ACCIÓN:** POST `/api/v2/monitor/system/disconnect-admins/select` con `{"admins":[{"id":23515,"method":"ssh"},{"id":23530,"method":"ssh"}]}`. Header `X-CSRFTOKEN` = valor de cookie `ccsrftoken` **sin comillas**. HTTP **200**.
 
-**NO:** borrar/deshabilitar la cuenta; cambiar password/MFA/Trusted Hosts; tocar otros admins; tocar WAN; tocar firewall.
+**NO HECHO:** borrar/deshabilitar la cuenta; password/MFA/Trusted Hosts; otros admins; WAN allowaccess; firewall.
 
-**RIESGO:** Bajo/Medio. Si era soporte real, se reconectará. Si era abusivo, corta el acceso actual. Camino A (`admin` HTTPS) no se toca.
+**VALIDACIÓN INMEDIATA:** `after_admins` = tres HTTPS `admin` (369090 `170.244.42.35`, 370912 `18.217.23.204` is_current, 370829 `3.15.75.171`). 0 SSH `support_fortinet`. WAN1/WAN2 UP 1G; port14 UP; port11 down (visita física); 6 AP + 1 discovered; 6 switch Connected + FS224D3Z15000948 Idle; 70 clientes Wi-Fi.
 
-**ROLLBACK:** cuenta intacta; puede volver a autenticarse.
+**ROLLBACK:** no aplica a config; la cuenta puede volver a autenticarse (si reconecta desde `94.198.50.189` u otra IP desconocida → **CHG-004** disable **solo** esa cuenta).
 
-**VALIDACIÓN:** `support_fortinet` sesiones = 0; `admin` sigue conectado; WAN1/WAN2 UP; FortiLink UP; switches/AP online.
+**Re-verificación 22:08 UTC:** **NO VERIFICADA** — Chrome VM otra vez en Login/401. Las pestañas JSON de `current-admins` son caché, no GET vivo.
 
-`¿AUTORIZAS CHG-003?`
+---
+
+## CHG-004 — Disable `support_fortinet` si reconecta (**NO EJECUTADO**)
+
+Solo si GET fresco muestra esa cuenta SSH/HTTPS desde `94.198.50.189` o IP no reconocida. No tocar `admin` / `justech` / `fsantana`. No borrar. No masivo de 42 admins.
+
+---
+
+## Fase 5 — Quitar `ssh` de wan1 luego wan2 (**NO EJECUTADO** — STOP Fase 0)
+
+Prior allowaccess confirmado en GET 22:00: wan1 `ping https ssh` → objetivo `ping https`. wan2 `ping https ssh fabric` → objetivo `ping https fabric`. HTTPS se conserva. IPs/gateway/rutas **no** se tocan. Requiere sesión `admin` viva en este Chrome.
 
 ---
 

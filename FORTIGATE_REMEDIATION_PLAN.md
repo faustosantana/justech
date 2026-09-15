@@ -45,33 +45,29 @@ Prioridad remota: no perder HTTPS WAN ni la cuenta `admin`.
 
 ---
 
-## CHG-002 — Usuario READ-ONLY `justech_cursor_audit` (después de CHG-001)
+## CHG-002 — Usuario READ-ONLY `justech_cursor_audit`
 
-No se pide autorización todavía. Condiciones:
-
-- Backup CHG-001 validado.
-- Inspección de perfiles: existen `super_admin_readonly`, `Solo vista`, `admin_no_access`, `prof_admin`.
-- Preferir perfil RO existente; si no cubre AP/Switch, crear `justech_cursor_ro` (WRITE none).
-- Contraseña: **tú la introduces**; no se inventa ni se guarda.
-- Trusted Host: **no** usar `3.151.173.70` (AWS efímera) sin tu decisión. Si no hay IP estable, detener y listar opciones.
-- No asignar FortiToken de `admin`.
-- No cerrar sesión `admin`. Segunda sesión para probar RO.
-- Si el RO falla, no se toca `admin`.
-
-Riesgo de acceso: MEDIO si TH/perfil mal — por eso Camino A permanece.
+**CANCELADO POR DECISIÓN OPERATIVA** (2026-09-15 21:13 UTC). No es un fallo técnico pendiente. No se creó el usuario ni perfiles nuevos. `admin` sigue siendo la cuenta operativa.
 
 ---
 
-## Contención `support_fortinet` (no es CHG aún)
+## CHG-003 — Desconectar sesiones SSH de `support_fortinet` (**NO EJECUTADO**)
 
-Opciones a discutir **después** del backup, una por una:
+**PROBLEMA:** Sesiones SSH activas de una cuenta `super_admin` cuya legitimidad no está demostrada.
 
-1. Solo observar (estado actual).
-2. Desconectar las 2 sesiones SSH **sin** borrar la cuenta (impacto: si era soporte real, se quejan; si era abusivo, corta C2). Riesgo de acceso **bajo** para nosotros (no es nuestra sesión HTTPS).
-3. Disable de la cuenta (más agresivo).
-4. Borrar: **último recurso**, prohibido ahora.
+**EVIDENCIA (última API, 2026-09-15 20:52 UTC):** dos SSH `support_fortinet` desde `94.198.50.189` (wan1 id 22685, wan2 id 22690). Cuenta: MFA `disable`, Trusted Hosts `0.0.0.0/0` y `::/0`, perfil `super_admin`. RDAP SmartApe RU; no es ASN Fortinet TAC. No hay log de acciones. **No se reautenticó** en este paso para refrescar (GUI en login).
 
-No se hace 2–4 sin `AUTORIZO CHG-xxx` y confirmación de que **no** es un contrato de soporte activo.
+**CAMBIO PROPUESTO:** finalizar **únicamente** las sesiones activas de `support_fortinet` (API disconnect por session id, tras un GET fresco de `current-admins`). La cuenta permanece.
+
+**NO:** borrar/deshabilitar la cuenta; cambiar password/MFA/Trusted Hosts; tocar otros admins; tocar WAN; tocar firewall.
+
+**RIESGO:** Bajo/Medio. Si era soporte real, se reconectará. Si era abusivo, corta el acceso actual. Camino A (`admin` HTTPS) no se toca.
+
+**ROLLBACK:** cuenta intacta; puede volver a autenticarse.
+
+**VALIDACIÓN:** `support_fortinet` sesiones = 0; `admin` sigue conectado; WAN1/WAN2 UP; FortiLink UP; switches/AP online.
+
+`¿AUTORIZAS CHG-003?`
 
 ---
 

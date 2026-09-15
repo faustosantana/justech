@@ -1,0 +1,22 @@
+Tipo,Nombre,Modelo,Serial,Firmware,IP,Estado,Notas
+FortiGate,CAPITAL,FG100E,FG100ETK19012927,v7.0.15 build0632,181.37.127.69 / 179.51.67.67,HA standalone / VDOM root,Wireless+Switch controller enable; log disk not_available
+FortiAP,FP221E,FAP-221E,FP221E,,0.0.0.0,connecting/discovered,profile=FAP221E-default clients=0 loc=
+FortiAP,FP221E5520099A17,FAP-221E,FP221E5520099A17,FP221E-v7.0-build0115,10.20.40.33,connected/authorized,profile=FORALL clients=13 loc=
+FortiAP,FP221E5520099AAH,FAP-221E,FP221E5520099AAH,FP221E-v7.0-build0115,10.20.40.26,connected/authorized,profile=FORALL clients=16 loc=
+FortiAP,FP221E5520099ACV,FAP-221E,FP221E5520099ACV,FP221E-v7.0-build0115,10.20.40.242,connected/authorized,profile=FORALL clients=2 loc=
+FortiAP,FP221ETF22078748,FAP-221E,FP221ETF22078748,FP221E-v7.0-build0115,10.20.40.50,connected/authorized,profile=FAP221E-default clients=6 loc=
+FortiAP,FP221ETF22078762,FAP-221E,FP221ETF22078762,FP221E-v7.0-build0115,10.20.40.32,connected/authorized,profile=FAP221E-default clients=12 loc=
+FortiAP,FP221ETF22078983,FAP-221E,FP221ETF22078983,FP221E-v7.0-build0115,10.20.40.30,connected/authorized,profile=FAP221E-default clients=31 loc=Piso 1
+FortiSwitch,S424ENTF20000399,FS424E,S424ENTF20000399,"S424EN-v7.4.2-build801,231207 (GA)",169.254.2.3,Connected,"join=Thu Jul 23 07:10:12 2026
+ poe_budget=0"
+FortiSwitch,FS224D3Z14001985,FS224D-POE,FS224D3Z14001985,"FS224D-v3.6.11-build432,191108 (GA)",169.254.2.4,Connected,"join=Thu Jul 23 07:10:30 2026
+ poe_budget=180"
+FortiSwitch,FS224D3Z14002019,FS224D-POE,FS224D3Z14002019,"FS224D-v3.6.11-build432,191108 (GA)",169.254.2.5,Connected,"join=Thu Jul 23 07:10:37 2026
+ poe_budget=180"
+FortiSwitch,FS224D3Z14001687,FS224D-POE,FS224D3Z14001687,"FS224D-v3.6.11-build432,191108 (GA)",169.254.2.2,Connected,"join=Thu Jul 23 07:10:36 2026
+ poe_budget=180"
+FortiSwitch,FS224D3Z14000932,FS224D-POE,FS224D3Z14000932,"FS224D-v3.6.11-build432,191108 (GA)",169.254.2.6,Connected,"join=Thu Jul 23 07:11:22 2026
+ poe_budget=180"
+FortiSwitch,FS224D3Z14001698,FS224D-POE,FS224D3Z14001698,"FS224D-v3.6.11-build432,191108 (GA)",169.254.2.7,Connected,"join=Thu Jul 23 07:10:33 2026
+ poe_budget=180"
+FortiSwitch,FS224D3Z15000948,FS224D-POE,FS224D3Z15000948,,,Idle,join=None poe_budget=0
